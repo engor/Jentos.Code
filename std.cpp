@@ -31,21 +31,23 @@ QString extractExt( const QString &path ){
 // Converts \ to /, removes trailing /s and prefixes drive if necessary.
 //
 QString fixPath( QString path ){
-    if( path.isEmpty() ) return path;
-
-    if( isUrl( path ) ) return path;
-
-    path=path.replace( '\\','/' );
-    path=QDir::cleanPath( path );
-
+    if( path.isEmpty() )
+        return path;
+    if( isUrl( path ) )
+        return path;
+    path = path.replace( '\\','/' );
+    path = QDir::cleanPath( path );
 #ifdef Q_OS_WIN32
-    if( path.startsWith( "//" ) ) return path;
-    if( path.startsWith( '/' ) ) path=QDir::rootPath()+path.mid( 1 );
-    if( path.endsWith( '/' ) && !path.endsWith( ":/" ) ) path=path.left( path.length()-1 );
+    if( path.startsWith( "//" ) )
+        return path;
+    if( path.startsWith( '/' ) )
+        path = QDir::rootPath()+path.mid( 1 );
+    if( path.endsWith( '/' ) && !path.endsWith( ":/" ) )
+        path = path.left( path.length()-1 );
 #else
-    if( path.endsWith( '/' ) && path!="/" ) path=path.left( path.length()-1 );
+    if( path.endsWith( '/' ) && path!="/" )
+        path = path.left( path.length()-1 );
 #endif
-
     return path;
 }
 

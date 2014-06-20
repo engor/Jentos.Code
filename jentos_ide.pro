@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     listwidgetcomplete.cpp \
     codeanalyzer.cpp \
     tabwidgetdrop.cpp \
-    proc.cpp
+    proc.cpp \
+    theme.cpp
 
 HEADERS  += mainwindow.h \
     codeeditor.h \
@@ -44,9 +45,11 @@ HEADERS  += mainwindow.h \
     listwidgetcomplete.h \
     codeanalyzer.h \
     tabwidgetdrop.h \
-    proc.h
+    proc.h \
+    theme.h
 
-RESOURCES += resources.qrc
+RESOURCES += \
+    resources.qrc
 
 TARGET = JentosIDE
 #OK, this seems to prevent latest Windows QtCreator from being able to run Ted (builds fine).

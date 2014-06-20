@@ -34,6 +34,11 @@ public:
     CodeEditor( QWidget *parent=0 );
     ~CodeEditor();
 
+    enum Highlighting {
+        HlCommon, HlCaretRow, HlError, HlCaretRowCentered
+    };
+
+    bool aucompIsVisible();
     //return true if successful and path updated
     bool open( const QString &path );
     bool save( const QString &path );
@@ -49,22 +54,20 @@ public:
     bool isMonkey(){ return _monkey; }
 
     void gotoLine( int line );
-    void highlightLine(int line , int kind=0);
+    void highlightLine(int line , Highlighting kind=HlCommon);
 
 
     bool findNext( const QString &findText,bool cased,bool wrap,bool backward=false );
     bool replace( const QString &findText,const QString &replaceText,bool cased );
     int  replaceAll( const QString &findText,const QString &replaceText,bool cased,bool wrap );
 
-    QString identAtCursor();
-    QString identBeforeCursor();
-    QString identInLineBefore(const QString &line, int posInLine , int posTotal);
+    QString identAtCursor(bool fullWord=true);
 
     Highlighter *highlighter(){ return _highlighter; }
     void updateCodeViews(QTreeView *tree, QListView *view);
 
-    QString aucompProcess(ListWidgetCompleteItem *item );
-    void aucompShowList(const QString &ident, const QTextCursor &cursor, const QString &kind="", bool process=true );
+    void aucompProcess(CodeItem *item , bool forInheritance=false);
+    void aucompShowList(bool process=true , bool inheritance=false);
 
     void storeBlock( int num=-1 );
     QString cursorRowCol();
@@ -73,6 +76,7 @@ public:
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     void pressOnLineNumber(QMouseEvent *e);
     void moveOnLineNumber(QMouseEvent *e);
+    void commentUncommentBlock();
     void bookmarkToggle();
     void bookmarkNext();
     void bookmarkPrev();
@@ -80,7 +84,8 @@ public:
 
     void analyzeCode();
     void updateSourceNavigationByCurrentScope();
-    void fillSourceListWidget(ItemWithData *item);
+    void fillSourceListWidget(CodeItem *item, QStandardItem *si);
+    void fillCodeTree();
 
     QTextBlock foldBlock(QTextBlock block);
     QTextBlock unfoldBlock(QTextBlock block);
@@ -90,13 +95,11 @@ public:
     void goBack();
     void goForward();
     void autoformatAll();
-
-    static int HL_COMMON;
-    static int HL_CARETROW;
-    static int HL_ERROR;
-    static int HL_CARETROW_CENTERED;
-
-
+    void lowerUpperCase(bool lower);
+    //
+    bool canFindUsages();
+    QString findUsages(QTreeWidget *tree);
+    void replaceInRange(int from, int to, const QString &text);
 
 public slots:
 
@@ -108,19 +111,20 @@ public slots:
     void onPrefsChanged( const QString &name );
 
     void onCodeTreeViewClicked( const QModelIndex &index );
-    void onCodeTreeViewDoubleClicked( const QModelIndex &index );
-    void onSourceListWidgetClicked( const QModelIndex &index );
+    void onSourceListViewClicked( const QModelIndex &index );
+
     void onPaste(const QString &text);//replace quotes by ~q when paste in "{here}"
+    void onThemeChanged();
 
 private slots:
 
-    void onCompleteProcess(QListWidgetItem *item);
+    void onCompleteProcess(QListWidgetItem *item=0);
     void onCompleteChangeItem(QListWidgetItem *current, QListWidgetItem *previous);
     void onCompleteFocusOut();
     void onUpdateLineNumberArea(const QRect &, int);
 
 signals:
-
+    void keyEscapePressed();
     void showCode( const QString &file, int line);
     void statusBarChanged( const QString &text );
     void keyPressed(QKeyEvent *event);
@@ -144,10 +148,6 @@ private:
     void editPosInsert(int pos);
 
     Highlighter *_highlighter;
-    QTreeView *_codeTreeView;
-    QListView* _sourceListView;
-    QStandardItemModel *_codeTreeModel;
-    QStandardItemModel *_sourceListModel;
     //
     QString _path;
     QString _fileType, _fileName;
@@ -161,11 +161,10 @@ private:
     LineNumberArea *_lineNumberArea;
     int _prevCursorPos, _prevTextLen, _prevTextChangedPos;
 
-    int identBeforeStart, identBeforeEnd;
-    QString identStr, _aucompKind;
-
     QList<int> _editPosList;
     int _editPosIndex;
+
+    bool _isHighlightLine, _isHighlightWord;
 
     friend class Highlighter;
 };
@@ -181,11 +180,19 @@ public:
 
     CodeEditor *editor(){ return _editor; }
 
-    bool capitalize( const QTextBlock &block,QTextCursor cursor );
+    enum Formats {
+        FormatDefault, FormatIdentifier,
+        FormatUserClass, FormatUserClassVar, FormatUserDecl,
+        FormatMonkeyClass,
+        FormatKeyword, FormatParam, FormatNumber, FormatString, FormatComment
+    };
+    void setEnabled( bool value ) { _enabled = value; }
+    bool isEnabled() { return _enabled; }
 
 public slots:
 
     void onPrefsChanged( const QString &name );
+
 
 protected:
 
@@ -201,12 +208,13 @@ private:
     QColor _identifiersColor;
     QColor _keywordsColor;
     QColor _monkeywordsColor;
-    QColor _userwordsColor, _userwordsColorVar;
+    QColor _userwordsColor, _userwordsVarColor, _userwordsDeclColor, _paramsColor;
     QColor _commentsColor;
     QColor _highlightColor;
 
-    QString parseToke( QString &text,QColor &color );
-
+    //QString parseToke(const QTextBlock &block, QString &text, QColor &color );
+    void setTextFormat(int start, int end, Formats format, bool italic=false);
+    bool _enabled;
     friend class BlockData;
 };
 
@@ -236,7 +244,7 @@ public:
         }
     }
 
-    static BlockData* data(QTextBlock &block, bool create=false);
+    static BlockData* data(const QTextBlock &block, bool create=false);
     static void flush(QTextBlock &block);
 
     bool isFoldable() { return _foldable; }
@@ -249,13 +257,18 @@ public:
     CodeItem* code(){ return _code; }
     void setCode(CodeItem *code){ _code = code; }
 
+    void addItem(CodeItem *item){ _items.append(item); }
+    CodeItem *item(QString &ident);
+    QList<CodeItem*> items() { return _items; }
+
+    int foldType;
 
 private:
     QTextBlock _block, _blockEnd;
     bool _marked, _folded, _foldable;
     int _modified;
     CodeItem *_code;
-
+    QList<CodeItem*> _items;
 };
 
 

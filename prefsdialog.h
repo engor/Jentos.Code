@@ -31,13 +31,16 @@ public:
     int exec();
 
 public slots:
-
+    void onHighlightLineChanged(bool value);
+    void onHighlightWordChanged(bool value);
     void onFontChanged( const QFont &font );
     void onFontSizeChanged( int size );
     void onTabSizeChanged( int size );
     void onSmoothFontsChanged( bool state );
     void onColorChanged();
     void onBrowseForPath();
+    void onAnalyzerChanged();
+    void onCheckUpdatesChanged();
 
 private:
     Ui::PrefsDialog *_ui;

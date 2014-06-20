@@ -8,17 +8,39 @@ See LICENSE.TXT for licensing terms.
 
 #include "prefs.h"
 
+
 Prefs::Prefs(){
-    _settings.beginGroup( "userPrefs" );
+    _blockEmitPrefsChanged = false;
+
 }
 
 void Prefs::setValue( const QString &name,const QVariant &value ){
-    _settings.setValue( name,value );
-    emit prefsChanged( name );
+    settings()->beginGroup( "userPrefs" );
+    settings()->setValue( name,value );
+    settings()->endGroup();
+    if(!_blockEmitPrefsChanged) {
+        emit prefsChanged( name );
+    }
+}
+
+QSettings* Prefs::settings() {
+    static QSettings *s = 0;
+    if(!s)
+        s = new QSettings(QApplication::applicationDirPath()+"/settings.ini",QSettings::IniFormat);
+    return s;
 }
 
 Prefs *Prefs::prefs() {
     static Prefs *_prefs;
-    if( !_prefs ) _prefs=new Prefs;
+    if( !_prefs ) {
+        _prefs = new Prefs;
+    }
     return _prefs;
+}
+
+void Prefs::blockEmitPrefsChanged(bool value, bool emitNow) {
+    _blockEmitPrefsChanged = value;
+    if(emitNow) {
+        emit prefsChanged( "" );
+    }
 }

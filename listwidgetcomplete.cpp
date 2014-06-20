@@ -11,15 +11,15 @@ See LICENSE.TXT for licensing terms.
 ListWidgetComplete::ListWidgetComplete(QWidget *parent) :
     QListWidget(parent)
 {
-
+    _isForInheritance = false;
 }
 
 void ListWidgetComplete::keyPressEvent(QKeyEvent *event) {
     int key = event->key();
-    if( key == Qt::Key_Escape) {
+    if( key == Qt::Key_Escape ) {
         emit focusOut();
     }
-    else if( key == Qt::Key_Return) {
+    else if( key == Qt::Key_Return || key == Qt::Key_Tab ) {
         emit itemActivated( currentItem() );
         //emit activated(_codeItem);
     }

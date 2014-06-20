@@ -7,17 +7,26 @@
     <x>0</x>
     <y>0</y>
     <width>394</width>
-    <height>461</height>
+    <height>484</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>IDE Options</string>
+   <string>Options</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QGroupBox" name="groupBox_2">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="title">
-      <string>Code Editor Options</string>
+      <string>Editor</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
@@ -33,12 +42,30 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QFontComboBox" name="fontComboBox"/>
+         <widget class="QFontComboBox" name="fontComboBox">
+          <property name="fontFilters">
+           <set>QFontComboBox::MonospacedFonts</set>
+          </property>
+          <property name="currentFont">
+           <font>
+            <family>Courier</family>
+           </font>
+          </property>
+         </widget>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="pointSizeLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Font Size</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -67,9 +94,37 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QCheckBox" name="smoothFontsWidget">
+         <widget class="QCheckBox" name="chbSmoothFonts">
           <property name="layoutDirection">
            <enum>Qt::LeftToRight</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Highlight current line</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QCheckBox" name="chbHighlightLine">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Highlight word under cursor</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QCheckBox" name="chbHighlightWord">
+          <property name="text">
+           <string/>
           </property>
          </widget>
         </item>
@@ -79,9 +134,270 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Analyzer</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QCheckBox" name="checkBoxAutoformat">
+        <property name="toolTip">
+         <string>Autoformat current line when line position changed</string>
+        </property>
+        <property name="text">
+         <string>Autoformat</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBoxUseSpaces">
+        <property name="toolTip">
+         <string>Spaces count equals 'tab size' value</string>
+        </property>
+        <property name="text">
+         <string>Replace tabs with spaces</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBoxFillAucompInherit">
+        <property name="toolTip">
+         <string>Open list of all methods from base classes and interfaces, which isn't already overridden</string>
+        </property>
+        <property name="text">
+         <string>Inheritance list for 'Method '</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_4">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Monkey Path</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMinimumSize</enum>
+      </property>
+      <item>
+       <widget class="QLineEdit" name="monkeyPathWidget">
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="monkeyPathButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>25</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="checkBoxCheckUpdates">
+     <property name="statusTip">
+      <string>Check for Updates at startup</string>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="text">
+      <string>Check for Updates</string>
+     </property>
+     <property name="tristate">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>10</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_3">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Go to &quot;Main Menu -- Window -- Themes&quot; to change current theme.</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QFrame" name="frame">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>226</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="okayButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Okay</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="enabled">
       <bool>false</bool>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>0</height>
+      </size>
      </property>
      <property name="title">
       <string>Code Editor Colors</string>
@@ -189,155 +505,6 @@
      </layout>
     </widget>
    </item>
-   <item>
-    <widget class="QGroupBox" name="groupBox_4">
-     <property name="title">
-      <string>Tool Paths</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="0">
-       <layout class="QFormLayout" name="formLayout_4">
-        <item row="0" column="0">
-         <widget class="QLabel" name="monkeyLabel">
-          <property name="text">
-           <string>Monkey</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="blitzMaxLabel">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>BlitzMax</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QWidget" name="widget" native="true">
-          <layout class="QHBoxLayout" name="horizontalLayout">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QLineEdit" name="monkeyPathWidget">
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="monkeyPathButton">
-             <property name="minimumSize">
-              <size>
-               <width>25</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="baseSize">
-              <size>
-               <width>25</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QWidget" name="widget_2" native="true">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QLineEdit" name="blitzmaxPathWidget">
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="blitzmaxPathButton">
-             <property name="text">
-              <string>...</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="okayButton">
-       <property name="text">
-        <string>Okay</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -355,9 +522,12 @@
   <tabstop>fontComboBox</tabstop>
   <tabstop>fontSizeWidget</tabstop>
   <tabstop>tabSizeWidget</tabstop>
-  <tabstop>smoothFontsWidget</tabstop>
+  <tabstop>chbSmoothFonts</tabstop>
+  <tabstop>checkBoxAutoformat</tabstop>
+  <tabstop>checkBoxUseSpaces</tabstop>
+  <tabstop>checkBoxFillAucompInherit</tabstop>
   <tabstop>monkeyPathWidget</tabstop>
-  <tabstop>blitzmaxPathWidget</tabstop>
+  <tabstop>monkeyPathButton</tabstop>
  </tabstops>
  <resources/>
  <connections>
@@ -368,8 +538,8 @@
    <slot>onColorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>340</x>
-     <y>320</y>
+     <x>373</x>
+     <y>268</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -384,8 +554,8 @@
    <slot>onColorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>340</x>
-     <y>372</y>
+     <x>373</x>
+     <y>284</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -400,8 +570,8 @@
    <slot>onColorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>340</x>
-     <y>242</y>
+     <x>373</x>
+     <y>244</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -416,8 +586,8 @@
    <slot>onColorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>340</x>
-     <y>294</y>
+     <x>373</x>
+     <y>260</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -432,8 +602,8 @@
    <slot>onColorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>340</x>
-     <y>216</y>
+     <x>373</x>
+     <y>236</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -448,8 +618,8 @@
    <slot>onColorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>340</x>
-     <y>346</y>
+     <x>373</x>
+     <y>276</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -464,8 +634,8 @@
    <slot>onColorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>340</x>
-     <y>398</y>
+     <x>373</x>
+     <y>293</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -496,8 +666,8 @@
    <slot>onFontSizeChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>164</x>
-     <y>68</y>
+     <x>254</x>
+     <y>59</y>
     </hint>
     <hint type="destinationlabel">
      <x>138</x>
@@ -512,8 +682,8 @@
    <slot>onTabSizeChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>244</x>
-     <y>123</y>
+     <x>334</x>
+     <y>75</y>
     </hint>
     <hint type="destinationlabel">
      <x>4</x>
@@ -528,8 +698,8 @@
    <slot>onColorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>282</x>
-     <y>268</y>
+     <x>364</x>
+     <y>252</y>
     </hint>
     <hint type="destinationlabel">
      <x>143</x>
@@ -538,14 +708,14 @@
    </hints>
   </connection>
   <connection>
-   <sender>smoothFontsWidget</sender>
+   <sender>chbSmoothFonts</sender>
    <signal>toggled(bool)</signal>
    <receiver>PrefsDialog</receiver>
    <slot>onSmoothFontsChanged(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>226</x>
-     <y>139</y>
+     <x>316</x>
+     <y>92</y>
     </hint>
     <hint type="destinationlabel">
      <x>176</x>
@@ -560,8 +730,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>318</x>
-     <y>546</y>
+     <x>383</x>
+     <y>450</y>
     </hint>
     <hint type="destinationlabel">
      <x>182</x>
@@ -576,8 +746,8 @@
    <slot>onBrowseForPath()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>102</x>
-     <y>360</y>
+     <x>373</x>
+     <y>357</y>
     </hint>
     <hint type="destinationlabel">
      <x>196</x>
@@ -586,18 +756,98 @@
    </hints>
   </connection>
   <connection>
-   <sender>blitzmaxPathButton</sender>
+   <sender>checkBoxAutoformat</sender>
    <signal>clicked()</signal>
    <receiver>PrefsDialog</receiver>
-   <slot>onBrowseForPath()</slot>
+   <slot>onAnalyzerChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>336</x>
-     <y>386</y>
+     <x>196</x>
+     <y>141</y>
     </hint>
     <hint type="destinationlabel">
      <x>196</x>
-     <y>227</y>
+     <y>230</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxUseSpaces</sender>
+   <signal>clicked()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onAnalyzerChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>196</x>
+     <y>195</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>196</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxFillAucompInherit</sender>
+   <signal>clicked()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onAnalyzerChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>196</x>
+     <y>218</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>196</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxCheckUpdates</sender>
+   <signal>clicked()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onCheckUpdatesChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>196</x>
+     <y>299</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>196</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>chbHighlightLine</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onHighlightLineChanged(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>265</x>
+     <y>136</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>196</x>
+     <y>224</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>chbHighlightWord</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onHighlightWordChanged(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>265</x>
+     <y>155</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>196</x>
+     <y>224</y>
     </hint>
    </hints>
   </connection>
@@ -609,5 +859,9 @@
   <slot>onBrowseForPath()</slot>
   <slot>onTabSizeChanged(int)</slot>
   <slot>onSmoothFontsChanged(bool)</slot>
+  <slot>onAnalyzerChanged()</slot>
+  <slot>onCheckUpdatesChanged()</slot>
+  <slot>onHighlightLineChanged(bool)</slot>
+  <slot>onHighlightWordChanged(bool)</slot>
  </slots>
 </ui>
