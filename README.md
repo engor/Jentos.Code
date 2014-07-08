@@ -2,8 +2,9 @@ Jentos_IDE
 ==========
 
 ## About
-Jentos IDE is a powerfull and free code editor for Monkey programming language.
-Based on original Ted v1.17.
+Jentos IDE is a powerfull open source IDE for Monkey programming language. [[Official Website](http://www.monkey-x.com) - [Github](https://github.com/blitz-research/monkey)]
+
+It is based on TED v1.17, the official IDE for Monkey. [[Webpage](http://www.monkey-x.com/Monkey/ted.php)]
 
 ## Download Links:
 ### Windows (version 1.1)
@@ -35,7 +36,7 @@ Download Sources: [[Google Drive](https://drive.google.com/uc?id=0Bx2zoIlA6GzKSH
 * Templates are stored in templates.txt, you can add your own templates.
 
 ### Smart navigation
-Im* proved CodeTree with icons and class/function members.
+* Improved CodeTree with icons and class/function members.
 * Additional list 'Source', which contains members of selected class or function.
 * Shows variable's info when hold Ctrl and mouse over.
 * Go to variable's declaration by Ctrl+Left Mouse Button.
@@ -53,7 +54,7 @@ Im* proved CodeTree with icons and class/function members.
 * Shows variable's info when hold Ctrl and mouse over.
 
 ### Themes
-And* roid Studio, dark.
+* Android Studio, dark.
 * Qt Creator, light.
 * Netbeans ,light, is default.
 * Also monkey's docs have dark style when current theme is Android Studio (need to restart app).
