@@ -11,8 +11,8 @@ It is based on TED v1.17, the official IDE for Monkey. [[Webpage](http://www.mon
 Download Sources: [[Google Drive](https://drive.google.com/uc?id=0Bx2zoIlA6GzKQmM4cTcteGxTQzg)] - [[Yandex Disk](https://yadi.sk/d/92ucsHehUAw3Q)]
 ### Mac OS X (version 1.1)
 Download Sources: [[Google Drive](https://drive.google.com/uc?id=0Bx2zoIlA6GzKV0RwblRnVURWVDQ)] - [[Yandex Disk](https://yadi.sk/d/PyOHi9LGUGr7P)]
-### Linux (version 1.0.2)
-Download Sources: [[Google Drive](https://drive.google.com/uc?id=0Bx2zoIlA6GzKSHVkaGdhcWJBRjg)] - [[Yandex Disk](http://yadi.sk/d/Z5G_G4YbM5uc5)]
+### Linux (version 1.1)
+Download Sources: [[Google Drive](https://drive.google.com/uc?id=0Bx2zoIlA6GzKR1JKc0Jpbmpfb0k)] - [[Yandex Disk](https://yadi.sk/d/UokJw-WMWNm5g)]
 
 ## Features
 ### Code Analyzer
