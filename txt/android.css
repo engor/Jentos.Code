@@ -146,6 +146,9 @@ QPushButton:hover {
 QPushButton:pressed {
 	margin: 1px 0px 0px 1px;
 }
+QPushButton:checked {
+	background-color: #3c3f41;
+}
 
 /*****************************************/
 QToolButton {
@@ -351,7 +354,7 @@ QTabWidget  {
 }
 QTabWidget::pane {
 	/*padding-top: 2px;*/
-	background: #313131;
+	background: #393939;
 	border: none;
 	margin: 0;
 	padding: 0;

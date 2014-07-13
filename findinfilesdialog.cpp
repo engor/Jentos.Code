@@ -23,42 +23,42 @@ FindInFilesDialog::~FindInFilesDialog(){
 
 void FindInFilesDialog::readSettings(){
 
-    QSettings settings;
+    QSettings *set = Prefs::settings();
 
-    if( settings.value( "settingsVersion" ).toInt()<2 ){
+    if( set->value( "settingsVersion" ).toInt()<2 ){
         _ui->typesLineEdit->setText( "*.monkey" );
         _ui->dirLineEdit->setText( Prefs::prefs()->getString( "monkeyPath" ) );
         return;
     }
 
-    settings.beginGroup( "findInFilesDialog" );
+    set->beginGroup( "findInFilesDialog" );
 
-    _ui->findLineEdit->setText( settings.value( "findText" ).toString() );
-    _ui->typesLineEdit->setText( settings.value( "fileTypes" ).toString() );
-    _ui->dirLineEdit->setText( fixPath( settings.value( "directory" ).toString() ) );
-    _ui->casedCheckBox->setChecked( settings.value( "caseSensitive" ).toBool() );
-    _ui->recursiveCheckBox->setChecked( settings.value( "recursive" ).toBool() );
+    _ui->findLineEdit->setText( set->value( "findText" ).toString() );
+    _ui->typesLineEdit->setText( set->value( "fileTypes" ).toString() );
+    _ui->dirLineEdit->setText( fixPath( set->value( "directory" ).toString() ) );
+    _ui->casedCheckBox->setChecked( set->value( "caseSensitive" ).toBool() );
+    _ui->recursiveCheckBox->setChecked( set->value( "recursive" ).toBool() );
 
-    restoreGeometry( settings.value( "geometry" ).toByteArray() );
+    restoreGeometry( set->value( "geometry" ).toByteArray() );
 
-    settings.endGroup();
+    set->endGroup();
 }
 
 void FindInFilesDialog::writeSettings(){
 
-    QSettings settings;
+    QSettings *set = Prefs::settings();
 
-    settings.beginGroup( "findInFilesDialog" );
+    set->beginGroup( "findInFilesDialog" );
 
-    settings.setValue( "findText",_ui->findLineEdit->text() );
-    settings.setValue( "fileTypes",_ui->typesLineEdit->text() );
-    settings.setValue( "directory",_ui->dirLineEdit->text() );
-    settings.setValue( "caseSensitive",_ui->casedCheckBox->isChecked() );
-    settings.setValue( "recursive",_ui->recursiveCheckBox->isChecked() );
+    set->setValue( "findText",_ui->findLineEdit->text() );
+    set->setValue( "fileTypes",_ui->typesLineEdit->text() );
+    set->setValue( "directory",_ui->dirLineEdit->text() );
+    set->setValue( "caseSensitive",_ui->casedCheckBox->isChecked() );
+    set->setValue( "recursive",_ui->recursiveCheckBox->isChecked() );
 
-    if( _used ) settings.setValue( "geometry",saveGeometry() );
+    if( _used ) set->setValue( "geometry",saveGeometry() );
 
-    settings.endGroup();
+    set->endGroup();
 }
 
 void FindInFilesDialog::show(){

@@ -32,19 +32,23 @@ class TabWidgetDrop;
 
 class MainWindow : public QMainWindow{
     Q_OBJECT
+
 public:
 
     MainWindow( QWidget *parent=0 );
     ~MainWindow();
 
     void cdebug( const QString &str );
-    static bool isValidMonkeyPath( const QString &path );
+    static bool isValidMonkeyPath(const QString &path , QString &trans);
+    void updateTheme();
 
 private:
 
+    void updateCodeViews(QTreeView *tree, QListView* list);
+
     void parseAppArgs();
     void initKeywords();
-    void loadStyles(bool load);
+
 
     bool isBuildable( CodeEditor *editor );
     QString widgetPath( QWidget *widget );
@@ -55,9 +59,6 @@ private:
     bool saveFile( QWidget *widget,const QString &path );
     bool closeFile( QWidget *widget,bool remove=true );
 
-
-    bool isValidBlitzmaxPath( const QString &path );
-    QString defaultMonkeyPath();
     void enumTargets();
 
     void readSettings();
@@ -67,7 +68,7 @@ private:
     void updateTabLabel( QWidget *widget );
     void updateActions();
 
-    void print( const QString &str );
+    void print(const QString &str , QString kind);
     void runCommand( QString cmd,QWidget *fileWidget );
     void build( QString mode );
 
@@ -81,6 +82,17 @@ protected:
 
 
 public slots:
+
+    void onStyleChanged(bool b);
+    void onCodeTreeViewClicked( const QModelIndex &index );
+    void onSourceListViewClicked( const QModelIndex &index );
+
+    void onLowerUpperCase();
+    void onNetworkFinished(QNetworkReply *reply);
+    void onCheckForUpdates();
+    void onCheckForUpdatesSilent();
+    void onOpenUrl();
+    void onKeyEscapePressed();
 
     //File menu
     void onFileNew();
@@ -118,6 +130,7 @@ public slots:
     void onViewToolBar();
     void onViewWindow();
     //
+    void onCommentUncommentBlock();
     void onToggleBookmark();
     void onPreviousBookmark();
     void onNextBookmark();
@@ -166,23 +179,30 @@ public slots:
     void onTabsCloseOtherTabs();
     void onTabsCloseAllTabs();
 
-    void onDarkTheme();
-    void onLightTheme();
+    void onThemeAndroidStudio();
+    void onThemeNetBeans();
+    void onThemeQtCreator();
+    void onFindUsages();
+
+    void onLinkClicked( const QUrl &url );
 
 private slots:
 
     void onShowHelp( const QString &text );
 
-    void onLinkClicked( const QUrl &url );
-
+    void onCloseUsagesTab(int index);
+    void onUsagesJumpToLine(QTreeWidgetItem *item, int column);
     void onCloseMainTab( int index );
     void onMainTabChanged( int index );
 
     void onDockVisibilityChanged( bool visible );
 
+    void onEditorMenu(const QPoint &pos);
     void onTabsMenu( const QPoint &pos );
     void onProjectMenu( const QPoint &pos );
     void onFileClicked( const QModelIndex &index );
+    void onSourceMenu( const QPoint &pos );
+    void onUsagesMenu( const QPoint &pos );
 
     void onTextChanged();
     void onCursorPositionChanged();
@@ -197,10 +217,17 @@ private slots:
     void onStatusBarChanged(const QString &text);
     void onAutoformatAll();
 
+
+    void onUsagesRename();
+    void onUsagesSelectAll();
+    void onUsagesUnselectAll();
+
+
 private:
 
 
-
+    QNetworkAccessManager *_networkManager;
+    bool _showMsgbox;
     Ui::MainWindow *_ui;
 
     QString _defaultDir;
@@ -209,7 +236,7 @@ private:
     QString _buildBmxCmd;
     QString _runBmxCmd;
 
-    QString _monkeyPath;
+    static QString _monkeyPath, _transPath;
     QString _buildMonkeyCmd;
     QString _runMonkeyCmd;
 
@@ -227,13 +254,16 @@ private:
     QWebView *_helpWidget;
 
     PrefsDialog *_prefsDialog;
-    FindDialog *_findDialog;
+    //FindDialog *_findDialog;
     FindInFilesDialog *_findInFilesDialog;
 
     QMenu *_tabsPopupMenu;
     QMenu *_projectPopupMenu;
     QMenu *_dirPopupMenu;
     QMenu *_filePopupMenu;
+    QMenu *_sourcePopupMenu;
+    QMenu *_editorPopupMenu;
+    QMenu *_usagesPopupMenu;
 
     QLabel *_statusWidget;
 

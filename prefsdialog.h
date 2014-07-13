@@ -16,13 +16,14 @@ class PrefsDialog;
 }
 
 class Prefs;
+class MainWindow;
 
 class PrefsDialog : public QDialog
 {
     Q_OBJECT
     
 public:
-    explicit PrefsDialog( QWidget *parent=0 );
+    explicit PrefsDialog( MainWindow *mainwnd, QWidget *parent=0 );
     ~PrefsDialog();
 
     void readSettings();
@@ -31,15 +32,20 @@ public:
     int exec();
 
 public slots:
-
+    void onHighlightLineChanged(bool value);
+    void onHighlightWordChanged(bool value);
     void onFontChanged( const QFont &font );
     void onFontSizeChanged( int size );
     void onTabSizeChanged( int size );
     void onSmoothFontsChanged( bool state );
     void onColorChanged();
     void onBrowseForPath();
+    void onAnalyzerChanged();
+    void onCheckUpdatesChanged();
+    void onThemeChanged(int index);
 
 private:
+    MainWindow *_mainwnd;
     Ui::PrefsDialog *_ui;
     Prefs *_prefs;
     bool _used;

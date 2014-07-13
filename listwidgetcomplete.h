@@ -19,6 +19,8 @@ class ListWidgetComplete : public QListWidget {
 public:
     ListWidgetComplete(QWidget *parent = 0);
     void selectNear(int dir);
+    void setIsForInheritance(bool value) { _isForInheritance = value; }
+    bool isForInheritance() { return _isForInheritance; }
 
 signals:
     void activated(CodeItem *item);
@@ -31,7 +33,7 @@ protected:
     void show();
 
 private:
-
+    bool _isForInheritance;
 };
 
 

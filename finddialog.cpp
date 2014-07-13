@@ -8,6 +8,7 @@ See LICENSE.TXT for licensing terms.
 
 #include "finddialog.h"
 #include "ui_finddialog.h"
+#include "prefs.h"
 
 FindDialog::FindDialog( QWidget *parent ):QDialog( parent ),_ui( new Ui::FindDialog ),_used( false ){
 
@@ -21,35 +22,35 @@ FindDialog::~FindDialog(){
 
 void FindDialog::readSettings(){
 
-    QSettings settings;
+    QSettings *set = Prefs::settings();
 
-    if( settings.value( "settingsVersion" ).toInt()<2 ) return;
+    if( set->value( "settingsVersion" ).toInt()<2 ) return;
 
-    settings.beginGroup( "findDialog" );
+    set->beginGroup( "findDialog" );
 
-    _ui->findText->setText( settings.value( "findText" ).toString() );
-    _ui->replaceText->setText( settings.value( "replaceText" ).toString() );
-    _ui->caseSensitive->setChecked( settings.value( "caseSensitive" ).toBool() );
+    _ui->findText->setText( set->value( "findText" ).toString() );
+    _ui->replaceText->setText( set->value( "replaceText" ).toString() );
+    _ui->caseSensitive->setChecked( set->value( "caseSensitive" ).toBool() );
 
-    restoreGeometry( settings.value( "geometry" ).toByteArray() );
+    restoreGeometry( set->value( "geometry" ).toByteArray() );
 
-    settings.endGroup();
+    set->endGroup();
 }
 
 void FindDialog::writeSettings(){
     if( !_used ) return;
 
-    QSettings settings;
+    QSettings *set = Prefs::settings();
 
-    settings.beginGroup( "findDialog" );
+    set->beginGroup( "findDialog" );
 
-    settings.setValue( "findText",_ui->findText->text() );
-    settings.setValue( "replaceText",_ui->replaceText->text() );
-    settings.setValue( "caseSensitive",_ui->caseSensitive->isChecked() );
+    set->setValue( "findText",_ui->findText->text() );
+    set->setValue( "replaceText",_ui->replaceText->text() );
+    set->setValue( "caseSensitive",_ui->caseSensitive->isChecked() );
 
-    settings.setValue( "geometry",saveGeometry() );
+    set->setValue( "geometry",saveGeometry() );
 
-    settings.endGroup();
+    set->endGroup();
 }
 
 int FindDialog::exec(){

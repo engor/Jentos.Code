@@ -1,23 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>icons/Back.png</file>
-        <file>icons/Build.png</file>
-        <file>icons/Build-Run.png</file>
-        <file>icons/Close.png</file>
-        <file>icons/Copy.png</file>
-        <file>icons/Cut.png</file>
-        <file>icons/Find.png</file>
-        <file>icons/Forward.png</file>
-        <file>icons/Go.png</file>
-        <file>icons/Home.png</file>
-        <file>icons/New.png</file>
-        <file>icons/Open.png</file>
-        <file>icons/Paste.png</file>
-        <file>icons/Save.png</file>
-        <file>icons/Step.png</file>
-        <file>icons/Step-In.png</file>
-        <file>icons/Step-Out.png</file>
-        <file>icons/Stop.png</file>
         <file>ui/combo.png</file>
         <file>ui/dock_close.png</file>
         <file>ui/dock_undock.png</file>
@@ -49,8 +31,62 @@
         <file>ui/toolbar_handle.png</file>
         <file>ui/toolbar_separator.png</file>
         <file>txt/home.html</file>
-        <file>txt/styles.txt</file>
         <file>icons/Options.png</file>
         <file>txt/keywords.txt</file>
+        <file>icons/light/Back.png</file>
+        <file>icons/light/Build.png</file>
+        <file>icons/light/Build-Run.png</file>
+        <file>icons/light/Clear.png</file>
+        <file>icons/light/Close.png</file>
+        <file>icons/light/Copy.png</file>
+        <file>icons/light/Cut.png</file>
+        <file>icons/light/Find.png</file>
+        <file>icons/light/Forward.png</file>
+        <file>icons/light/Go.png</file>
+        <file>icons/light/Home.png</file>
+        <file>icons/light/New.png</file>
+        <file>icons/light/Open.png</file>
+        <file>icons/light/Paste.png</file>
+        <file>icons/light/Save.png</file>
+        <file>icons/light/Sort.png</file>
+        <file>icons/light/Step.png</file>
+        <file>icons/light/Step-In.png</file>
+        <file>icons/light/Step-Out.png</file>
+        <file>icons/light/Stop.png</file>
+        <file>icons/light/Bookmark.png</file>
+        <file>icons/light/CloseSearch.png</file>
+        <file>icons/light/Fold.png</file>
+        <file>icons/light/Project.png</file>
+        <file>icons/light/ShowVars.png</file>
+        <file>icons/light/Unfold.png</file>
+        <file>icons/dark/Back.png</file>
+        <file>icons/dark/Bookmark.png</file>
+        <file>icons/dark/Build.png</file>
+        <file>icons/dark/Build-Run.png</file>
+        <file>icons/dark/Clear.png</file>
+        <file>icons/dark/Close.png</file>
+        <file>icons/dark/CloseSearch.png</file>
+        <file>icons/dark/Copy.png</file>
+        <file>icons/dark/Cut.png</file>
+        <file>icons/dark/Find.png</file>
+        <file>icons/dark/Fold.png</file>
+        <file>icons/dark/Forward.png</file>
+        <file>icons/dark/Go.png</file>
+        <file>icons/dark/Home.png</file>
+        <file>icons/dark/New.png</file>
+        <file>icons/dark/Open.png</file>
+        <file>icons/dark/Options.png</file>
+        <file>icons/dark/Paste.png</file>
+        <file>icons/dark/Project.png</file>
+        <file>icons/dark/Save.png</file>
+        <file>icons/dark/ShowVars.png</file>
+        <file>icons/dark/Sort.png</file>
+        <file>icons/dark/Step.png</file>
+        <file>icons/dark/Step-In.png</file>
+        <file>icons/dark/Step-Out.png</file>
+        <file>icons/dark/Stop.png</file>
+        <file>icons/dark/Unfold.png</file>
+        <file>txt/android.css</file>
+        <file>icons/light/Options.png</file>
     </qresource>
 </RCC>

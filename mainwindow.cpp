@@ -20,6 +20,7 @@ See LICENSE.TXT for licensing terms.
 #include "quickhelp.h"
 #include "codeanalyzer.h"
 #include "tabwidgetdrop.h"
+#include "theme.h"
 
 #include <QHostInfo>
 
@@ -40,9 +41,13 @@ See LICENSE.TXT for licensing terms.
 #define _STRINGIZE( X ) _QUOTE(X)
 
 #define TED_VERSION "1.17"
-#define APP_VERSION "1.0.2"
-//#define APP_NAME "Ted 2.0 IDE"
+#define APP_VERSION "1.1"
 #define APP_NAME "Jentos IDE"
+
+
+QString MainWindow::_monkeyPath;
+QString MainWindow::_transPath;
+
 
 static MainWindow *mainWindow;
 
@@ -63,25 +68,24 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
     QCoreApplication::instance()->setAttribute( Qt::AA_DontShowIconsInMenus );
 #endif
 
-    QCoreApplication::setOrganizationName( "settings" );
-
-    QString cfgPath = QCoreApplication::applicationDirPath();
-
-    QSettings::setDefaultFormat( QSettings::IniFormat );
-    QSettings::setPath( QSettings::IniFormat,QSettings::UserScope,cfgPath );
-
     //Enables pdf viewing!
     QWebSettings::globalSettings()->setAttribute( QWebSettings::PluginsEnabled,true );
 
-    QCoreApplication::setOrganizationName( "Blitz Research Ltd & FingerDev Studio" );
-    QCoreApplication::setOrganizationDomain( "blitzresearchltd.com" );
+    QSettings::setDefaultFormat( QSettings::IniFormat );
+    QCoreApplication::setOrganizationName( "FingerDev Studio" );
+    QCoreApplication::setOrganizationDomain( "fingerdev.com" );
     QCoreApplication::setApplicationName( APP_NAME );
 
     _ui->setupUi( this );
 
-    _codeEditor=0;
-    _lockedEditor=0;
-    _helpWidget=0;
+    CodeAnalyzer::init();
+    Theme::init();
+
+    _showMsgbox = true;
+    _networkManager = 0;
+    _codeEditor = 0;
+    _lockedEditor = 0;
+    _helpWidget = 0;
 
     //docking options
     setCorner( Qt::TopLeftCorner,Qt::LeftDockWidgetArea );
@@ -112,10 +116,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
     w->setFixedWidth(3);
     _ui->helpToolBar->addWidget(w);
     _indexWidget = new QComboBox;
-    _indexWidget->setFixedWidth( 150 );
+    _indexWidget->setFixedWidth( 180 );
     _indexWidget->setEditable( true );
     _indexWidget->setInsertPolicy( QComboBox::NoInsert );
     _ui->helpToolBar->addWidget( _indexWidget );
+
+    //
+    /*w = new QWidget;
+    w->setFixedWidth(3);
+    _ui->codeToolBar->addWidget(w);
+    QProgressBar *_progressBar = new QProgressBar(_ui->codeToolBar);
+    _progressBar->setFixedWidth(80);
+    _progressBar->setMaximum(100);
+    _progressBar->setValue(40);
+    _progressBar->setTextVisible(false);
+    _ui->codeToolBar->addWidget(_progressBar);*/
 
     //init central tab widget
     _mainTabWidget = new TabWidgetDrop;
@@ -123,9 +138,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
     _mainTabWidget->setTabsClosable( true );
     _mainTabWidget->setAcceptDrops(true);
 
-    QGridLayout *lay = new QGridLayout;
+    QGridLayout *lay = new QGridLayout(_ui->widget);
     lay->setSpacing(0);
     lay->setMargin(1);
+    //_ui->widget->layout()
     _ui->widget->setLayout(lay);
     _ui->widget->layout()->addWidget(_mainTabWidget);
 
@@ -133,6 +149,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
     connect( _mainTabWidget,SIGNAL(currentChanged(int)),SLOT(onMainTabChanged(int)) );
     connect( _mainTabWidget,SIGNAL(tabCloseRequested(int)),SLOT(onCloseMainTab(int)) );
     connect( _mainTabWidget,SIGNAL(dropFiles(QStringList)),SLOT(onDropFiles(QStringList)) );
+    connect( _mainTabWidget,SIGNAL(customContextMenuRequested(const QPoint&)),SLOT(onTabsMenu(const QPoint&)) );
 
     //init console widgets
     _consoleProc=0;
@@ -153,9 +170,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
 
     _debugTreeModel=0;
 
-    connect( _ui->browserDockWidget,SIGNAL(visibilityChanged(bool)),SLOT(onDockVisibilityChanged(bool)) );
+    connect( _ui->projectDockWidget,SIGNAL(visibilityChanged(bool)),SLOT(onDockVisibilityChanged(bool)) );
     connect( _ui->sourceDockWidget,SIGNAL(visibilityChanged(bool)),SLOT(onDockVisibilityChanged(bool)) );
-    connect( _ui->consoleDockWidget,SIGNAL(visibilityChanged(bool)),SLOT(onDockVisibilityChanged(bool)) );
+    connect( _ui->codeTreeDockWidget,SIGNAL(visibilityChanged(bool)),SLOT(onDockVisibilityChanged(bool)) );
+    connect( _ui->debugDockWidget,SIGNAL(visibilityChanged(bool)),SLOT(onDockVisibilityChanged(bool)) );
+    connect( _ui->outputDockWidget,SIGNAL(visibilityChanged(bool)),SLOT(onDockVisibilityChanged(bool)) );
+    connect( _ui->usagesDockWidget,SIGNAL(visibilityChanged(bool)),SLOT(onDockVisibilityChanged(bool)) );
+    connect( _ui->docsDockWidget,SIGNAL(visibilityChanged(bool)),SLOT(onDockVisibilityChanged(bool)) );
 
 #ifdef Q_OS_WIN
     _ui->actionFileNext->setShortcut( QKeySequence( "Ctrl+Tab" ) );
@@ -171,8 +192,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
     _tabsPopupMenu->addAction( _ui->actionClose_all_Tabs );
     _tabsPopupMenu->addSeparator();
     _tabsPopupMenu->addAction( _ui->actionLock_Build_File );
-    _tabsPopupMenu->addAction( _ui->actionUnlock_Build_File );
-    _tabsPopupMenu->addSeparator();
+    //_tabsPopupMenu->addAction( _ui->actionUnlock_Build_File );
+    //_tabsPopupMenu->addSeparator();
 
     _projectPopupMenu=new QMenu;
     _projectPopupMenu->addAction( _ui->actionNewFile );
@@ -201,17 +222,36 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
     _dirPopupMenu->addAction( _ui->actionRenameFile );
     _dirPopupMenu->addAction( _ui->actionDeleteFile );
 
+    _sourcePopupMenu = new QMenu;
+    _sourcePopupMenu->addAction( _ui->actionView_Class_Summary );
+
+    _editorPopupMenu = new QMenu;
+    _editorPopupMenu->addAction( _ui->actionFind_Usages );
+    _editorPopupMenu->addSeparator();
+    QMenu *bm = new QMenu("Bookmarks",_editorPopupMenu);
+    bm->addAction( _ui->actionToggleBookmark );
+    bm->addAction( _ui->actionPreviousBookmark );
+    bm->addAction( _ui->actionNextBookmark );
+    _editorPopupMenu->addMenu(bm);
+    _editorPopupMenu->addSeparator();
+    _editorPopupMenu->addAction( _ui->actionEditCut );
+    _editorPopupMenu->addAction( _ui->actionEditCopy );
+    _editorPopupMenu->addAction( _ui->actionEditPaste );
+
+    _usagesPopupMenu = new QMenu;
+    _usagesPopupMenu->addAction(_ui->actionUsagesSelectAll);
+    _usagesPopupMenu->addAction(_ui->actionUsagesUnselectAll);
+
     connect( _ui->actionFileQuit,SIGNAL(triggered()),SLOT(onFileQuit()) );
 
     readSettings();
 
-    _prefsDialog=new PrefsDialog( this );
+    _prefsDialog = new PrefsDialog( this, this );
     _prefsDialog->readSettings();
 
-
-    _findDialog=new FindDialog( this );
-    _findDialog->readSettings();
-    connect( _findDialog,SIGNAL(findReplace(int)),SLOT(onFindReplace(int)) );
+    //_findDialog=new FindDialog( this );
+    //_findDialog->readSettings();
+    //connect( _findDialog,SIGNAL(findReplace(int)),SLOT(onFindReplace(int)) );
 
     _findInFilesDialog=new FindInFilesDialog( 0 );
     _findInFilesDialog->readSettings();
@@ -227,6 +267,42 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
 
     _ui->frameSearch->setVisible(false);
 
+    connect( Prefs::prefs(), SIGNAL(prefsChanged(const QString&)), CodeAnalyzer::instance(), SLOT(onPrefsChanged(const QString&)) );
+
+    _ui->toolButtonShowVariables->setChecked(CodeAnalyzer::isShowVariables());
+    _ui->toolButtonShowInherited->setChecked(CodeAnalyzer::isShowInherited());
+    _ui->toolButtonSortByName->setChecked(CodeAnalyzer::isSortByName());
+    onChangeAnalyzerProperties(false);
+
+    updateCodeViews(_ui->codeTreeView, _ui->sourceListView);
+
+    //_ui->sourceListView->
+    _ui->sourceListView->setContextMenuPolicy( Qt::CustomContextMenu );
+    connect( _ui->sourceListView,SIGNAL(customContextMenuRequested(const QPoint&)),SLOT(onSourceMenu(const QPoint&)) );
+
+    _ui->usagesTabWidget->setContextMenuPolicy( Qt::CustomContextMenu );
+    connect( _ui->usagesTabWidget,SIGNAL(customContextMenuRequested(const QPoint&)),SLOT(onUsagesMenu(const QPoint&)) );
+    connect( _ui->usagesTabWidget,SIGNAL(tabCloseRequested(int)),SLOT(onCloseUsagesTab(int)) );
+    _ui->frameUsagesRename->hide();
+
+    //_ui->menuStyles->hide();
+    /*Prefs *p = Prefs::prefs();
+    QString style = p->getString("style");
+    QAction *a = new QAction("Default", _ui->menuStyles);
+    _ui->menuStyles->addAction(a);
+    a->setCheckable(true);
+    a->setChecked( (style == "Default") );
+    a->setObjectName("Default");
+    connect(a,SIGNAL(toggled(bool)),SLOT(onStyleChanged(bool)));
+    foreach (QString s, QStyleFactory::keys()) {
+        a = new QAction(s, _ui->menuStyles);
+        _ui->menuStyles->addAction(a);
+        a->setCheckable(true);
+        a->setChecked( (style == s) );
+        a->setObjectName(s);
+        connect(a,SIGNAL(toggled(bool)),SLOT(onStyleChanged(bool)));
+    }
+    qApp->setStyle(QStyleFactory::create(style));*/
 }
 
 MainWindow::~MainWindow(){
@@ -236,8 +312,23 @@ MainWindow::~MainWindow(){
     delete _projectPopupMenu;
     delete _filePopupMenu;
     delete _dirPopupMenu;
+    delete _sourcePopupMenu;
+    delete _editorPopupMenu;
+    delete _usagesPopupMenu;
 
     CodeAnalyzer::finalize();
+}
+
+void MainWindow::onStyleChanged(bool b) {
+    /*qDebug()<<"style changed";
+    QList<QAction*> list = _ui->menuStyles->actions();
+    QString style = sender()->objectName();
+    Prefs *p = Prefs::prefs();
+    p->setValue("style", style);
+    foreach (QAction *a, list) {
+        a->setChecked( a->text() == style );
+    }
+    qApp->setStyle(QStyleFactory::create(style));*/
 }
 
 void MainWindow::showEvent(QShowEvent * event) {
@@ -248,26 +339,32 @@ void MainWindow::showEvent(QShowEvent * event) {
     splash = new QSplashScreen(pixmap);
     splash->show();
 
-    bool isValid = isValidMonkeyPath(_monkeyPath);
+    QString tr;
+    bool isValid = isValidMonkeyPath(_monkeyPath,tr);
 
     if( isValid ) {
         initKeywords();
     }
 
-    QSettings settings;
-    int n=settings.beginReadArray( "openDocuments" );
-    for( int i=0;i<n;++i ){
-        settings.setArrayIndex( i );
-        QString path=fixPath( settings.value( "path" ).toString() );
-        if( isUrl( path ) ){
-            openFile( path,false );
-        }else{
-            if( QFile::exists( path ) ) openFile( path,false );
+    QSettings *set = Prefs::settings();
+    int n = set->beginReadArray( "openDocuments" );
+    QStringList list;
+    for( int i=0;i<n;++i ) {
+        set->setArrayIndex( i );
+        QString path = fixPath( set->value( "path" ).toString() );
+        list.append(path);
+    }
+    set->endArray();
+
+    foreach (QString s, list) {
+        if( isUrl(s) ){
+            openFile( s,false );
+        }
+        else if(QFile::exists(s)) {
+                CodeAnalyzer::flushFileModified(s);
+                openFile( s,false );
         }
     }
-    settings.endArray();
-
-    loadStyles(true);
 
     int dt = t.msec()-(msec+2000);
     if(dt > 0)
@@ -278,24 +375,91 @@ void MainWindow::showEvent(QShowEvent * event) {
         QMessageBox::warning( this, APP_NAME, "Invalid Monkey path!\n\nPlease select correct path from the 'File -- Options' dialog." );
         onFilePrefs();
     }
+
+    Prefs *p = Prefs::prefs();
+    if(p->getBool("updates")) {
+        QTimer::singleShot(5000,this,SLOT(onCheckForUpdatesSilent()));
+    }
 }
 
 //***** private methods *****
-void MainWindow::loadStyles(bool load) {
+void MainWindow::updateTheme() {
+
     QString css = "";
-    if(load) {
-        QFile f(":/txt/styles.txt");
+    if(Theme::isDark()) {
+        QFile f(":/txt/android.css");
         if(f.open(QFile::ReadOnly)) {
             css = f.readAll();
         }
         f.close();
     }
+    css += "QDockWidget::title{text-align:center;}";
     qApp->setStyleSheet(css);
+    QApplication::processEvents();
+    //
+    _ui->actionThemeAndroidStudio->setChecked( Theme::isCurrent("android") );
+    _ui->actionThemeNetBeans->setChecked( Theme::isCurrent("netbeans") );
+    _ui->actionThemeQt->setChecked( Theme::isCurrent("qt") );
+    //update all icons
+    //
+    _ui->actionNew->setIcon(Theme::icon("New.png"));
+    _ui->actionOpen->setIcon(Theme::icon("Open.png"));
+    _ui->actionOpenProject->setIcon(Theme::icon("Project.png"));
+    _ui->actionSave->setIcon(Theme::icon("Save.png"));
+    _ui->actionClose->setIcon(Theme::icon("Close.png"));
+    _ui->actionPrefs->setIcon(Theme::icon("Options.png"));
+    //
+    _ui->actionBuildBuild->setIcon(Theme::icon("Build.png"));
+    _ui->actionBuildRun->setIcon(Theme::icon("Build-Run.png"));
+    //
+    _ui->actionStep->setIcon(Theme::icon("Step.png"));
+    _ui->actionStep_In->setIcon(Theme::icon("Step-In.png"));
+    _ui->actionStep_Out->setIcon(Theme::icon("Step-Out.png"));
+    _ui->actionKill->setIcon(Theme::icon("Stop.png"));
+    //
+    _ui->actionEditFind->setIcon(Theme::icon("Find.png"));
+    _ui->actionEditCut->setIcon(Theme::icon("Cut.png"));
+    _ui->actionEditCopy->setIcon(Theme::icon("Copy.png"));
+    _ui->actionEditPaste->setIcon(Theme::icon("Paste.png"));
+    _ui->actionHelpHome->setIcon(Theme::icon("Home.png"));
+    _ui->actionGoBack->setIcon(Theme::icon("Back.png"));
+    _ui->actionGoForward->setIcon(Theme::icon("Forward.png"));
+    //
+    _ui->actionToggleBookmark->setIcon(Theme::icon("Bookmark.png"));
+    _ui->actionFoldAll->setIcon(Theme::icon("Fold.png"));
+    _ui->actionUnfoldAll->setIcon(Theme::icon("Unfold.png"));
+    //
+    //_ui->toolButtonShowVariables->setIcon(Theme::icon("ShowVars.png"));
+    //_ui->toolButtonSortByName->setIcon(Theme::icon("Sort.png"));
+    //_ui->toolButtonClearOutput->setIcon(Theme::icon("Clear.png"));
+    _ui->toolButtonCloseSearch->setIcon(Theme::icon("CloseSearch.png"));
+    //
+    //_ui->actionCodeAnalyze->setIcon(Theme::icon("Options.png"));
+
+    /*_ui->action->setIcon(QIcon(":/icons/"+theme+"/.png"));
+    _ui->action->setIcon(QIcon(":/icons/"+theme+"/.png"));
+    _ui->action->setIcon(QIcon(":/icons/"+theme+"/.png"));*/
+
+    //qDebug() << "update theme: "+Theme::theme();
+    if( !_monkeyPath.isEmpty() ) {
+        QString jent = QApplication::applicationDirPath() + "/pagestyle.css";
+        QString monk = _monkeyPath+"/docs/html/pagestyle.css";
+        if(!QFile::exists(jent)) {
+            QFile::copy(monk,jent);
+        }
+        jent = QApplication::applicationDirPath() + (Theme::isDark() ? "/help_dark.css" : "/pagestyle.css");
+        if(QFile::exists(jent)) {
+            bool b = QFile::remove(monk);
+            //qDebug()<<"remove:"<<b<<monk;
+            b = QFile::copy(jent,monk);
+            //qDebug()<<"copy dark help:"<<b<<jent;
+        }
+    }
 }
 
 void MainWindow::initKeywords(){
+    //qDebug() << "initKeywords()";
 
-    CodeAnalyzer::init();
     CodeAnalyzer::loadTemplates(QApplication::applicationDirPath()+"/templates.txt");
     CodeAnalyzer::loadKeywords(QApplication::applicationDirPath()+"/keywords.txt");
     CodeAnalyzer::clearMonkey();
@@ -335,7 +499,7 @@ void MainWindow::parseAppArgs(){
 bool MainWindow::isBuildable( CodeEditor *editor ){
     if( !editor ) return false;
     if( editor->fileType()=="monkey" ) return !_monkeyPath.isEmpty();
-    if( editor->fileType()=="bmx" ) return !_blitzmaxPath.isEmpty();
+    //if( editor->fileType()=="bmx" ) return !_blitzmaxPath.isEmpty();
     return false;
 }
 
@@ -363,7 +527,7 @@ QWidget *MainWindow::newFile( const QString &cpath ){
 
     if( path.isEmpty() ){
 
-        path=fixPath( QFileDialog::getSaveFileName( this,"New File",_defaultDir,"Source Files (*.monkey *.bmx *.cpp *.cs *.js *.as *.java *.txt)" ) );
+        path=fixPath( QFileDialog::getSaveFileName( this,"New File",_defaultDir,"Source Files (*.monkey)" ) );
         if( path.isEmpty() ) return 0;
     }
 
@@ -403,8 +567,57 @@ void MainWindow::onCloseSearch() {
     _ui->frameSearch->setVisible(false);
 }
 
+void MainWindow::onFindUsages() {
+    //qDebug()<<"find usages";
+    if(!_codeEditor || !_codeEditor->canFindUsages())
+        return;
+    QWidget *w = new QWidget(_ui->usagesTabWidget);
+    QTreeWidget *tree = new QTreeWidget(w);
+    tree->setHeaderHidden(true);
+
+    QString s = _codeEditor->findUsages(tree);
+
+    QHBoxLayout *lay = new QHBoxLayout(w);
+    lay->setSpacing(0);
+    lay->setMargin(0);
+    lay->addWidget(tree);
+    w->setLayout(lay);
+
+    _ui->usagesTabWidget->addTab(w,s);
+    _ui->usagesTabWidget->setCurrentWidget(w);
+    tree->expandAll();
+    _ui->usagesDockWidget->setVisible(true);
+    connect(tree,SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),SLOT(onUsagesJumpToLine(QTreeWidgetItem*,int)));
+    _ui->frameUsagesRename->show();
+}
+
+void MainWindow::onCloseUsagesTab(int index) {
+    //qDebug()<<"close tab:"<<index;
+    QWidget *w = _ui->usagesTabWidget->widget(index);
+    _ui->usagesTabWidget->removeTab(index);
+    delete w;
+    if(_ui->usagesTabWidget->count() == 0) {
+        _ui->frameUsagesRename->hide();
+        UsagesResult::clear();
+    }
+}
+
+void MainWindow::onUsagesJumpToLine(QTreeWidgetItem *item, int column) {
+    UsagesResult *u = UsagesResult::item(item);
+    if(u) {
+        onShowCode(u->path, u->blockNumber);
+        if(_codeEditor) {
+            QTextCursor c = _codeEditor->textCursor();
+            c.setPosition(u->positionStart);
+            c.setPosition(u->positionEnd, QTextCursor::KeepAnchor);
+            _codeEditor->setTextCursor(c);
+        }
+    }
+}
+
 void MainWindow::onTabsCloseTab() {
     _mainTabWidget->tabCloseRequested(_mainTabWidget->currentIndex());
+    //qDebug()<<"close tab";
 }
 
 void MainWindow::onTabsCloseOtherTabs() {
@@ -427,7 +640,7 @@ QWidget *MainWindow::openFile( const QString &cpath,bool addToRecent ){
 
     if( isUrl( cpath ) ){
         QWebView *webView=0;
-        for( int i=0;i<_mainTabWidget->count();++i ){
+        /*for( int i=0;i<_mainTabWidget->count();++i ){
             if( webView=qobject_cast<QWebView*>( _mainTabWidget->widget( i ) ) ) break;
         }
         if( !webView ){
@@ -443,6 +656,13 @@ QWidget *MainWindow::openFile( const QString &cpath,bool addToRecent ){
             _mainTabWidget->setCurrentWidget( webView );
         }else{
             updateWindowTitle();
+        }*/
+
+        //add to dock panel
+        _ui->webView->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
+        _ui->webView->setUrl( cpath );
+        if(true) {
+            _ui->docsDockWidget->setVisible(true);
         }
 
         return webView;
@@ -473,14 +693,22 @@ QWidget *MainWindow::openFile( const QString &cpath,bool addToRecent ){
         return 0;
     }
 
+    //qDebug()<<"work1";
+
+    connect( editor,SIGNAL(keyEscapePressed()),SLOT(onKeyEscapePressed()) );
     connect( editor,SIGNAL(textChanged()),SLOT(onTextChanged()) );
     connect( editor,SIGNAL(cursorPositionChanged()),SLOT(onCursorPositionChanged()) );
     connect( editor,SIGNAL(statusBarChanged(const QString&)),SLOT(onStatusBarChanged(const QString&)) );
     connect( editor,SIGNAL(openCodeFile(const QString&,const QString&,const int&)),SLOT(onOpenCodeFile(const QString&,const QString&,const int&)));
-    connect( _mainTabWidget,SIGNAL(customContextMenuRequested(const QPoint&)),SLOT(onTabsMenu(const QPoint&)) );
 
+    editor->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect( editor,SIGNAL(customContextMenuRequested(const QPoint&)),SLOT(onEditorMenu(const QPoint&)) );
+
+    //qDebug()<<"work2";
     _mainTabWidget->addTab( editor,stripDir( path ) );
     _mainTabWidget->setCurrentWidget( editor );
+
+    //qDebug()<<"work3";
 
     if( addToRecent ){
         QMenu *menu=_ui->menuRecent_Files;
@@ -529,7 +757,8 @@ bool MainWindow::saveFile( QWidget *widget,const QString &cpath ){
         return true;
     }
 
-    if( !editor->save( path ) ){
+    bool done = editor->save( path );
+    if( !done ){
         QMessageBox::warning( this,"Save File Error","Error saving file: "+path );
         return false;
     }
@@ -540,12 +769,13 @@ bool MainWindow::saveFile( QWidget *widget,const QString &cpath ){
 
     updateActions();
 
-    onCodeAnalyze();
+    editor->analyzeCode();
 
     return true;
 }
 
 bool MainWindow::closeFile( QWidget *widget,bool really ){
+    //qDebug()<<"close file";
     if( !widget ) return true;
 
     CodeEditor *editor=qobject_cast<CodeEditor*>( widget );
@@ -581,9 +811,24 @@ bool MainWindow::closeFile( QWidget *widget,bool really ){
         _lockedEditor=0;
     }
 
+    QString path = "";
+    if(editor) {
+        path = editor->path();
+    }
+
     _mainTabWidget->removeTab( _mainTabWidget->indexOf( widget ) );
 
     delete widget;
+
+    if(!path.isEmpty()) {
+        CodeAnalyzer::removeUserFile(path);
+        CodeAnalyzer::treeItemModel()->clear();
+        CodeAnalyzer::listItemModel()->clear();
+        if(_codeEditor) {
+            //qDebug()<<"fill tree here:"<<_codeEditor->fileName();
+            _codeEditor->fillCodeTree();
+        }
+    }
 
     return true;
 }
@@ -594,7 +839,7 @@ bool MainWindow::confirmQuit(){
 
     _prefsDialog->writeSettings();
 
-    _findDialog->writeSettings();
+    //_findDialog->writeSettings();
 
     _findInFilesDialog->writeSettings();
 
@@ -611,10 +856,21 @@ bool MainWindow::confirmQuit(){
 }
 
 void MainWindow::closeEvent( QCloseEvent *event ){
-
+    //qDebug()<<"close app";
     if( confirmQuit() ){
         _findInFilesDialog->close();
         event->accept();
+        //restore help css
+        if(!_monkeyPath.isEmpty()) {
+            QString jent = QApplication::applicationDirPath() + "/pagestyle.css";
+            QString monk = _monkeyPath+"/docs/html/pagestyle.css";
+            if(QFile::exists(jent)) {
+                QFile::remove(monk);
+                QFile::copy(jent,monk);
+                //qDebug()<<"restore help css";
+            }
+        }
+
     }else{
         event->ignore();
     }
@@ -622,255 +878,187 @@ void MainWindow::closeEvent( QCloseEvent *event ){
 
 //Settings...
 //
-bool MainWindow::isValidMonkeyPath( const QString &path ){
-    QString transcc = "transcc"+HOST;
+bool MainWindow::isValidMonkeyPath( const QString &path, QString &trans ){
+    trans = "transcc"+HOST;
 #ifdef Q_OS_WIN
-    transcc += ".exe";
+    trans += ".exe";
 #endif
-    bool r = QFile::exists( path+"/bin/"+transcc );
-    if(r)
+    QString s = path+"/bin/"+trans;
+    bool r = QFile::exists(s);
+    if(r) {
+        _monkeyPath = path;
+        _transPath = trans;
         return true;
-    transcc = "trans"+HOST;
-#ifdef Q_OS_WIN
-    transcc += ".exe";
-#endif
-    return QFile::exists( path+"/bin/"+transcc );
-}
-
-bool MainWindow::isValidBlitzmaxPath( const QString &path ){
-#ifdef Q_OS_WIN
-    QString bmk="bmk.exe";
-#else
-    QString bmk="bmk";
-#endif
-    return QFile::exists( path+"/bin/"+bmk );
-}
-
-QString MainWindow::defaultMonkeyPath(){
-    QString path=QApplication::applicationDirPath();
-    while( !path.isEmpty() ){
-        if( isValidMonkeyPath( path ) ) return path;
-        path=extractDir( path );
     }
-    return "";
+    trans = "trans"+HOST;
+#ifdef Q_OS_WIN
+    trans += ".exe";
+#endif
+    s = path+"/bin/"+trans;
+    r = QFile::exists(s);
+    if(r) {
+        _monkeyPath = path;
+        _transPath = trans;
+        return true;
+    }
+    return false;
 }
 
 void MainWindow::enumTargets(){
     if( _monkeyPath.isEmpty() ) return;
 
-    QString transcc = "transcc"+HOST, path = _monkeyPath+"/bin/"+transcc;
-    #ifdef Q_OS_WIN
-        path += ".exe";
-    #endif
-    bool r = QFile::exists( path );
-    if(!r) {
-        transcc = "trans"+HOST;
-    }
-
-    QString cmd="\""+_monkeyPath+"/bin/"+transcc+"\"";
+    QString cmd="\""+_monkeyPath+"/bin/"+_transPath+"\"";
 
     Process proc;
     if( !proc.start( cmd ) ) return;
 
+    QString target = _targetsWidget->currentText();
     _targetsWidget->clear();
 
-    QString sol="Valid targets: ";
-    QString ver="TRANS monkey compiler V";
-
+    QString sol = "Valid targets: ";
+    QString ver = "TRANS monkey compiler V";
+    int index = -1;
     while( proc.waitLineAvailable( 0 ) ){
         QString line=proc.readLine( 0 );
         if( line.startsWith( ver ) ){
-            _transVersion=line.mid( ver.length() );
+            _transVersion = line.mid( ver.length() );
         }else if( line.startsWith( sol ) ){
             line=line.mid( sol.length() );
             QStringList bits=line.split( ' ' );
             for( int i=0;i<bits.count();++i ){
                 QString bit=bits[i];
-                if( !bit.isEmpty() ) _targetsWidget->addItem( bit.replace( '_',' ' ) );
+                if( !bit.isEmpty() ) {
+                    QString t = bit.replace( '_',' ' );
+                    _targetsWidget->addItem( t );
+                    if(t == target)
+                        index = _targetsWidget->count()-1;
+                }
             }
         }
     }
+    if(index >= 0)
+        _targetsWidget->setCurrentIndex(index);
 }
 
 void MainWindow::readSettings(){
 
-    QSettings settings;
+    QSettings *set = Prefs::settings();
+    Prefs *prefs = Prefs::prefs();
 
-    Prefs *prefs=Prefs::prefs();
-
-    if( settings.value( "settingsVersion" ).toInt()<1 ){
-
-        prefs->setValue( "fontFamily","Courier" );
-        prefs->setValue( "fontSize",12 );
-        prefs->setValue( "tabSize",4 );
-        prefs->setValue( "backgroundColor",QColor( 0x2b2b2b ) );
-        prefs->setValue( "defaultColor",QColor( 0xA9B7C6 ) );
-        prefs->setValue( "numbersColor",QColor( 0x6897BB ) );
-        prefs->setValue( "stringsColor",QColor( 0x6A8759 ) );
-        prefs->setValue( "identifiersColor",QColor( 0xA9B7C6 ) );
-        prefs->setValue( "keywordsColor",QColor( 0xCC7832 ) );
-        prefs->setValue( "constantsColor",QColor( 0x9876AA ) );
-        prefs->setValue( "funcDeclsColor",QColor( 0xFFC66D ) );
-
-        prefs->setValue( "commentsColor",QColor( 0x808080 ) );
-        prefs->setValue( "highlightColor",QColor( 0x323232 ) );
-        prefs->setValue( "highlightColorError",QColor( 0x323232 ) );
-        prefs->setValue( "highlightColorCaretRow",QColor( 0x323232 ) );
-        prefs->setValue( "smoothFonts",true );
-
-        _monkeyPath = defaultMonkeyPath();
-        prefs->setValue( "monkeyPath",_monkeyPath );
-
-        _blitzmaxPath = "";
-        prefs->setValue( "blitzmaxPath",_blitzmaxPath );
-
-        if( !_monkeyPath.isEmpty() ){
-            _projectTreeModel->addProject( _monkeyPath );
-        }
-
-        enumTargets();
-
-        onHelpHome();
-
-        return;
+    //some default values
+    if(!prefs->contains("updates")) {
+        prefs->setValue("updates",true);
+        prefs->setValue("tabSize",4);
+        prefs->setValue("fontSize",12);
+        prefs->setValue("highlightLine",true);
+        prefs->setValue("highlightWord",true);
+        prefs->setValue("style","Default");
     }
 
-    _monkeyPath = defaultMonkeyPath();
+    _monkeyPath = prefs->getString( "monkeyPath" );
+    _transPath = prefs->getString( "transPath" );
 
-    QString prefsMonkeyPath = prefs->getString( "monkeyPath" );
-
-    if( _monkeyPath.isEmpty() ) {
-        _monkeyPath = prefsMonkeyPath;
-        if( !isValidMonkeyPath( _monkeyPath ) ){
-            _monkeyPath = "";
-            prefs->setValue( "monkeyPath",_monkeyPath );
-        }
-    }
-    else if( _monkeyPath != prefsMonkeyPath ){
-        prefs->setValue( "monkeyPath",_monkeyPath );
-        QMessageBox::information( this, APP_NAME, "Monkey path has been updated to "+_monkeyPath );
-    }
-
-    _blitzmaxPath=prefs->getString( "blitzmaxPath" );
-    if( !_blitzmaxPath.isEmpty() && !isValidBlitzmaxPath( _blitzmaxPath ) ){
-        _blitzmaxPath="";
-        prefs->setValue( "blitzmaxPath",_blitzmaxPath );
-        QMessageBox::warning( this, APP_NAME, "Invalid BlitzMax path!\n\nPlease select correct path from the 'File -- Options' dialog" );
-    }
-
+    onHelpHome();
     enumTargets();
 
-    settings.beginGroup( "mainWindow" );
-    restoreGeometry( settings.value( "geometry" ).toByteArray() );
-    restoreState( settings.value( "state" ).toByteArray() );
-    settings.endGroup();
+    set->beginGroup( "mainWindow" );
+    restoreGeometry( set->value( "geometry" ).toByteArray() );
+    restoreState( set->value( "state" ).toByteArray() );
+    set->endGroup();
 
-    int n=settings.beginReadArray( "openProjects" );
+    int n = set->beginReadArray( "openProjects" );
     for( int i=0;i<n;++i ){
-        settings.setArrayIndex( i );
-        QString path = fixPath( settings.value( "path" ).toString() );
+        set->setArrayIndex( i );
+        QString path = fixPath( set->value( "path" ).toString() );
         if( QFile::exists( path ) ) _projectTreeModel->addProject( path );
     }
-    settings.endArray();
+    set->endArray();
 
-    /*  n=settings.beginReadArray( "openDocuments" );
+    n = set->beginReadArray( "recentFiles" );
     for( int i=0;i<n;++i ){
-        settings.setArrayIndex( i );
-        QString path=fixPath( settings.value( "path" ).toString() );
-        if( isUrl( path ) ){
-            openFile( path,false );
-        }else{
-            if( QFile::exists( path ) ) openFile( path,false );
-        }
+        set->setArrayIndex( i );
+        QString path = fixPath( set->value( "path" ).toString() );
+        if( QFile::exists( path ) )
+            _ui->menuRecent_Files->addAction( path,this,SLOT(onFileOpenRecent()) );
     }
-    settings.endArray();*/
+    set->endArray();
 
-    n=settings.beginReadArray( "recentFiles" );
-    for( int i=0;i<n;++i ){
-        settings.setArrayIndex( i );
-        QString path=fixPath( settings.value( "path" ).toString() );
-        if( QFile::exists( path ) ) _ui->menuRecent_Files->addAction( path,this,SLOT(onFileOpenRecent()) );
-    }
-    settings.endArray();
-
-    settings.beginGroup( "buildSettings" );
-    QString target=settings.value( "target" ).toString();
+    set->beginGroup( "buildSettings" );
+    QString target = set->value( "target" ).toString();
     if( !target.isEmpty() ){
         for( int i=0;i<_targetsWidget->count();++i ){
-            if( _targetsWidget->itemText(i)==target ){
+            if( _targetsWidget->itemText(i) == target ){
                 _targetsWidget->setCurrentIndex( i );
                 break;
             }
         }
     }
-    QString config=settings.value( "config" ).toString();
+    QString config = set->value( "config" ).toString();
     if( !config.isEmpty() ){
         for( int i=0;i<_configsWidget->count();++i ){
-            if( _configsWidget->itemText(i)==config ){
+            if( _configsWidget->itemText(i) == config ){
                 _configsWidget->setCurrentIndex( i );
                 break;
             }
         }
     }
-    QString locked=settings.value( "locked" ).toString();
+    QString locked = set->value( "locked" ).toString();
     if( !locked.isEmpty() ){
-        if( CodeEditor *editor=editorWithPath( locked ) ){
-            _lockedEditor=editor;
+        if( CodeEditor *editor = editorWithPath( locked ) ){
+            _lockedEditor = editor;
             updateTabLabel( editor );
         }
     }
-    settings.endGroup();
+    set->endGroup();
 
-    if( settings.value( "settingsVersion" ).toInt()<2 ){
-        return;
-    }
+    _defaultDir = fixPath( set->value("defaultDir").toString() );
 
-    _defaultDir=fixPath( settings.value( "defaultDir" ).toString() );
+    updateTheme();
 }
 
 void MainWindow::writeSettings(){
-    QSettings settings;
+    QSettings *set = Prefs::settings();
 
-    settings.setValue( "settingsVersion",SETTINGS_VERSION );
+    set->setValue( "settingsVersion",SETTINGS_VERSION );
 
-    settings.beginGroup( "mainWindow" );
-    settings.setValue( "geometry",saveGeometry() );
-    settings.setValue( "state",saveState() );
-    settings.endGroup();
+    set->beginGroup( "mainWindow" );
+    set->setValue( "geometry",saveGeometry() );
+    set->setValue( "state",saveState() );
+    set->endGroup();
 
-    settings.beginWriteArray( "openProjects" );
-    QVector<QString> projs=_projectTreeModel->projects();
+    set->beginWriteArray( "openProjects" );
+    QVector<QString> projs = _projectTreeModel->projects();
     for( int i=0;i<projs.size();++i ){
-        settings.setArrayIndex(i);
-        settings.setValue( "path",projs[i] );
+        set->setArrayIndex(i);
+        set->setValue( "path",projs[i] );
     }
-    settings.endArray();
+    set->endArray();
 
-    settings.beginWriteArray( "openDocuments" );
+    set->beginWriteArray( "openDocuments" );
     int n=0;
     for( int i=0;i<_mainTabWidget->count();++i ){
-        QString path=widgetPath( _mainTabWidget->widget( i ) );
+        QString path = widgetPath( _mainTabWidget->widget( i ) );
         if( path.isEmpty() ) continue;
-        settings.setArrayIndex( n++ );
-        settings.setValue( "path",path );
+        set->setArrayIndex( n++ );
+        set->setValue( "path",path );
     }
-    settings.endArray();
+    set->endArray();
 
-    settings.beginWriteArray( "recentFiles" );
-    QList<QAction*> rfiles=_ui->menuRecent_Files->actions();
+    set->beginWriteArray( "recentFiles" );
+    QList<QAction*> rfiles = _ui->menuRecent_Files->actions();
     for( int i=0;i<rfiles.size();++i ){
-        settings.setArrayIndex( i );
-        settings.setValue( "path",rfiles[i]->text() );
+        set->setArrayIndex( i );
+        set->setValue( "path",rfiles[i]->text() );
     }
-    settings.endArray();
+    set->endArray();
 
-    settings.beginGroup( "buildSettings" );
-    settings.setValue( "target",_targetsWidget->currentText() );
-    settings.setValue( "config",_configsWidget->currentText() );
-    settings.setValue( "locked",_lockedEditor ? _lockedEditor->path() : "" );
-    settings.endGroup();
+    set->beginGroup( "buildSettings" );
+    set->setValue( "target",_targetsWidget->currentText() );
+    set->setValue( "config",_configsWidget->currentText() );
+    set->setValue( "locked",_lockedEditor ? _lockedEditor->path() : "" );
+    set->endGroup();
 
-    settings.setValue( "defaultDir",_defaultDir );
+    set->setValue( "defaultDir",_defaultDir );
 }
 
 //Actions...
@@ -914,15 +1102,21 @@ void MainWindow::updateActions(){
     _ui->actionEditFindNext->setEnabled( ed );
     _ui->actionEditFindPrevious->setEnabled( ed );
     _ui->actionEditGoto->setEnabled( ed );
+    bool usages = ed && _codeEditor->canFindUsages();
+    _ui->actionFind_Usages->setEnabled( usages );
 
     //view menu - not totally sure why !isHidden works but isVisible doesn't...
     _ui->actionViewFile->setChecked( !_ui->fileToolBar->isHidden() );
     _ui->actionViewEdit->setChecked( !_ui->editToolBar->isHidden() );
     _ui->actionViewBuild->setChecked( !_ui->buildToolBar->isHidden() );
     _ui->actionViewHelp->setChecked( !_ui->helpToolBar->isHidden() );
-    _ui->actionViewConsole->setChecked( !_ui->consoleDockWidget->isHidden() );
-    _ui->actionViewBrowser->setChecked( !_ui->browserDockWidget->isHidden() );
+    _ui->actionViewOutput->setChecked( !_ui->outputDockWidget->isHidden() );
+    _ui->actionViewUsages->setChecked( !_ui->usagesDockWidget->isHidden() );
+    _ui->actionViewProject->setChecked( !_ui->projectDockWidget->isHidden() );
     _ui->actionViewSource->setChecked( !_ui->sourceDockWidget->isHidden() );
+    _ui->actionViewCodeTree->setChecked( !_ui->codeTreeDockWidget->isHidden() );
+    _ui->actionViewDebug->setChecked( !_ui->debugDockWidget->isHidden() );
+    _ui->actionViewDocs->setChecked( !_ui->docsDockWidget->isHidden() );
 
     //build menu
     CodeEditor *buildEditor=_lockedEditor ? _lockedEditor : _codeEditor;
@@ -936,8 +1130,8 @@ void MainWindow::updateActions(){
     _ui->actionStep_In->setEnabled( db );
     _ui->actionStep_Out->setEnabled( db );
     _ui->actionKill->setEnabled( _consoleProc!=0 );
-    _ui->actionLock_Build_File->setEnabled( _codeEditor!=_lockedEditor && isBuildable( _codeEditor ) );
-    _ui->actionUnlock_Build_File->setEnabled( _lockedEditor!=0 );
+    _ui->actionLock_Build_File->setEnabled( /*_codeEditor!=_lockedEditor &&*/ isBuildable( _codeEditor ) );
+    //_ui->actionUnlock_Build_File->setEnabled( _lockedEditor!=0 );
 
     //help menu
     _ui->actionHelpBack->setEnabled( _helpWidget!=0 );
@@ -945,13 +1139,31 @@ void MainWindow::updateActions(){
     _ui->actionHelpQuickHelp->setEnabled( _codeEditor!=0 );
     _ui->actionHelpRebuild->setEnabled( _consoleProc==0 );
 
-    onChangeAnalyzerProperties();
 }
 
 void MainWindow::onChangeAnalyzerProperties(bool) {
-    CodeAnalyzer::setShowVariables(_ui->toolButtonShowVariables->isChecked());
-    CodeAnalyzer::setSortByName(_ui->toolButtonSortByName->isChecked());
-    //qDebug() << "onChangeAnalyzerProperties()";
+    Prefs *p = Prefs::prefs();
+    bool fill = true;
+    if(sender() == _ui->toolButtonShowVariables)
+        p->setValue("codeShowVariables", _ui->toolButtonShowVariables->isChecked());
+    else if(sender() == _ui->toolButtonShowInherited)
+        p->setValue("codeShowInherited", _ui->toolButtonShowInherited->isChecked());
+    else if(sender() == _ui->toolButtonSortByName)
+        p->setValue("codeSort", _ui->toolButtonSortByName->isChecked());
+    else {
+        fill = false;
+    }
+    if(_codeEditor && fill)
+        _codeEditor->fillCodeTree();
+    bool b = _ui->toolButtonShowVariables->isChecked();
+    QString s = (b?"on":"off");
+    _ui->toolButtonShowVariables->setToolTip("Show Variables: "+s);
+    b = _ui->toolButtonShowInherited->isChecked();
+    s = (b?"on":"off");
+    _ui->toolButtonShowInherited->setToolTip("Show Inherited Members: "+s);
+    b = _ui->toolButtonSortByName->isChecked();
+    s = (b?"on":"off");
+    _ui->toolButtonSortByName->setToolTip("Sorting: "+s);
 }
 
 void MainWindow::updateWindowTitle(){
@@ -979,38 +1191,38 @@ void MainWindow::updateTabLabel( QWidget *widget ){
 }
 
 void MainWindow::onCloseMainTab( int index ){
-
     closeFile( _mainTabWidget->widget( index ) );
 }
 
 void MainWindow::onMainTabChanged( int index ){
 
+    //qDebug()<<"onMainTabChanged";
     CodeEditor *_oldEditor=_codeEditor;
 
-    QWidget *widget=_mainTabWidget->widget( index );
+    QWidget *widget = _mainTabWidget->widget( index );
 
-    _codeEditor=qobject_cast<CodeEditor*>( widget );
+    _codeEditor = qobject_cast<CodeEditor*>( widget );
 
-    _helpWidget=qobject_cast<QWebView*>( widget );
+    _helpWidget = qobject_cast<QWebView*>( widget );
 
-    if( _oldEditor ){
-
-        disconnect( _oldEditor,SIGNAL(showCode(QString,int)),this,SLOT(onShowCode(QString,int)) );
+    if(_oldEditor) {
+        connect( _oldEditor,SIGNAL(showCode(QString,int)),SLOT(onShowCode(QString,int)) );
     }
-
     if( _codeEditor ){
 
         connect( _codeEditor,SIGNAL(showCode(QString,int)),SLOT(onShowCode(QString,int)) );
+        CodeAnalyzer::setCurFilePath(_codeEditor->path());
+        //qDebug()<<"111";
         _codeEditor->setFocus( Qt::OtherFocusReason );
-        onCursorPositionChanged();
-        _codeEditor->updateCodeViews(_ui->codeTreeView, _ui->sourceListView);
+        //qDebug()<<"222";
+        //onCursorPositionChanged();
+        //qDebug()<<"333";
         _ui->sourceDockWidget->widget()->setEnabled(true);
         _ui->codeTreeView->setEnabled(true);
 
-        CodeAnalyzer::setCurFilePath(_codeEditor->path());
-        CodeAnalyzer::disable();
-        onCodeAnalyze();
-        CodeAnalyzer::enable();
+        //CodeAnalyzer::disable();
+        //onCodeAnalyze();
+        //CodeAnalyzer::enable();
     }
     else {
         _ui->sourceDockWidget->widget()->setEnabled(false);
@@ -1020,6 +1232,7 @@ void MainWindow::onMainTabChanged( int index ){
     updateWindowTitle();
 
     updateActions();
+    //qDebug()<<"444";
 }
 
 void MainWindow::onDockVisibilityChanged( bool visible ){
@@ -1030,11 +1243,11 @@ void MainWindow::onDockVisibilityChanged( bool visible ){
 void MainWindow::onTabsMenu( const QPoint &pos ){
     if(pos.y() > 25)
         return;
+    _tabsPopupMenu->exec( _mainTabWidget->mapToGlobal( pos ) );
+}
 
-    QMenu *menu = _tabsPopupMenu;
-
-    QAction *action = menu->exec( _mainTabWidget->mapToGlobal( pos ) );
-    if( !action ) return;
+void MainWindow::onEditorMenu(const QPoint &pos) {
+    _editorPopupMenu->exec( _codeEditor->mapToGlobal( pos ) );
 }
 
 //Project browser...
@@ -1149,6 +1362,40 @@ void MainWindow::onFileClicked( const QModelIndex &index ){
     if( !_projectTreeModel->isDir( index ) ) openFile( _projectTreeModel->filePath( index ),true );
 }
 
+void MainWindow::onSourceMenu( const QPoint &pos ) {
+
+    QModelIndex index = _ui->sourceListView->indexAt( pos );
+    if( !index.isValid() || index.row() != 0 ) return;
+
+    QMenu *menu = _sourcePopupMenu;
+
+    QAction *action = menu->exec( _ui->sourceListView->mapToGlobal( pos ) );
+    if( !action ) return;
+
+    if( action == _ui->actionView_Class_Summary ){
+        ItemWithData *si = CodeAnalyzer::itemInList(index);
+        CodeItem *code = si->code();//CodeAnalyzer::getCodeItemFromStandardItem(si);
+        if(code) {
+            QMessageBox m;
+            m.setText(code->summary());
+            m.exec();
+        }
+    }
+}
+
+void MainWindow::onUsagesMenu( const QPoint &pos ) {
+
+    QAction *action = _usagesPopupMenu->exec( _ui->usagesTabWidget->mapToGlobal( pos ) );
+    if( !action ) return;
+
+    if( action == _ui->actionUsagesSelectAll ){
+        onUsagesSelectAll();
+    }
+    else if( action == _ui->actionUsagesUnselectAll ){
+        onUsagesUnselectAll();
+    }
+}
+
 //Editor...
 //
 void MainWindow::onTextChanged(){
@@ -1166,34 +1413,99 @@ void MainWindow::onCursorPositionChanged(){
         _statusWidget->setText( s );
     }
     updateActions();
+    //qDebug()<<"onCursorPositionChanged";
 }
 
 void MainWindow::onShowCode( const QString &path, int line, bool error ){
-
+    //qDebug()<<"onShowCode";
     if( CodeEditor *editor=qobject_cast<CodeEditor*>( openFile( path,true ) ) ){
         //
         editor->gotoLine( line );
-        editor->highlightLine( line, (error?CodeEditor::HL_ERROR:0) );
+        editor->highlightLine( line, (error ? CodeEditor::HlError : CodeEditor::HlCommon) );
         //
         if( editor==_codeEditor ) editor->setFocus( Qt::OtherFocusReason );
     }
 }
 
 void MainWindow::onShowCode( const QString &path,int pos,int len ){
+    //qDebug()<<"main.showcode:"<<path;
     if( CodeEditor *editor=qobject_cast<CodeEditor*>( openFile( path,true ) ) ){
-        //
-        QTextCursor cursor( editor->document() );
-        cursor.setPosition( pos );
-        cursor.setPosition( pos+len,QTextCursor::KeepAnchor );
-        editor->setTextCursor( cursor );
-        //
+        if(pos >= 0) {
+            QTextCursor cursor( editor->document() );
+            cursor.setPosition( pos );
+            cursor.setPosition( pos+len,QTextCursor::KeepAnchor );
+            editor->setTextCursor( cursor );
+        }
         if( editor==_codeEditor ) editor->setFocus( Qt::OtherFocusReason );
     }
 }
 
+void MainWindow::updateCodeViews(QTreeView *tree, QListView* list) {
+    CodeAnalyzer::setViews(tree, list);
+    connect( tree,SIGNAL(clicked(QModelIndex)),SLOT(onCodeTreeViewClicked(QModelIndex)) );
+    connect( list,SIGNAL(clicked(QModelIndex)),SLOT(onSourceListViewClicked(QModelIndex)) );
+
+}
+
+void MainWindow::onCodeTreeViewClicked( const QModelIndex &index ) {
+    QStandardItem *i = CodeAnalyzer::treeItemModel()->itemFromIndex( index );
+    if(i && i->parent() != 0) {
+        i = i->parent();
+        //qDebug()<<"parent1:"<<i->text();
+        if(i && i->parent() != 0) {
+            i = i->parent();
+            //qDebug()<<"parent2:"<<i->text();
+        }
+    }
+    if(i) {
+        QString path = i->toolTip();
+        int index = -1;
+        for( int i = 0; i < _mainTabWidget->count(); ++i ){
+            if( CodeEditor *editor = qobject_cast<CodeEditor*>( _mainTabWidget->widget( i ) ) ){
+                if( editor->path() == path ) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+        if(index != -1) {
+            //qDebug()<<"show tab with:"<<path;
+            _mainTabWidget->setCurrentIndex(index);
+        }
+        else {
+            //qDebug()<<"show code for:"<<path;
+            CodeAnalyzer::flushFileModified(path);
+            onShowCode(path, 0, 0);
+        }
+    }
+    if(_codeEditor) {
+        //onCodeAnalyze();
+        _codeEditor->onCodeTreeViewClicked(index);
+    }
+}
+
+void MainWindow::onSourceListViewClicked( const QModelIndex &index ) {
+    if(_codeEditor)
+        _codeEditor->onSourceListViewClicked(index);
+    qDebug()<<"onSourceListViewClicked";
+}
+
 //Console...
 //
-void MainWindow::print( const QString &str ){
+void MainWindow::print(const QString &str, QString kind ){
+    if(kind == "") {
+        _ui->outputTextEdit->setTextColor( Theme::isDark() ? QColor(0xc8c8c8) : QColor(0x050505) );
+    }
+    else if(kind == "error") {
+        _ui->outputTextEdit->setTextColor( Theme::isDark() ? QColor(0xE07464) : QColor(0x800000) );
+        _ui->outputDockWidget->setVisible(true);
+    }
+    else if(kind == "finish") {
+        _ui->outputTextEdit->setTextColor( Theme::isDark() ? QColor(0x69C1F1) : QColor(0x000080) );
+    }
+    else if(kind == "debug") {
+        _ui->outputTextEdit->setTextColor( Theme::isDark() ? QColor(128,0,128) : QColor(0,128,0) );
+    }
     QTextCursor cursor=_ui->outputTextEdit->textCursor();
     cursor.insertText( str );
     cursor.insertBlock();
@@ -1202,8 +1514,7 @@ void MainWindow::print( const QString &str ){
 }
 
 void MainWindow::cdebug( const QString &str ){
-    _ui->outputTextEdit->setTextColor( QColor( 128,0,128 ) );
-    print( str );
+    print( str, "debug" );
 }
 
 void MainWindow::runCommand( QString cmd, QWidget *fileWidget ){
@@ -1211,19 +1522,17 @@ void MainWindow::runCommand( QString cmd, QWidget *fileWidget ){
     cmd=cmd.replace( "${TARGET}",_targetsWidget->currentText().replace( ' ','_' ) );
     cmd=cmd.replace( "${CONFIG}",_configsWidget->currentText() );
     cmd=cmd.replace( "${MONKEYPATH}",_monkeyPath );
-    cmd=cmd.replace( "${BLITZMAXPATH}",_blitzmaxPath );
+    //cmd=cmd.replace( "${BLITZMAXPATH}",_blitzmaxPath );
     if( fileWidget ) cmd=cmd.replace( "${FILEPATH}",widgetPath( fileWidget ) );
 
-    _consoleProc=new Process;
+    _consoleProc = new Process;
 
-    connect( _consoleProc,SIGNAL(lineAvailable(int)),SLOT(onProcLineAvailable(int)) );//,Qt::QueuedConnection );
-    connect( _consoleProc,SIGNAL(finished()),SLOT(onProcFinished()) );//,Qt::QueuedConnection );
+    connect( _consoleProc,SIGNAL(lineAvailable(int)),SLOT(onProcLineAvailable(int)) );
+    connect( _consoleProc,SIGNAL(finished()),SLOT(onProcFinished()) );
 
     _ui->outputTextEdit->clear();
-    _ui->consoleDockWidget->show();
-    _ui->outputTextEdit->setTextColor( QColor( 0xc8c8c8 ) );
 
-    print( cmd );
+    print( cmd, "" );
 
     if( !_consoleProc->start( cmd ) ){
         delete _consoleProc;
@@ -1237,14 +1546,17 @@ void MainWindow::runCommand( QString cmd, QWidget *fileWidget ){
 
 void MainWindow::onProcStdout(){
 
-    static QString comerr=" : Error : ";
-    static QString runerr="Monkey Runtime Error : ";
+    static QString comerr = " : Error : ";
+    static QString runerr = "Monkey Runtime Error : ";
 
-    QString text=_consoleProc->readLine( 0 );
+    QString text = _consoleProc->readLine( 0 );
 
-    print( text );
+    bool iscomerr = text.contains( comerr );
+    bool isrunerr = text.startsWith( runerr );
 
-    if( text.contains( comerr )){
+    print( text, (iscomerr||isrunerr ? "error" : "") );
+
+    if(iscomerr){
         int i0=text.indexOf( comerr );
         QString info=text.left( i0 );
         int i=info.lastIndexOf( '<' );
@@ -1257,7 +1569,7 @@ void MainWindow::onProcStdout(){
 
             QMessageBox::warning( this,"Compile Error",err );
         }
-    }else if( text.startsWith( runerr ) ){
+    }else if( isrunerr ){
         QString err=text.mid( runerr.length() );
 
         //not sure what this voodoo is for...!
@@ -1284,8 +1596,7 @@ void MainWindow::onProcStderr(){
             int line=info.mid( i+1,info.length()-i-2 ).toInt()-1;
             onShowCode( path,line );
         }else{
-            _ui->outputTextEdit->setTextColor( QColor( 0xE07464 ) );
-            print( info );
+            print( info, "error" );
         }
 
         if( !_debugTreeModel ){
@@ -1298,10 +1609,9 @@ void MainWindow::onProcStderr(){
             _ui->debugTreeView->setModel( _debugTreeModel );
             connect( _ui->debugTreeView,SIGNAL(clicked(const QModelIndex&)),_debugTreeModel,SLOT(onClicked(const QModelIndex&)) );
 
-            _ui->browserTabWidget->setCurrentWidget( _ui->debugTreeView );
+            _ui->debugDockWidget->setVisible(true);
 
-            _ui->outputTextEdit->setTextColor( QColor( 0xE07464 ) );
-            print( "STOPPED" );
+            print( "STOPPED", "error" );
         }
 
         _debugTreeModel->stop();
@@ -1311,8 +1621,7 @@ void MainWindow::onProcStderr(){
         return;
     }
 
-    _ui->outputTextEdit->setTextColor( QColor( 0xE07464 ) );
-    print( text );
+    print( text, "error" );
 }
 
 void MainWindow::onProcLineAvailable( int channel ){
@@ -1333,8 +1642,7 @@ void MainWindow::onProcFinished(){
         onProcLineAvailable( 0 );
     }
 
-    _ui->outputTextEdit->setTextColor( QColor( 0x69C1F1 ) );
-    print( "Done." );
+    print( "Done.","finish" );
 
     if( _debugTreeModel ){
         _ui->debugTreeView->setModel( 0 );
@@ -1354,40 +1662,28 @@ void MainWindow::onProcFinished(){
 
 void MainWindow::build( QString mode ){
 
-    CodeEditor *editor=_lockedEditor ? _lockedEditor : _codeEditor;
-    if( !isBuildable( editor ) ) return;
+    CodeEditor *editor = (_lockedEditor ? _lockedEditor : _codeEditor);
+    if( !isBuildable( editor ) )
+        return;
 
-    QString filePath=editor->path();
-    if( filePath.isEmpty() ) return;
+    QString filePath = editor->path();
+    if( filePath.isEmpty() )
+        return;
 
-    QString cmd,msg="Buillding: "+filePath+"...";
+    QString cmd, msg = "Buillding: "+filePath+"...";
 
-    QString transcc = "transcc"+HOST, path = _monkeyPath+"/bin/"+transcc;
-    #ifdef Q_OS_WIN
-        path += ".exe";
-    #endif
-    bool r = QFile::exists( path );
-    if(!r) {
-        transcc = "trans"+HOST;
-    }
 
     if( editor->fileType()=="monkey" ){
         if( mode=="run" ){
-            cmd="\"${MONKEYPATH}/bin/"+transcc+"\" -target=${TARGET} -config=${CONFIG} -run \"${FILEPATH}\"";
+            cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} -run \"${FILEPATH}\"";
         }else if( mode=="build" ){
-            cmd="\"${MONKEYPATH}/bin/"+transcc+"\" -target=${TARGET} -config=${CONFIG} \"${FILEPATH}\"";
+            cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} \"${FILEPATH}\"";
         }else if( mode=="update" ){
-            cmd="\"${MONKEYPATH}/bin/"+transcc+"\" -target=${TARGET} -config=${CONFIG} -update \"${FILEPATH}\"";
+            cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} -update \"${FILEPATH}\"";
             msg="Updating: "+filePath+"...";
         }else if( mode=="check" ){
-            cmd="\"${MONKEYPATH}/bin/"+transcc+"\" -target=${TARGET} -config=${CONFIG} -check \"${FILEPATH}\"";
+            cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} -check \"${FILEPATH}\"";
             msg="Checking: "+filePath+"...";
-        }
-    }else if( editor->fileType()=="bmx" ){
-        if( mode=="run" ){
-            cmd="\"${BLITZMAXPATH}/bin/bmk\" makeapp -a -r -x ${FILEPATH}";
-        }else if( mode=="build" ){
-            cmd="\"${BLITZMAXPATH}/bin/bmk\" makeapp -a -x ${FILEPATH}";
         }
     }
 
@@ -1403,7 +1699,27 @@ void MainWindow::build( QString mode ){
 //***** File menu *****
 
 void MainWindow::onFileNew(){
-    newFile( "" );
+    if(sender() == _ui->actionNew) {
+        newFile( "" );
+    }
+    else {
+        QString s = QApplication::applicationDirPath()+"/projects/";
+        QDir dir(s);
+        bool b = dir.mkpath(s);
+        //if(!b) {
+        //    QMessageBox::information(this,"New File","Can't create dir");
+        //}
+        QDate dd = QDate::currentDate();
+        QString y = QString::number(dd.year());
+        QString m = QString::number(dd.month());
+        QString d = QString::number(dd.day());
+        QTime tt = QTime::currentTime();
+        QString t = QString::number(tt.hour())+"-"+QString::number(tt.minute())+"-"+QString::number(tt.second());
+
+        s += y+"-"+m+"-"+d+"_"+t+".monkey";
+        //QMessageBox::information(this,"",s);
+        newFile(s);
+    }
 }
 
 void MainWindow::onFileOpen(){
@@ -1466,8 +1782,8 @@ void MainWindow::onFileSaveAs(){
 }
 
 void MainWindow::onFileSaveAll(){
-    for( int i=0;i<_mainTabWidget->count();++i ){
-        CodeEditor *editor=qobject_cast<CodeEditor*>( _mainTabWidget->widget( i ) );
+    for( int i = 0; i < _mainTabWidget->count(); ++i ){
+        CodeEditor *editor = qobject_cast<CodeEditor*>( _mainTabWidget->widget( i ) );
         if( editor && !saveFile( editor,editor->path() ) ) return;
     }
 }
@@ -1492,31 +1808,17 @@ void MainWindow::onFilePrevious(){
 
 void MainWindow::onFilePrefs(){
 
+    QString mpath = _monkeyPath;
+
     _prefsDialog->setModal( true );
 
     _prefsDialog->exec();
 
-    Prefs *prefs=Prefs::prefs();
-
-    QString path = prefs->getString( "monkeyPath" );
-
-    if( path != _monkeyPath ){
-        if( isValidMonkeyPath( path ) ){
-            _monkeyPath = path;
-            enumTargets();
-            initKeywords();
+    if(!_monkeyPath.isEmpty() && _monkeyPath != mpath){
+        enumTargets();
+        initKeywords();
+        if(!_codeEditor)
             onHelpHome();
-        }
-    }
-
-    path=prefs->getString( "blitzmaxPath" );
-    if( path!=_blitzmaxPath ){
-        if( isValidBlitzmaxPath( path ) ){
-            _blitzmaxPath=path;
-        }else{
-            prefs->setValue( "blitzmaxPath",_blitzmaxPath );
-            QMessageBox::warning( this,"Tool Path Error","Invalid BlitzMax Path" );
-        }
     }
 
     updateActions();
@@ -1577,12 +1879,18 @@ void MainWindow::onEditFind(){
 
     _ui->frameSearch->setVisible(true);
     _ui->editFind->setFocus();
+    QString s = _codeEditor->textCursor().selectedText();
+    if(!s.isEmpty())
+        _ui->editFind->setText(s);
     _ui->editFind->selectAll();
 }
 
 void MainWindow::onEditFindNext(){
-    if( _codeEditor )
+    if( _codeEditor ) {
         onFindReplace( 0 );
+        //if(_ui->frameSearch->isVisible())
+        //    _ui->editFind->setFocus();
+    }
 }
 void MainWindow::onEditFindPrev(){
     if( _codeEditor )
@@ -1606,23 +1914,24 @@ void MainWindow::onFindReplace( int how ){
 
     bool cased = _ui->chbCase->isChecked();
 
-    bool wrap=true;
+    bool wrap = _ui->chbWrap->isChecked();;
 
+    bool found = true;
     if( how==0 || how==3){
-        if( !_codeEditor->findNext( findText,cased,wrap,(how==3) ) ){
-            QApplication::beep();
-        }
+        found = _codeEditor->findNext( findText,cased,wrap,(how==3) );
     }
     else if( how==1 ){
         if( _codeEditor->replace( findText,replaceText,cased ) ){
-            if( !_codeEditor->findNext( findText,cased,wrap ) ){
-                QApplication::beep();
-            }
+            found = _codeEditor->findNext( findText,cased,wrap );
         }
     }
     else if( how==2 ){
-        int n=_codeEditor->replaceAll( findText,replaceText,cased,wrap );
+        int n = _codeEditor->replaceAll( findText,replaceText,cased,wrap );
         QMessageBox::information( this,"Replace All",QString::number(n)+" occurences replaced" );
+    }
+    if( !found ){
+        QApplication::beep();
+        _ui->editFind->setFocus();
     }
 }
 
@@ -1659,14 +1968,46 @@ void MainWindow::onViewToolBar(){
 }
 
 void MainWindow::onViewWindow(){
-    if( sender() == _ui->actionViewBrowser ){
-        _ui->browserDockWidget->setVisible( _ui->actionViewBrowser->isChecked() );
+    if( sender() == _ui->actionViewProject ){
+        _ui->projectDockWidget->setVisible( _ui->actionViewProject->isChecked() );
     }
     else if( sender() == _ui->actionViewSource ){
         _ui->sourceDockWidget->setVisible( _ui->actionViewSource->isChecked() );
     }
-    else if( sender() == _ui->actionViewConsole ){
-        _ui->consoleDockWidget->setVisible( _ui->actionViewConsole->isChecked() );
+    else if( sender() == _ui->actionViewOutput ){
+        _ui->outputDockWidget->setVisible( _ui->actionViewOutput->isChecked() );
+    }
+    else if( sender() == _ui->actionViewUsages ){
+        _ui->usagesDockWidget->setVisible( _ui->actionViewUsages->isChecked() );
+    }
+    else if( sender() == _ui->actionViewCodeTree ){
+        _ui->codeTreeDockWidget->setVisible( _ui->actionViewCodeTree->isChecked() );
+    }
+    else if( sender() == _ui->actionViewDebug ){
+        _ui->debugDockWidget->setVisible( _ui->actionViewDebug->isChecked() );
+    }
+    else if( sender() == _ui->actionViewDocs ){
+        _ui->docsDockWidget->setVisible( _ui->actionViewDocs->isChecked() );
+    }
+    else if( sender() == _ui->actionViewDockShowAll ){
+        bool vis = true;
+        _ui->codeTreeDockWidget->setVisible( vis );
+        _ui->sourceDockWidget->setVisible( vis );
+        _ui->projectDockWidget->setVisible( vis );
+        _ui->debugDockWidget->setVisible( vis );
+        _ui->outputDockWidget->setVisible( vis );
+        _ui->usagesDockWidget->setVisible( vis );
+        _ui->docsDockWidget->setVisible( vis );
+    }
+    else if( sender() == _ui->actionViewDocksHideAll ){
+        bool vis = false;
+        _ui->codeTreeDockWidget->setVisible( vis );
+        _ui->sourceDockWidget->setVisible( vis );
+        _ui->projectDockWidget->setVisible( vis );
+        _ui->debugDockWidget->setVisible( vis );
+        _ui->outputDockWidget->setVisible( vis );
+        _ui->usagesDockWidget->setVisible( vis );
+        _ui->docsDockWidget->setVisible( vis );
     }
 }
 
@@ -1710,8 +2051,7 @@ void MainWindow::onDebugStepOut(){
 void MainWindow::onDebugKill(){
     if( !_consoleProc ) return;
 
-    _ui->outputTextEdit->setTextColor( QColor( 0,0,255 ) );
-    print( "Killing process..." );
+    print( "Killing process...", "finish" );
 
     _consoleProc->kill();
 }
@@ -1747,11 +2087,14 @@ void MainWindow::onBuildConfig(){
 }
 
 void MainWindow::onBuildLockFile(){
-    if( _codeEditor && _codeEditor!=_lockedEditor ){
-        CodeEditor *wasLocked=_lockedEditor;
-        _lockedEditor=_codeEditor;
+    CodeEditor *wasLocked = _lockedEditor;
+    if( wasLocked ){
+        _lockedEditor = 0;
+        updateTabLabel( wasLocked );
+    }
+    if( _codeEditor && _codeEditor != wasLocked ){
+        _lockedEditor = _codeEditor;
         updateTabLabel( _lockedEditor );
-        if( wasLocked ) updateTabLabel( wasLocked );
     }
     updateActions();
 }
@@ -1835,15 +2178,12 @@ void MainWindow::onHelpQuickHelp(){
 
 void MainWindow::onHelpAbout(){
     QString href = "http://fingerdev.com/apps/jentos/";
-    QString APP_ABOUT = "<html><head><style>a{color:#CC7832;}</style></head><body bgcolor='#ff3355'><b>"APP_NAME"</b> is an editor for the Monkey programming language.<br>"
-            "Developed by Evgeniy Goroshkin.<br>"
-            "v"APP_VERSION"<br>"
-            "Visit <a href='"+href+"'>"+href+"</a> for more information.<br><br>"
+    QString APP_ABOUT = "<html><head><style>a{color:#CC8030;}</style></head><body bgcolor2='#ff3355'><b>"APP_NAME"</b> is a powefull code editor for the Monkey programming language.<br>"
             "Based on Ted V"TED_VERSION".<br>"
-            "Copyright Blitz Research Ltd.<br>"
-            "Please visit <a href='http://www.monkey-x.com'>www.monkey-x.com</a> for more information on Monkey.<br><br>"
-            "Translator Version: "+_transVersion+"<br>"
-            "Qt Version: "_STRINGIZE(QT_VERSION)
+            "Visit <a href='"+href+"'>"+href+"</a> for more information.<br><br>"
+            "Version: "APP_VERSION+"<br>Trans: "+_transVersion+"<br>Qt: "_STRINGIZE(QT_VERSION)+"<br><br>"
+            "Jentos is free and always be free.<br>But you may support the author via <a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE\">donation</a>.<br>"
+
             "</body></html>";
     QMessageBox::information( this, "About", APP_ABOUT );
 }
@@ -1911,6 +2251,11 @@ void MainWindow::onStatusBarChanged(const QString &text) {
     statusBar()->showMessage( text );
 }
 
+void MainWindow::onCommentUncommentBlock() {
+    if( _codeEditor )
+        _codeEditor->commentUncommentBlock();
+}
+
 void MainWindow::onToggleBookmark() {
     if( _codeEditor )
         _codeEditor->bookmarkToggle();
@@ -1950,19 +2295,171 @@ void MainWindow::onGoForward() {
         onHelpForward();
 }
 
-void MainWindow::onDarkTheme() {
-    _ui->actionDarkTheme->setChecked(true);
-    _ui->actionLightTheme->setChecked(false);
-    loadStyles(true);
+void MainWindow::onThemeAndroidStudio() {
+    Theme::set("android");
+    updateTheme();
 }
 
-void MainWindow::onLightTheme() {
-    _ui->actionDarkTheme->setChecked(false);
-    _ui->actionLightTheme->setChecked(true);
-    loadStyles(false);
+void MainWindow::onThemeNetBeans() {
+    Theme::set("netbeans");
+    updateTheme();
+}
+
+void MainWindow::onThemeQtCreator() {
+    Theme::set("qt");
+    updateTheme();
 }
 
 void MainWindow::onAutoformatAll() {
-    if( _codeEditor )
+    if( _codeEditor ) {
+        QMessageBox m;
+        m.setText("Autoformating whole document.\nPlease, wait...");
+        m.showNormal();
+        m.setStandardButtons(QMessageBox::Close);
+        QApplication::processEvents();
         _codeEditor->autoformatAll();
+        m.hide();
+    }
+}
+
+void MainWindow::onKeyEscapePressed() {
+    if(_ui->frameSearch->isVisible())
+        _ui->frameSearch->hide();
+}
+
+void MainWindow::onCheckForUpdates() {
+    QUrl url("http://fingerdev.com/apps/jentos/update.txt");
+    if(_networkManager)
+        delete _networkManager;
+    _networkManager = new QNetworkAccessManager(this);
+    connect(_networkManager, SIGNAL(finished(QNetworkReply*)), SLOT(onNetworkFinished(QNetworkReply*)));
+    QNetworkRequest request;
+    request.setUrl(url);
+    _showMsgbox = true;
+    _networkManager->get(request);
+}
+
+void MainWindow::onCheckForUpdatesSilent() {
+    QUrl url("http://fingerdev.com/apps/jentos/update.txt");
+    if(_networkManager)
+        delete _networkManager;
+    _networkManager = new QNetworkAccessManager(this);
+    connect(_networkManager, SIGNAL(finished(QNetworkReply*)), SLOT(onNetworkFinished(QNetworkReply*)));
+    QNetworkRequest request;
+    request.setUrl(url);
+    _showMsgbox = false;
+    _networkManager->get(request);
+}
+
+void MainWindow::onNetworkFinished(QNetworkReply *reply) {
+    reply->deleteLater();
+    QByteArray bytes = reply->readAll();
+    QString s(bytes);
+    s = s.trimmed();
+    //qDebug()<<s;
+    if(!s.startsWith("$$$") && _showMsgbox) {
+        QMessageBox::information(this,"New version","<html><body>Check new version error.</body></html>");
+        return;
+    }
+    int i = s.indexOf("\n");
+    QString ver = s.left(i).mid(3).trimmed();
+    QString v = APP_VERSION;
+    //qDebug()<<v<<ver;
+    if(ver > v) {
+        s = s.mid(i+1);
+        QMessageBox::information(this,"New version",s);
+    }
+    else if(_showMsgbox){
+        QMessageBox::information(this,"New version","<html><head><style>a{color:#CC8030;}</style></head><body>No updates available.<br><b>You are using the latest version "+v+".</b><br><br><a href='http://fingerdev.com/apps/jentos/'>Jentos IDE Homepage</a></body></html>");
+    }
+}
+
+void MainWindow::onOpenUrl() {
+    QString url;
+    if(sender() == _ui->actionHelpOnlineDocs)
+        url = "http://www.monkey-x.com/docs/html/Home.html";
+    else if(sender() == _ui->actionHelpMonkeyHomepage)
+        url = "http://www.monkey-x.com/";
+    else if(sender() == _ui->actionHelpFingerDevStudioHomepage)
+        url = "http://fingerdev.com/";
+    QDesktopServices::openUrl(url);
+}
+
+void MainWindow::onLowerUpperCase() {
+    if( _codeEditor ) {
+        _codeEditor->lowerUpperCase( sender() == _ui->actionFormatLowercase );
+    }
+}
+
+
+void MainWindow::onUsagesRename() {
+    QString newIdent = _ui->editUsagesRename->text();
+    if(newIdent == "") {
+        QMessageBox::information(this,"Rename","Field 'Rename with' is empty! Enter correct value.");
+        return;
+    }
+    QWidget *w = _ui->usagesTabWidget->currentWidget();
+    w = w->layout()->itemAt(0)->widget();
+    QTreeWidget *tree = dynamic_cast<QTreeWidget*>(w);
+    if(!tree)
+        return;
+    int newLen = newIdent.length();
+    bool selOnly = true;//_ui->chbUsageSelectedOnly->isChecked();
+    QTreeWidgetItem *root = tree->invisibleRootItem();
+    for(int k = 0; k < root->childCount(); ++k) {
+        QTreeWidgetItem *item = root->child(k);
+        bool first = true;
+        int delta = 0;
+        for(int j = 0; j < item->childCount(); ++j) {
+            QTreeWidgetItem *sub = item->child(j);
+            if(selOnly && sub->checkState(0) != Qt::Checked) {
+                continue;
+            }
+            UsagesResult *u = UsagesResult::item(sub);
+            if(u) {
+                if(first) {
+                    openFile(u->path, true);
+                    first = false;
+                }
+                if(_codeEditor) {
+                    int from = u->positionStart+delta;
+                    int to = u->positionEnd+delta;
+                    _codeEditor->replaceInRange(from, to, newIdent);
+                    delta += (newLen - u->ident.length());
+                }
+            }
+        }
+    }
+}
+
+void MainWindow::onUsagesSelectAll() {
+    QWidget *w = _ui->usagesTabWidget->currentWidget();
+    w = w->layout()->itemAt(0)->widget();
+    QTreeWidget *tree = dynamic_cast<QTreeWidget*>(w);
+    if(tree) {
+        QTreeWidgetItem *root = tree->invisibleRootItem();
+        for(int k = 0; k < root->childCount(); ++k) {
+            QTreeWidgetItem *item = root->child(k);
+            for(int j = 0; j < item->childCount(); ++j) {
+                QTreeWidgetItem *sub = item->child(j);
+                sub->setCheckState(0,Qt::Checked);
+            }
+        }
+    }
+}
+
+void MainWindow::onUsagesUnselectAll() {
+    QWidget *w = _ui->usagesTabWidget->currentWidget();
+    w = w->layout()->itemAt(0)->widget();
+    QTreeWidget *tree = dynamic_cast<QTreeWidget*>(w);
+    if(tree) {
+        QTreeWidgetItem *root = tree->invisibleRootItem();
+        for(int k = 0; k < root->childCount(); ++k) {
+            QTreeWidgetItem *item = root->child(k);
+            for(int j = 0; j < item->childCount(); ++j) {
+                QTreeWidgetItem *sub = item->child(j);
+                sub->setCheckState(0,Qt::Unchecked);
+            }
+        }
+    }
 }
