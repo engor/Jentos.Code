@@ -303,6 +303,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="checkBoxShowHelpInDock">
+     <property name="text">
+      <string>Show help in docked panel instead of tab</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QCheckBox" name="checkBoxCheckUpdates">
      <property name="statusTip">
       <string>Check for Updates at startup</string>
@@ -921,6 +928,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>checkBoxShowHelpInDock</sender>
+   <signal>clicked()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onShowHelpInDockChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>199</x>
+     <y>393</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>259</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>onColorChanged()</slot>
@@ -933,5 +956,6 @@
   <slot>onCheckUpdatesChanged()</slot>
   <slot>onHighlightLineChanged(bool)</slot>
   <slot>onHighlightWordChanged(bool)</slot>
+  <slot>onShowHelpInDockChanged()</slot>
  </slots>
 </ui>

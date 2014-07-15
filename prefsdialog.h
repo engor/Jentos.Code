@@ -43,6 +43,7 @@ public slots:
     void onAnalyzerChanged();
     void onCheckUpdatesChanged();
     void onThemeChanged(int index);
+    void onShowHelpInDockChanged();
 
 private:
     MainWindow *_mainwnd;

@@ -75,6 +75,7 @@ int PrefsDialog::exec(){
     _ui->checkBoxFillAucompInherit->setChecked( _prefs->getBool( "codeFillAucompInherit" ) );
 
     _ui->checkBoxCheckUpdates->setChecked( _prefs->getBool( "updates" ) );
+    _ui->checkBoxShowHelpInDock->setChecked(_prefs->getBool("showHelpInDock"));
 
     Prefs *p = Prefs::prefs();
     _ui->labelSettingsFile->setText( p->settings()->fileName() );
@@ -165,4 +166,8 @@ void PrefsDialog::onThemeChanged(int index) {
         _mainwnd->onThemeNetBeans();
     else
         _mainwnd->onThemeQtCreator();
+}
+
+void PrefsDialog::onShowHelpInDockChanged() {
+    _prefs->setValue("showHelpInDock", _ui->checkBoxShowHelpInDock->isChecked());
 }

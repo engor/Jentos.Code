@@ -185,6 +185,7 @@ public slots:
     void onFindUsages();
 
     void onLinkClicked( const QUrl &url );
+    void onDocsZoomChanged(int);
 
 private slots:
 
@@ -237,6 +238,7 @@ private:
     QString _runBmxCmd;
 
     static QString _monkeyPath, _transPath;
+    bool _isShowHelpInDock;
     QString _buildMonkeyCmd;
     QString _runMonkeyCmd;
 

@@ -639,33 +639,33 @@ void MainWindow::onTabsCloseAllTabs() {
 QWidget *MainWindow::openFile( const QString &cpath,bool addToRecent ){
 
     if( isUrl( cpath ) ){
-        QWebView *webView=0;
-        /*for( int i=0;i<_mainTabWidget->count();++i ){
-            if( webView=qobject_cast<QWebView*>( _mainTabWidget->widget( i ) ) ) break;
-        }
-        if( !webView ){
-            webView=new QWebView;
-            webView->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
-            connect( webView,SIGNAL(linkClicked(QUrl)),SLOT(onLinkClicked(QUrl)) );
-            _mainTabWidget->addTab( webView,"Help" );
-        }
-
-        webView->setUrl( cpath );
-
-        if( webView!=_mainTabWidget->currentWidget() ){
-            _mainTabWidget->setCurrentWidget( webView );
-        }else{
-            updateWindowTitle();
-        }*/
-
-        //add to dock panel
-        _ui->webView->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
-        _ui->webView->setUrl( cpath );
-        if(true) {
+        if(_isShowHelpInDock) {
+            _ui->webView->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
+            _ui->webView->setUrl( cpath );
             _ui->docsDockWidget->setVisible(true);
+            return 0;
         }
+        else {
+            QWebView *webView = 0;
+            for( int i = 0; i < _mainTabWidget->count(); ++i ){
+                if( webView = qobject_cast<QWebView*>( _mainTabWidget->widget( i ) ) ) break;
+            }
+            if( !webView ){
+                webView = new QWebView;
+                webView->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
+                connect( webView,SIGNAL(linkClicked(QUrl)),SLOT(onLinkClicked(QUrl)) );
+                _mainTabWidget->addTab( webView,"Help" );
+            }
 
-        return webView;
+            webView->setUrl( cpath );
+
+            if( webView != _mainTabWidget->currentWidget() ){
+                _mainTabWidget->setCurrentWidget( webView );
+            }else{
+                updateWindowTitle();
+            }
+            return webView;
+        }
     }
 
     QString path=cpath;
@@ -953,7 +953,10 @@ void MainWindow::readSettings(){
         prefs->setValue("highlightLine",true);
         prefs->setValue("highlightWord",true);
         prefs->setValue("style","Default");
+        prefs->setValue("showHelpInDock",false);
     }
+
+    _isShowHelpInDock = prefs->getBool("showHelpInDock");
 
     _monkeyPath = prefs->getString( "monkeyPath" );
     _transPath = prefs->getString( "transPath" );
@@ -1821,6 +1824,8 @@ void MainWindow::onFilePrefs(){
             onHelpHome();
     }
 
+    _isShowHelpInDock = Prefs::prefs()->getBool("showHelpInDock");
+
     updateActions();
 }
 
@@ -2462,4 +2467,8 @@ void MainWindow::onUsagesUnselectAll() {
             }
         }
     }
+}
+
+void MainWindow::onDocsZoomChanged(int) {
+    _ui->webView->setZoomFactor(_ui->zoomSlider->value()/100.0f);
 }
