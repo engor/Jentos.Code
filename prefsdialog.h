@@ -44,6 +44,7 @@ public slots:
     void onCheckUpdatesChanged();
     void onThemeChanged(int index);
     void onShowHelpInDockChanged();
+    void onReplaceDocsStyleChanged();
 
 private:
     MainWindow *_mainwnd;

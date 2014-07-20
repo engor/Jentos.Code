@@ -441,7 +441,9 @@ void MainWindow::updateTheme() {
     _ui->action->setIcon(QIcon(":/icons/"+theme+"/.png"));*/
 
     //qDebug() << "update theme: "+Theme::theme();
-    if( !_monkeyPath.isEmpty() ) {
+    Prefs *p = Prefs::prefs();
+    if( !_monkeyPath.isEmpty() && p->getBool("replaceDocsStyle") ) {
+        qDebug()<<"replace docs style";
         QString jent = QApplication::applicationDirPath() + "/pagestyle.css";
         QString monk = _monkeyPath+"/docs/html/pagestyle.css";
         if(!QFile::exists(jent)) {
@@ -861,7 +863,8 @@ void MainWindow::closeEvent( QCloseEvent *event ){
         _findInFilesDialog->close();
         event->accept();
         //restore help css
-        if(!_monkeyPath.isEmpty()) {
+        Prefs *p = Prefs::prefs();
+        if( !_monkeyPath.isEmpty() && p->getBool("replaceDocsStyle") ) {
             QString jent = QApplication::applicationDirPath() + "/pagestyle.css";
             QString monk = _monkeyPath+"/docs/html/pagestyle.css";
             if(QFile::exists(jent)) {
@@ -954,6 +957,7 @@ void MainWindow::readSettings(){
         prefs->setValue("highlightWord",true);
         prefs->setValue("style","Default");
         prefs->setValue("showHelpInDock",false);
+        prefs->setValue("replaceDocsStyle",true);
     }
 
     _isShowHelpInDock = prefs->getBool("showHelpInDock");
