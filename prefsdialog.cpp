@@ -76,6 +76,7 @@ int PrefsDialog::exec(){
 
     _ui->checkBoxCheckUpdates->setChecked( _prefs->getBool( "updates" ) );
     _ui->checkBoxShowHelpInDock->setChecked(_prefs->getBool("showHelpInDock"));
+    _ui->checkBoxReplaceDocsStyle->setChecked(_prefs->getBool("replaceDocsStyle"));
 
     Prefs *p = Prefs::prefs();
     _ui->labelSettingsFile->setText( p->settings()->fileName() );
@@ -87,7 +88,7 @@ int PrefsDialog::exec(){
         index = 2;
     _ui->comboBoxTheme->setCurrentIndex(index);
 
-    _ui->groupBox->setVisible(false);
+    //_ui->groupBox->setVisible(false);
 
     QDialog::show();
     return QDialog::exec();
@@ -170,4 +171,8 @@ void PrefsDialog::onThemeChanged(int index) {
 
 void PrefsDialog::onShowHelpInDockChanged() {
     _prefs->setValue("showHelpInDock", _ui->checkBoxShowHelpInDock->isChecked());
+}
+
+void PrefsDialog::onReplaceDocsStyleChanged() {
+    _prefs->setValue("replaceDocsStyle", _ui->checkBoxReplaceDocsStyle->isChecked());
 }
