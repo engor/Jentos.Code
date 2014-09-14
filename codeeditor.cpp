@@ -21,6 +21,7 @@ QList<QTextEdit::ExtraSelection> extraSels;
 QTextEdit::ExtraSelection rowSelection;
 QString _extraSelWord;
 int _extraSelScrollPos;
+QTextEdit::ExtraSelection hintWordSelection;
 
 //static QList<QTextEdit::ExtraSelection> extraSelsWords;
 
@@ -1226,13 +1227,14 @@ void CodeEditor::mouseMoveEvent(QMouseEvent *e) {
         cursor.select(QTextCursor::WordUnderCursor);
         //flushExtraSels();
         QTextBlock block = cursor.block();
-        if( block.isValid() ){
-            QTextEdit::ExtraSelection selection;
-            selection.format.setForeground( (Theme::isDark() ? QColor(250,250,250) : QColor(0,0,255)) );
-            selection.format.setFontUnderline( true );
-            selection.format.setFontWeight( QFont::Bold );
-            selection.cursor = cursor;
-            extraSels.append( selection );
+        if( block.isValid() ) {
+            QTextEdit::ExtraSelection es = hintWordSelection;
+            flushWordsExtraSels();
+            es.format.setForeground( (Theme::isDark() ? QColor(250,250,250) : QColor(0,0,255)) );
+            es.format.setFontUnderline( true );
+            es.format.setFontWeight( QFont::Bold );
+            es.cursor = cursor;
+            extraSels.append( es );
         }
         setExtraSelections( extraSels );
         extraSelsEditor = this;
