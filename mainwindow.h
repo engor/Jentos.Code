@@ -232,6 +232,8 @@ private slots:
 
     void on_docsDockWidget_allowedAreasChanged(const Qt::DockWidgetAreas &allowedAreas);
 
+    void on_actionClose_all_Tabs_triggered();
+
 private:
 
 

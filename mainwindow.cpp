@@ -2504,3 +2504,8 @@ void MainWindow::on_docsDockWidget_allowedAreasChanged(const Qt::DockWidgetAreas
 {
 
 }
+
+void MainWindow::on_actionClose_all_Tabs_triggered()
+{
+
+}

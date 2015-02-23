@@ -3121,7 +3121,7 @@ Don't change documents between find usages and rename</string>
    <sender>actionClose_all_Tabs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>onTabsCloseAllTabs()</slot>
+   <slot>onFileCloseAll()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
