@@ -1,0 +1,81 @@
+
+	Jentos IDE v1.1
+
+** Themes **
+
++ Android Studio, dark.
++ Qt Creator, light.
++ Netbeans ,light, is default.
+For docs: file pagestyle.css replacing with dark or light version when change theme. But you have to restart the app to see changes.
+
+
+** Code Analyzer **
+
++ Correct multiple inheritance.
++ Improve parser for interfaces, now it don't expect of pair 'method-end', just 'method'.
+The same bug fixed for abstract methods.
++ Folding for "if,while,for,select" statements; and local variables is local for analyzer inside of them.
++ Import myfile - analyze user's imports.
++ Correct parse templates when there are few arguments in line.
++ Analyze variables from 'For local var:Type = ...'.
++ Analyzing for ':=' expression.
++ Check the file modified time before analyzing; if time isn't changed, then don't analyzing.
+
+
+** Editor **
+
++ Choose item from autocomplete list by Tab.
++ "Find Usages / Rename" for user's variables. 
+(Don't change documents between find usages and rename! For another rename do Find Usages again. This function opens all files from CodeTree.)
++ Show hint for all user's variables by Ctrl+"mouse over". Click LMB to jump to declaration line.
+Note: not showing hint if document has selection, because this prevents copying.
++ Fix for deleting multi-line selection area; early cursor may jump somewhere.
++ Improved tab/untab indention for multi-line selection area.
++ Click on word 'Import' by Ctrl+LMB to open file.
++ Show mark 'ovr.' for overridden methods on the line number area.
++ Italic font for const, global, function.
++ Fix 'crash when closing tab with code'.
++ Some new template-words (look at templates.txt).
++ Custom contextual menu for code editor, which includes Find Usages and Bookmark actions.
+
+
+** Options **
+
++ Inheritance list after 'Method ' (default is true) - show list with methods from base classes and interfaces.
++ Replace tabs with spaces (default is false).
++ Autoformat on/off (default is true) - replace #$%^ to :Float:String:Int:Bool, add/remove needed spaces.
++ Highlight current line (default is true) - visible carret row.
++ Highlight word under cursor (default is true).
++ Settings now stored in file settings.ini without sub-directory.
++ Check for Updated (default is true).
+
+
+** Main Menu **
+
++ Action "File -- New (temp)" - create temp file in folder %Jentos%/projects/ without prompt.
++ Action "View -- Comment / Uncomment Block" - add or remove comment quote for selected lines.
++ Action "Edit -- Find Usages / Rename"
+* New item 'Format':
++ Autoformat All (works even if item 'autoformat' is off in options)
++ lowercase selection
++ UPPERCASE selection
+
+
+** Source list **
+
+* Options (checkable buttons):
++ Show Inherited Members
++ Sorting
++ Show Variables
+* View class summary - click RMB on the first item (with class name) in the Source list 
+
+
+** Search panel **
+
++ Add option 'wrap' (early it always was true).
++ Copying selected text to field Find when opens Search panel.
++ Fix 'wrap around' for searching previous.
++ Hide panel by pressing Escape, if focus is on document.
+
+
+** Other minor fixes **

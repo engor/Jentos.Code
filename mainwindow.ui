@@ -491,6 +491,7 @@
    <addaction name="actionStep_In"/>
    <addaction name="actionStep_Out"/>
    <addaction name="actionKill"/>
+   <addaction name="actionLock_Target"/>
   </widget>
   <widget class="QToolBar" name="helpToolBar">
    <property name="windowTitle">
@@ -2031,6 +2032,21 @@ Don't change documents between find usages and rename</string>
    </property>
    <property name="text">
     <string>Docs</string>
+   </property>
+  </action>
+  <action name="actionLock_Target">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/light/lock.png</normaloff>:/icons/light/lock.png</iconset>
+   </property>
+   <property name="text">
+    <string>Lock Target</string>
+   </property>
+   <property name="toolTip">
+    <string>Locks the drop down box so you cannot accidentally switch targets when scrolling</string>
    </property>
   </action>
  </widget>

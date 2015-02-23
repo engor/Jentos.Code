@@ -2476,3 +2476,21 @@ void MainWindow::onUsagesUnselectAll() {
 void MainWindow::onDocsZoomChanged(int) {
     _ui->webView->setZoomFactor(_ui->zoomSlider->value()/100.0f);
 }
+
+void MainWindow::on_actionLock_Target_triggered()
+{
+
+
+}
+
+void MainWindow::on_actionLock_Target_toggled(bool arg1)
+{
+    if(arg1==true){
+        _targetsWidget->setEnabled(false);
+        _configsWidget->setEnabled(false);
+    }
+    if(arg1==false){
+        _targetsWidget->setEnabled(true);
+        _configsWidget->setEnabled(true);
+    }
+}

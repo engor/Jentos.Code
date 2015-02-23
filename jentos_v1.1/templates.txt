@@ -1,0 +1,9 @@
+<l>Local </l>
+<f>Field </f>
+<g>Global </g>
+<fu>Function </fu>
+<m>Method </m>
+<p>Print "%cursor%"</p>
+<for>For Local k:Int = 0 Until 0%cursor%
+    
+Next</for>

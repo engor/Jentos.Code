@@ -224,6 +224,10 @@ private slots:
     void onUsagesUnselectAll();
 
 
+    void on_actionLock_Target_triggered();
+
+    void on_actionLock_Target_toggled(bool arg1);
+
 private:
 
 
