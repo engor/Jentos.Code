@@ -41,7 +41,7 @@ See LICENSE.TXT for licensing terms.
 #define _STRINGIZE( X ) _QUOTE(X)
 
 #define TED_VERSION "1.17"
-#define APP_VERSION "1.1"
+#define APP_VERSION "1.2"
 #define APP_NAME "Jentos IDE"
 
 
@@ -2186,12 +2186,12 @@ void MainWindow::onHelpQuickHelp(){
 }
 
 void MainWindow::onHelpAbout(){
-    QString href = "http://fingerdev.com/apps/jentos/";
+    QString href = "https://github.com/nerionx/Jentos_IDE";
     QString APP_ABOUT = "<html><head><style>a{color:#CC8030;}</style></head><body bgcolor2='#ff3355'><b>"APP_NAME"</b> is a powefull code editor for the Monkey programming language.<br>"
-            "Based on Ted V"TED_VERSION".<br>"
+            "Based on Ted V"TED_VERSION".<br> This binary is Fryman's fork<br>Please send bug reports to him on monkey-x.com<br>"
             "Visit <a href='"+href+"'>"+href+"</a> for more information.<br><br>"
             "Version: "APP_VERSION+"<br>Trans: "+_transVersion+"<br>Qt: "_STRINGIZE(QT_VERSION)+"<br><br>"
-            "Jentos is free and always be free.<br>But you may support the author via <a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE\">donation</a>.<br>"
+            "Jentos is free and always be free.<br>But you may support engor/nerobot via <a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE\">donation</a>.<br>"
 
             "</body></html>";
     QMessageBox::information( this, "About", APP_ABOUT );
@@ -2349,7 +2349,7 @@ void MainWindow::onCheckForUpdates() {
 }
 
 void MainWindow::onCheckForUpdatesSilent() {
-    QUrl url("http://fingerdev.com/apps/jentos/update.txt");
+    QUrl url("https://raw.githubusercontent.com/nerionx/Jentos_IDE/master/updates.txt");
     if(_networkManager)
         delete _networkManager;
     _networkManager = new QNetworkAccessManager(this);
@@ -2379,7 +2379,7 @@ void MainWindow::onNetworkFinished(QNetworkReply *reply) {
         QMessageBox::information(this,"New version",s);
     }
     else if(_showMsgbox){
-        QMessageBox::information(this,"New version","<html><head><style>a{color:#CC8030;}</style></head><body>No updates available.<br><b>You are using the latest version "+v+".</b><br><br><a href='http://fingerdev.com/apps/jentos/'>Jentos IDE Homepage</a></body></html>");
+        QMessageBox::information(this,"New version","<html><head><style>a{color:#CC8030;}</style></head><body>No updates available.<br><b>You are using the latest version "+v+".</b><br><br><a href='https://github.com/nerionx/Jentos_IDE'>Jentos IDE - Frymans Fork HomePage</a></body></html>");
     }
 }
 
