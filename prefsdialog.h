@@ -46,6 +46,9 @@ public slots:
     void onShowHelpInDockChanged();
     void onReplaceDocsStyleChanged();
 
+private slots:
+    void on_checkBoxAutoBracket_stateChanged(int arg1);
+
 private:
     MainWindow *_mainwnd;
     Ui::PrefsDialog *_ui;

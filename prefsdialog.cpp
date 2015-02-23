@@ -176,3 +176,8 @@ void PrefsDialog::onShowHelpInDockChanged() {
 void PrefsDialog::onReplaceDocsStyleChanged() {
     _prefs->setValue("replaceDocsStyle", _ui->checkBoxReplaceDocsStyle->isChecked());
 }
+
+void PrefsDialog::on_checkBoxAutoBracket_stateChanged(int arg1)
+{
+     _prefs->setValue( "AutoBracket", _ui->checkBoxAutoBracket->isChecked() );
+}

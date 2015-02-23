@@ -2494,3 +2494,13 @@ void MainWindow::on_actionLock_Target_toggled(bool arg1)
         _configsWidget->setEnabled(true);
     }
 }
+
+void MainWindow::on_webView_selectionChanged()
+{
+
+}
+
+void MainWindow::on_docsDockWidget_allowedAreasChanged(const Qt::DockWidgetAreas &allowedAreas)
+{
+
+}

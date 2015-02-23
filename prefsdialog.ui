@@ -17,7 +17,7 @@
    <item>
     <widget class="QToolBox" name="toolBox">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="pageEditor">
       <property name="geometry">
@@ -56,7 +56,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-108</y>
+            <y>0</y>
             <width>362</width>
             <height>354</height>
            </rect>
@@ -294,6 +294,14 @@
       </layout>
      </widget>
      <widget class="QWidget" name="pageThemes">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>381</width>
+        <height>248</height>
+       </rect>
+      </property>
       <attribute name="label">
        <string>Themes</string>
       </attribute>
@@ -421,6 +429,14 @@
       </layout>
      </widget>
      <widget class="QWidget" name="pageAnalyzer">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>381</width>
+        <height>248</height>
+       </rect>
+      </property>
       <attribute name="label">
        <string>Analyzer</string>
       </attribute>
@@ -486,6 +502,16 @@
             </widget>
            </item>
            <item>
+            <widget class="QCheckBox" name="checkBoxAutoBracket">
+             <property name="text">
+              <string>Automatically close Brackets and Quotations</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
             <spacer name="verticalSpacer_4">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -505,6 +531,14 @@
       </layout>
      </widget>
      <widget class="QWidget" name="pageMonkey">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>381</width>
+        <height>248</height>
+       </rect>
+      </property>
       <attribute name="label">
        <string>Monkey path</string>
       </attribute>

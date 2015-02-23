@@ -661,7 +661,7 @@ CodeItem* CodeAnalyzer::isBlockHasClassOrFunc(const QTextBlock &block) {
     }
     return 0;
 }
-
+//Modify this code to stop the autobracing
 QStringList CodeAnalyzer::extractParams(const QString &text) {
     QStringList list;
     int st1=0, st2=0, st3=0, pos = 0;
@@ -691,7 +691,7 @@ QStringList CodeAnalyzer::extractParams(const QString &text) {
         else if(ch == '[')
             ++st1;
         else if(ch == ']')
-            --st1;
+           --st1;
         else if(ch == '(')
             ++st2;
         else if(ch == ')')

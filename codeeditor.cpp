@@ -1585,6 +1585,7 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     }
 
     //autocomplete for "",'',(),[]
+if(Prefs::prefs()->getBool("AutoBracket")==true){
     QString evtxt = e->text();
     bool k1 = (evtxt == "\"");
     bool k2 = false;//(evtxt == "'");
@@ -1628,6 +1629,8 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
             e->accept();
             return;
         }
+    }
+    //Disabled in options so do nothing
     }
 
 
