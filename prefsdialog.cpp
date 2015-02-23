@@ -75,6 +75,7 @@ int PrefsDialog::exec(){
     _ui->checkBoxFillAucompInherit->setChecked( _prefs->getBool( "codeFillAucompInherit" ) );
 
     _ui->checkBoxCheckUpdates->setChecked( _prefs->getBool( "updates" ) );
+    _ui->checkBoxAutoBracket->setChecked(_prefs->getBool("AutoBracket"));
     _ui->checkBoxShowHelpInDock->setChecked(_prefs->getBool("showHelpInDock"));
     _ui->checkBoxReplaceDocsStyle->setChecked(_prefs->getBool("replaceDocsStyle"));
 
