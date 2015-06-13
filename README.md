@@ -19,10 +19,13 @@ It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official
 
 ### snippets 
 @mojoapp
+name by default is Game
+
+@mojoapp{name}
 ```blitzmax
 Import mojo
 
-Class Game Extends App
+Class {name} Extends App
 
 	 Method OnCreate()
 		  SetUpdateRate 30
@@ -40,9 +43,11 @@ Class Game Extends App
 End
 
 Function Main()
-	 New Game()
+	 New {name}()
 End
 ```
+
+
 ### Code Analyzer
 * Correct multiple inheritance.
 * Folding for "if,while,for,select" statements; and local variables is local for analyzer inside of them.

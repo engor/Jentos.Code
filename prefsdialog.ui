@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>399</width>
+    <width>457</width>
     <height>470</height>
    </rect>
   </property>
@@ -17,15 +17,15 @@
    <item>
     <widget class="QToolBox" name="toolBox">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="pageEditor">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>381</width>
-        <height>248</height>
+        <width>441</width>
+        <height>247</height>
        </rect>
       </property>
       <attribute name="label">
@@ -53,12 +53,15 @@
           <bool>true</bool>
          </property>
          <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
-            <width>362</width>
-            <height>354</height>
+            <y>-306</y>
+            <width>428</width>
+            <height>571</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -84,7 +87,7 @@
                </property>
                <property name="currentFont">
                 <font>
-                 <family>Courier</family>
+                 <family>Cousine</family>
                 </font>
                </property>
               </widget>
@@ -168,6 +171,9 @@
            </item>
            <item>
             <widget class="QGroupBox" name="groupBox">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
              <property name="title">
               <string>Highlighter</string>
              </property>
@@ -252,14 +258,14 @@
                 <item row="6" column="1">
                  <widget class="ColorSwatch" name="keywordsColorWidget" native="true"/>
                 </item>
-                <item row="7" column="0">
+                <item row="16" column="0">
                  <widget class="QLabel" name="commentsColorLabel">
                   <property name="text">
                    <string>Comments</string>
                   </property>
                  </widget>
                 </item>
-                <item row="7" column="1">
+                <item row="16" column="1">
                  <widget class="ColorSwatch" name="commentsColorWidget" native="true"/>
                 </item>
                 <item row="5" column="0">
@@ -268,6 +274,96 @@
                    <string>Identifiers</string>
                   </property>
                  </widget>
+                </item>
+                <item row="7" column="0">
+                 <widget class="QLabel" name="constantsColorLabel">
+                  <property name="text">
+                   <string>constants</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="0">
+                 <widget class="QLabel" name="funcDeclsColorLabel">
+                  <property name="text">
+                   <string>funcDecls</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="1">
+                 <widget class="ColorSwatch" name="constantsColorWidget" native="true"/>
+                </item>
+                <item row="8" column="1">
+                 <widget class="ColorSwatch" name="funcDeclsColorWidget" native="true"/>
+                </item>
+                <item row="9" column="0">
+                 <widget class="QLabel" name="highlightColorErrorLabel">
+                  <property name="text">
+                   <string>highlightError</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="9" column="1">
+                 <widget class="ColorSwatch" name="highlightColorErrorWidget" native="true"/>
+                </item>
+                <item row="10" column="0">
+                 <widget class="QLabel" name="highlightColorCaretRowLabel">
+                  <property name="text">
+                   <string>highlightCaretRow</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="10" column="1">
+                 <widget class="ColorSwatch" name="highlightColorCaretRowWidget" native="true"/>
+                </item>
+                <item row="11" column="0">
+                 <widget class="QLabel" name="monkeywordsColorLabel">
+                  <property name="text">
+                   <string>monkeywords</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="11" column="1">
+                 <widget class="ColorSwatch" name="monkeywordsColorWidget" native="true"/>
+                </item>
+                <item row="12" column="0">
+                 <widget class="QLabel" name="userwordsColorLabel">
+                  <property name="text">
+                   <string>userwords</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="12" column="1">
+                 <widget class="ColorSwatch" name="userwordsColorWidget" native="true"/>
+                </item>
+                <item row="13" column="0">
+                 <widget class="QLabel" name="userwordsDeclColorLabel">
+                  <property name="text">
+                   <string>userwordsDecl</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="13" column="1">
+                 <widget class="ColorSwatch" name="userwordsDeclColorWidget" native="true"/>
+                </item>
+                <item row="14" column="0">
+                 <widget class="QLabel" name="userwordsVarColorLabel">
+                  <property name="text">
+                   <string>userwordsVar</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="14" column="1">
+                 <widget class="ColorSwatch" name="userwordsVarColorWidget" native="true"/>
+                </item>
+                <item row="15" column="0">
+                 <widget class="QLabel" name="paramsColorLabel">
+                  <property name="text">
+                   <string>Params</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="15" column="1">
+                 <widget class="ColorSwatch" name="paramsColorWidget" native="true"/>
                 </item>
                </layout>
               </item>
@@ -298,8 +394,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>381</width>
-        <height>248</height>
+        <width>441</width>
+        <height>247</height>
        </rect>
       </property>
       <attribute name="label">
@@ -331,8 +427,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>379</width>
-            <height>246</height>
+            <width>439</width>
+            <height>245</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -433,8 +529,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>381</width>
-        <height>248</height>
+        <width>441</width>
+        <height>247</height>
        </rect>
       </property>
       <attribute name="label">
@@ -466,8 +562,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>379</width>
-            <height>246</height>
+            <width>439</width>
+            <height>245</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -535,8 +631,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>381</width>
-        <height>248</height>
+        <width>441</width>
+        <height>247</height>
        </rect>
       </property>
       <attribute name="label">
@@ -568,8 +664,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>379</width>
-            <height>246</height>
+            <width>439</width>
+            <height>245</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -680,8 +776,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>381</width>
-        <height>248</height>
+        <width>441</width>
+        <height>247</height>
        </rect>
       </property>
       <attribute name="label">
@@ -713,8 +809,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>379</width>
-            <height>246</height>
+            <width>439</width>
+            <height>245</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -907,8 +1003,8 @@
    <slot>onColorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>373</x>
-     <y>268</y>
+     <x>416</x>
+     <y>190</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -923,8 +1019,8 @@
    <slot>onColorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>373</x>
-     <y>284</y>
+     <x>416</x>
+     <y>230</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -939,8 +1035,8 @@
    <slot>onColorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>373</x>
-     <y>244</y>
+     <x>416</x>
+     <y>130</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -955,8 +1051,8 @@
    <slot>onColorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>373</x>
-     <y>260</y>
+     <x>416</x>
+     <y>170</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -971,8 +1067,8 @@
    <slot>onColorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>373</x>
-     <y>236</y>
+     <x>416</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -987,8 +1083,8 @@
    <slot>onColorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>373</x>
-     <y>276</y>
+     <x>416</x>
+     <y>210</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -1003,8 +1099,8 @@
    <slot>onColorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>373</x>
-     <y>293</y>
+     <x>416</x>
+     <y>250</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -1019,8 +1115,8 @@
    <slot>onFontChanged(QFont)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>164</x>
-     <y>42</y>
+     <x>361</x>
+     <y>-78</y>
     </hint>
     <hint type="destinationlabel">
      <x>138</x>
@@ -1035,8 +1131,8 @@
    <slot>onFontSizeChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>254</x>
-     <y>59</y>
+     <x>425</x>
+     <y>-48</y>
     </hint>
     <hint type="destinationlabel">
      <x>138</x>
@@ -1051,8 +1147,8 @@
    <slot>onTabSizeChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>334</x>
-     <y>75</y>
+     <x>425</x>
+     <y>-18</y>
     </hint>
     <hint type="destinationlabel">
      <x>4</x>
@@ -1067,8 +1163,8 @@
    <slot>onColorChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>364</x>
-     <y>252</y>
+     <x>416</x>
+     <y>150</y>
     </hint>
     <hint type="destinationlabel">
      <x>143</x>
@@ -1083,8 +1179,8 @@
    <slot>onSmoothFontsChanged(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>92</y>
+     <x>425</x>
+     <y>7</y>
     </hint>
     <hint type="destinationlabel">
      <x>176</x>
@@ -1115,8 +1211,8 @@
    <slot>onBrowseForPath()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>373</x>
-     <y>357</y>
+     <x>429</x>
+     <y>163</y>
     </hint>
     <hint type="destinationlabel">
      <x>196</x>
@@ -1147,8 +1243,8 @@
    <slot>onAnalyzerChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>196</x>
-     <y>195</y>
+     <x>203</x>
+     <y>120</y>
     </hint>
     <hint type="destinationlabel">
      <x>196</x>
@@ -1163,8 +1259,8 @@
    <slot>onAnalyzerChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>196</x>
-     <y>218</y>
+     <x>203</x>
+     <y>170</y>
     </hint>
     <hint type="destinationlabel">
      <x>196</x>
@@ -1179,8 +1275,8 @@
    <slot>onCheckUpdatesChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>196</x>
-     <y>299</y>
+     <x>203</x>
+     <y>221</y>
     </hint>
     <hint type="destinationlabel">
      <x>196</x>
@@ -1195,8 +1291,8 @@
    <slot>onHighlightLineChanged(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>265</x>
-     <y>136</y>
+     <x>425</x>
+     <y>32</y>
     </hint>
     <hint type="destinationlabel">
      <x>196</x>
@@ -1211,8 +1307,8 @@
    <slot>onHighlightWordChanged(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>265</x>
-     <y>155</y>
+     <x>425</x>
+     <y>57</y>
     </hint>
     <hint type="destinationlabel">
      <x>196</x>
@@ -1227,8 +1323,8 @@
    <slot>onShowHelpInDockChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>199</x>
-     <y>393</y>
+     <x>206</x>
+     <y>196</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
@@ -1243,8 +1339,8 @@
    <slot>onReplaceDocsStyleChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>199</x>
-     <y>213</y>
+     <x>206</x>
+     <y>136</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
