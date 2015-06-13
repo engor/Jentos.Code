@@ -1,0 +1,258 @@
+[33mcommit 6c7bd5e9b39e944420c71e17263213305a0445aa[m
+Author: EnkiEA <lfcesar_1988@hotmail.com>
+Date:   Sat Jun 13 10:43:51 2015 -0500
+
+    modifying the README
+
+[33mcommit b79e51c6fc1f09a945cdba5b090bf3869284c8bf[m
+Author: EnkiEA <lfcesar_1988@hotmail.com>
+Date:   Sat Jun 13 10:41:32 2015 -0500
+
+    modifying the README
+
+[33mcommit ee2a0bd6864434b32971493b02109358ca2c2f45[m
+Author: EnkiEA <lfcesar_1988@hotmail.com>
+Date:   Sat Jun 13 10:38:35 2015 -0500
+
+    README and new theme code
+
+[33mcommit e204db178ef03af8e4ff0d93d3473f2abdaec09a[m
+Author: EnkiEA <lfcesar_1988@hotmail.com>
+Date:   Sat Jun 13 07:38:32 2015 -0500
+
+    add Highlighter complete
+    
+     Options-> editor
+
+[33mcommit 9c53813a1af69d4103f0889a55486573f8789728[m
+Author: EnkiEA <lfcesar_1988@hotmail.com>
+Date:   Sat Jun 13 06:13:19 2015 -0500
+
+    add text README
+
+[33mcommit 04ec85742ad2f563f05e082627ee062a2d628a44[m
+Author: EnkiEA <lfcesar_1988@hotmail.com>
+Date:   Sat Jun 13 05:32:31 2015 -0500
+
+    add more snippets
+
+[33mcommit 52554e4d104f51ba1f4ab386c4a0299f611edd5a[m
+Author: EnkiEA <lfcesar_1988@hotmail.com>
+Date:   Sat Jun 13 04:44:42 2015 -0500
+
+    add 3 snipper
+    
+    @mojoapp , @mn , @cc
+
+[33mcommit e8500810d6630b22d96fe89c04f03f19c344d437[m
+Author: nerionx <nerionx@googlemail.com>
+Date:   Mon Feb 23 18:02:40 2015 +0000
+
+    Changed versioning
+    
+    Changed version number/autoupdates so its easier to tell the fork apart
+    from the main when debugging
+
+[33mcommit dfd8bd566004e4576c879343813d044f4aa85923[m
+Author: Adam Fryman <nerionx@googlemail.com>
+Date:   Mon Feb 23 17:47:38 2015 +0000
+
+    Create updates.txt
+    
+    Temporary updates file while main dev is on hiatus
+
+[33mcommit e1a0bbe99dd8df6c75e46c4a58f6f6623bb40526[m
+Author: nerionx <nerionx@googlemail.com>
+Date:   Mon Feb 23 17:22:43 2015 +0000
+
+    Bug Fix: Close all Tabs from Tabs menu not working
+    
+    Fixed the close all tabs option from the right click tabs menu
+
+[33mcommit 00ed62bce20213e4018e55a9210757b6a34095ba[m
+Author: nerionx <nerionx@googlemail.com>
+Date:   Mon Feb 23 17:08:11 2015 +0000
+
+    Fixed a bug with new brackets options
+    
+    Preferences window showing incorrect state for AutoBracket
+
+[33mcommit 55ab15b7fb12de36247800bfa613d5e269e4b82c[m
+Author: nerionx <nerionx@googlemail.com>
+Date:   Mon Feb 23 09:14:02 2015 +0000
+
+    Quality of life changes regarding brackets
+    
+    Added option in preferences dialog to turn off the auto closing of
+    brackets/quotations
+
+[33mcommit 343a64011e8f0f636e2e84341eac3d944edf2816[m
+Author: nerionx <nerionx@googlemail.com>
+Date:   Mon Feb 23 07:49:07 2015 +0000
+
+    Removed DLL/Binaries
+    
+    Had Binaries in the source folder when I commited, removed them
+
+[33mcommit de45dda0e808676b27f2e4a0a1ac07925e3c18c4[m
+Author: nerionx <nerionx@googlemail.com>
+Date:   Mon Feb 23 07:40:16 2015 +0000
+
+    Added Lock Button to Targets
+    
+    Im constantly changing targets when Im scrolling the code with the
+    mousewheel. Causing it to either compile the wrong target or error.
+    Added a lock button to lock the targets so it cannot happen.
+
+[33mcommit 6b5cc1b3e8c26a0525e7627918ba9543f71845aa[m
+Author: nerionx <nerionx@googlemail.com>
+Date:   Mon Feb 23 07:34:56 2015 +0000
+
+    Delete lock.png
+
+[33mcommit 226f4182a9326667cb06b30554d93b161e88bad2[m
+Author: nerionx <nerionx@googlemail.com>
+Date:   Mon Feb 23 07:34:37 2015 +0000
+
+    Update and rename icons to icons/lock.png
+
+[33mcommit 81b14d29b8f1d086fcccad56a05bbebcfdc98ed2[m
+Merge: 5d5a5d3 252b6ff
+Author: Evgeniy Goroshkin <engor@yandex.ru>
+Date:   Wed Jul 30 22:21:37 2014 +0800
+
+    Merge pull request #23 from engor/help_in_docked_panel
+    
+    nightly
+
+[33mcommit 252b6ffcc8297179f2d3a5a0257acbc2b497c4ca[m
+Author: Evgeniy Goroshkin <engor@yandex.ru>
+Date:   Sun Jul 20 23:05:47 2014 +0800
+
+    nightly
+    + new option checkbox "replace docs style for dark theme"
+    + new options dialog with sections (in progess)
+
+[33mcommit 5d5a5d3497827e3e6d25aa7b5c5063f046ff7669[m
+Author: Evgeniy Goroshkin <engor@yandex.ru>
+Date:   Tue Jul 15 22:17:07 2014 +0800
+
+    'nightly'
+    + add new option "Show help in docked panel instead of tab" (you can zooming pages in dock between 50-200%).
+    + settings are stored at default system path, to avoid problems with saving them; this path you can see in Options dialog.
+    + choose current theme in Options dialog.
+    + console panel now can be small. so I delete some button from rename area. buttons select/unselect all moved to context menu of usages tabs. and checkbox "selected only" always is true.
+    + fix: save current target after closing Options dialog
+    + dock panels Navigator, Source and Console can be placed on the all sides of main window now (rigth, left, top, bottom)
+    + check for updates run via timer
+
+[33mcommit a86aa423ac53395314b9cf06af0fdd73649a543a[m
+Merge: caefa01 3c02b5d
+Author: Evgeniy Goroshkin <engor@yandex.ru>
+Date:   Tue Jul 15 21:17:03 2014 +0800
+
+    Merge branch 'master' of https://github.com/engor/Jentos_IDE.git
+    
+    Conflicts:
+    	jentos_ide.pro.user
+    	jentos_ide.pro.user.4680d73
+    	mainwindow.cpp
+    	mainwindow.h
+    	mainwindow.ui
+    	prefs.cpp
+    	prefsdialog.cpp
+    	prefsdialog.h
+    	prefsdialog.ui
+
+[33mcommit caefa013302ce5c4f98183b02cfbca53187132d9[m
+Author: Evgeniy Goroshkin <engor@yandex.ru>
+Date:   Sun Jul 13 22:54:47 2014 +0800
+
+    nightly
+    
+    + open docs in docked panel (optional, need to add this to options. when docking dock with webview - app crashes, why?)
+    
+    + settings are stored at default system path, to avoid problems with saving them; this path you can see in Options dialog.
+    + choose current theme in Options dialog.
+    + console panel now can be small. so I delete some button from rename area. buttons select/unselect all moved to context menu of usages tabs. and checkbox "selected only" always is true.
+    + fix: save current target after closing Options dialog
+    + dock panels Navigator, Source and Console can be placed on the all sides of main window now (rigth, left, top, bottom)
+    + check for updates run via timer
+
+[33mcommit 3c02b5d82e0d25b8cbd28098dc163f543dadb47c[m
+Merge: 5ea950a 1e2569f
+Author: Evgeniy Goroshkin <engor@yandex.ru>
+Date:   Fri Jul 11 13:25:08 2014 +0800
+
+    Merge pull request #21 from Alshurafa/patch-1
+    
+    Added badges, a screenshot, donation link, & more!
+
+[33mcommit 5ea950a779062b1f11bb2b3dd54e9913dfe58b6e[m
+Merge: 5e225a9 21ad4ab
+Author: Evgeniy Goroshkin <engor@yandex.ru>
+Date:   Fri Jul 11 13:18:46 2014 +0800
+
+    Merge pull request #20 from Alshurafa/master
+    
+    Adding Continuous Integration
+
+[33mcommit 1e2569f0017e934afafb150690ba9b17e2874343[m
+Author: Aman Alshurafa <aman.amn@gmail.com>
+Date:   Fri Jul 11 00:10:12 2014 -0500
+
+    Added badges, a screenshot, donation link, & more!
+    
+    Please remove the build status link if you do not plan on using the the ci tool for build status.
+
+[33mcommit 5e225a92b87345e7d0a5c575f95455edc7106e5d[m
+Author: Evgeniy Goroshkin <engor@yandex.ru>
+Date:   Fri Jul 11 09:19:45 2014 +0700
+
+    added download links for linux version 1.1
+
+[33mcommit 21ad4abb075d2a585a27138b41d6b31d26c890fa[m
+Author: Aman Alshurafa <aman.amn@gmail.com>
+Date:   Thu Jul 10 18:41:31 2014 -0500
+
+    Adding Continuous Integration
+    
+    This will allow you to test building for Mac and Linux after every push request. It also allow you to test changes made by others, like me, and make sure they do not break anything without having to merge them. All you have to do is sign-in with your github at https://travis-ci.org and turn on the switch next to the repository name. (It is free for public repositories)
+    
+    Example showing how the previous one failed and this one passes (hopefully):
+    https://travis-ci.org/Alshurafa/Jentos_IDE/builds
+
+[33mcommit c86a4ab4b86e13a05d98eaa31dc8d7504caa3592[m
+Merge: bcf9ce5 9ee51c3
+Author: Evgeniy Goroshkin <engor@yandex.ru>
+Date:   Thu Jul 10 09:44:23 2014 +0800
+
+    Merge pull request #16 from Alshurafa/master
+    
+    Create README.md
+
+[33mcommit 9ee51c3829a2df3c3570b645f0316f5ea68b88cc[m
+Author: Aman Alshurafa <aman.amn@gmail.com>
+Date:   Tue Jul 8 15:03:27 2014 -0500
+
+    Update README.md
+    
+    Added links to Monkey and TED and fixed minor things
+
+[33mcommit 2ee55ca3d849aecca5a8611a1b7404167c43da05[m
+Author: Aman Alshurafa <aman.amn@gmail.com>
+Date:   Tue Jul 8 14:45:04 2014 -0500
+
+    Create README.md
+
+[33mcommit bcf9ce5735ccbec9c0ea07c393c6bec263bfb271[m
+Author: engor <engor@yandex.ru>
+Date:   Fri Jun 20 11:28:40 2014 +0700
+
+    version 1.1
+
+[33mcommit f0f437b0ed7ee93e7f0c7c1daf6401adb178d11a[m
+Author: engor <engor@yandex.ru>
+Date:   Tue Apr 8 12:07:31 2014 +0700
+
+    v1.0.2

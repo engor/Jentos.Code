@@ -41,7 +41,7 @@ See LICENSE.TXT for licensing terms.
 #define _STRINGIZE( X ) _QUOTE(X)
 
 #define TED_VERSION "1.17"
-#define APP_VERSION "1.2"
+#define APP_VERSION "1.3.0"
 #define APP_NAME "Jentos IDE"
 
 
@@ -406,6 +406,7 @@ void MainWindow::updateTheme() {
     //update all icons
     //
     _ui->actionNew->setIcon(Theme::icon("New.png"));
+
     _ui->actionOpen->setIcon(Theme::icon("Open.png"));
     _ui->actionOpenProject->setIcon(Theme::icon("Project.png"));
     _ui->actionSave->setIcon(Theme::icon("Save.png"));
