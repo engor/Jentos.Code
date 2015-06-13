@@ -1174,7 +1174,7 @@ Don't change documents between find usages and rename</string>
       <widget class="QWebView" name="webView">
        <property name="url">
         <url>
-         <string>about:blank</string>
+         <string>file:///home/luis/Desarrollo/MonkeyX/monkey-83a/docs/html/Home.html</string>
         </url>
        </property>
        <property name="zoomFactor">

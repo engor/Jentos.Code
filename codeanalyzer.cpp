@@ -1617,6 +1617,42 @@ bool CodeAnalyzer::autoFormat( QString &s, bool force ) {
         return repl;
     static QStringList *sFrom = 0, *sTo = 0;
     static int cnt = 0;
+
+    QString snippetmojox;
+    snippetmojox += "Import mojo\n";
+    snippetmojox += "\n";
+    snippetmojox += "Class {{Xname}} Extends App\n";
+    snippetmojox += "\n";
+    snippetmojox += "<---->Method OnCreate()\n";
+    snippetmojox += "<----....>SetUpdateRate 30\n";
+    snippetmojox += "<---->End\n";
+    snippetmojox += "\n";
+    snippetmojox += "<---->Method OnUpdate()\n";
+    snippetmojox += "\n";
+    snippetmojox += "<---->End\n";
+    snippetmojox += "\n";
+    snippetmojox += "<---->Method OnRender()\n";
+    snippetmojox += "<----....>Cls\n";
+    snippetmojox += "<----....>DrawText(\"Welcome Monkey\",302,240)\n";
+    snippetmojox += "<---->End\n";
+    snippetmojox += "\n";
+    snippetmojox += "End\n";
+    snippetmojox += "\n";
+    snippetmojox += "Function Main()\n";
+    snippetmojox += "<---->New {{Xname}}()\n";
+    snippetmojox += "End\n";
+
+
+    QString snippetmethodname;
+    snippetmethodname += "<---->Method On{{Xname}}\n";
+    snippetmethodname += "\n";
+    snippetmethodname += "<---->End";
+
+    QString snippetclasename;
+    snippetclasename += "Class {{Xname}}\n";
+    snippetclasename += "\n";
+    snippetclasename += "End\n";
+
     if(!sFrom) {
         sFrom = new QStringList;
         sTo = new QStringList;
@@ -1632,9 +1668,14 @@ bool CodeAnalyzer::autoFormat( QString &s, bool force ) {
         sTo->append("#Rem");
         sFrom->append("*/");
         sTo->append("#End");
-        cnt = 6;
+        sFrom->append("@mojoapp");
+        sTo->append(snippetmojox);
+        sFrom->append("@mn");
+        sTo->append(snippetmethodname);
+        sFrom->append("@cc");
+        sTo->append(snippetclasename);
+        cnt = 9;
     }
-
     int pos = -1;
     bool checkQuotes = (s.indexOf("\"") > 0);
     if(trimmed.indexOf("'") == 0) {//skip comments
@@ -1643,6 +1684,7 @@ bool CodeAnalyzer::autoFormat( QString &s, bool force ) {
     if(trimmed.indexOf("#") == 0) {//skip preprocessor directives
         return false;
     }
+
     int comPos = s.indexOf("'");
     for(i = 0 ; i < cnt ; ++i) {
         pos = -1;
@@ -1659,6 +1701,44 @@ bool CodeAnalyzer::autoFormat( QString &s, bool force ) {
             if(i < 4 && !isIdent(s.at(pos-1)))
                 continue;
             s = s.left(pos) + sTo->at(i) + s.mid(pos+sFrom->at(i).length());
+
+            // create new method init
+            QString mncreate= sFrom->at(i);
+            if(mncreate == QString("@mn")){
+                QString snippetcreatemethod = sTo->at(i);
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+
+                snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX)+"()");
+                s = snippetcreatemethod;
+            }
+            if(mncreate == QString("@cc")){
+                QString snippetcreatemethod = sTo->at(i);
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+
+                snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX)+"()");
+                s = snippetcreatemethod;
+            }
+            if(mncreate == QString("@mojoapp")){
+                QString snippetcreatemethod = sTo->at(i); // all
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+
+                if(reemplazenameX == QString("")){
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString("Game"));
+                }
+                if(reemplazenameX != QString("")){
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
+                }
+
+                qDebug() << reemplazenameX;
+                s = snippetcreatemethod;
+            }
+            // create new method end
             repl = true;
         }
     }
@@ -1733,6 +1813,10 @@ bool CodeAnalyzer::autoFormat( QString &s, bool force ) {
         s = res;
         repl = true;
     }
+    //--------add space method and others init
+    s.replace(QString("<---->"), QString("    "));
+    s.replace(QString("<----....>"), QString("        "));
+    //--------add space method and others end
     return repl;
 }
 
