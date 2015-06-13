@@ -1644,7 +1644,7 @@ bool CodeAnalyzer::autoFormat( QString &s, bool force ) {
 
 
     QString snippetmethodname;
-    snippetmethodname += "<---->Method On{{Xname}}\n";
+    snippetmethodname += "<---->Method {{Xname}}\n";
     snippetmethodname += "\n";
     snippetmethodname += "<---->End";
 
@@ -1652,6 +1652,52 @@ bool CodeAnalyzer::autoFormat( QString &s, bool force ) {
     snippetclasename += "Class {{Xname}}\n";
     snippetclasename += "\n";
     snippetclasename += "End\n";
+
+    //key down
+    QString snippetkeydowndireccional;
+    snippetkeydowndireccional += "<----....>If KeyDown(KEY_LEFT)\n";
+    snippetkeydowndireccional += "\n";
+    snippetkeydowndireccional += "<----....>End\n";
+    snippetkeydowndireccional += "\n";
+    snippetkeydowndireccional += "<----....>If KeyDown(KEY_RIGHT)\n";
+    snippetkeydowndireccional += "\n";
+    snippetkeydowndireccional += "<----....>End\n";
+    snippetkeydowndireccional += "\n";
+    snippetkeydowndireccional += "<----....>If KeyDown(KEY_UP)\n";
+    snippetkeydowndireccional += "\n";
+    snippetkeydowndireccional += "<----....>End\n";
+    snippetkeydowndireccional += "\n";
+    snippetkeydowndireccional += "<----....>If KeyDown(KEY_DOWN)\n";
+    snippetkeydowndireccional += "\n";
+    snippetkeydowndireccional += "<----....>End\n";
+
+    QString snippetkeydownkey;
+    snippetkeydownkey += "<----....>If KeyDown(KEY_{{Xname}})\n";
+    snippetkeydownkey += "\n";
+    snippetkeydownkey += "<----....>End\n";
+
+    // key hit
+    QString snippetkeyhitdireccional;
+    snippetkeyhitdireccional += "<----....>If KeyHit(KEY_LEFT)\n";
+    snippetkeyhitdireccional += "\n";
+    snippetkeyhitdireccional += "<----....>End\n";
+    snippetkeyhitdireccional += "\n";
+    snippetkeyhitdireccional += "<----....>If KeyHit(KEY_RIGHT)\n";
+    snippetkeyhitdireccional += "\n";
+    snippetkeyhitdireccional += "<----....>End\n";
+    snippetkeyhitdireccional += "\n";
+    snippetkeyhitdireccional += "<----....>If KeyHit(KEY_UP)\n";
+    snippetkeyhitdireccional += "\n";
+    snippetkeyhitdireccional += "<----....>End\n";
+    snippetkeyhitdireccional += "\n";
+    snippetkeyhitdireccional += "<----....>If KeyHit(KEY_DOWN)\n";
+    snippetkeyhitdireccional += "\n";
+    snippetkeyhitdireccional += "<----....>End\n";
+
+    QString snippetkeyhitkey;
+    snippetkeyhitkey += "<----....>If KeyHit(KEY_{{Xname}})\n";
+    snippetkeyhitkey += "\n";
+    snippetkeyhitkey += "<----....>End\n";
 
     if(!sFrom) {
         sFrom = new QStringList;
@@ -1674,7 +1720,15 @@ bool CodeAnalyzer::autoFormat( QString &s, bool force ) {
         sTo->append(snippetmethodname);
         sFrom->append("@cc");
         sTo->append(snippetclasename);
-        cnt = 9;
+        sFrom->append("@kdd");
+        sTo->append(snippetkeydowndireccional);
+        sFrom->append("@kd-");
+        sTo->append(snippetkeydownkey);
+        sFrom->append("@khd");
+        sTo->append(snippetkeyhitdireccional);
+        sFrom->append("@kh-");
+        sTo->append(snippetkeyhitkey);
+        cnt = 13;
     }
     int pos = -1;
     bool checkQuotes = (s.indexOf("\"") > 0);
@@ -1735,7 +1789,26 @@ bool CodeAnalyzer::autoFormat( QString &s, bool force ) {
                     snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
                 }
 
-                qDebug() << reemplazenameX;
+                //qDebug() << reemplazenameX;
+                s = snippetcreatemethod;
+            }
+            if(mncreate == QString("@kd-")){
+                QString snippetcreatemethod = sTo->at(i); // all
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+                reemplazenameX = reemplazenameX.toUpper();
+                snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
+                s = snippetcreatemethod;
+            }
+
+            if(mncreate == QString("@kh-")){
+                QString snippetcreatemethod = sTo->at(i); // all
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+                reemplazenameX = reemplazenameX.toUpper();
+                snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
                 s = snippetcreatemethod;
             }
             // create new method end
