@@ -5,74 +5,61 @@ Jentos_IDE [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gi
 
 It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official IDE for Monkey.
 
-[![Jentos Screenshot](http://fingerdev.com/apps/jentos/qt.png)](http://fingerdev.com/apps/jentos/)
+## Features
 
-# Features
+### snippets 
+[![Snippers](http://i.imgur.com/oQc0ut3.gif)](http://fingerdev.com/apps/jentos/)
 
-## snippets 
-@mojoapp       // Create template basic, by default name Class is "Game"
-@mojoapp<name> //Create template basic, <name> -> MyGame
-@mn<name>      // Create Method
-@cc<name>      // Create Class
-@kdd           // Create Input KeyDown 4 direcction Left,Right,Up,Down
-@kd-<key>      // Create Input KeyDown, <key> -> R,ENTER,A,etc.
-@khd           // Create Input KeyHit 4 direcction Left,Right,Up,Down
-@kh-<key>      // Create Input KeyHit, <key> -> R,ENTER,A,etc.
 
-Examples snippers:
 
-Snippet :
-@mojoappMyGame
+##### @mojoapp      
+* Create template basic, by default name Class is "Game"
+##### @mojoapp{name} 
+* Create template basic, **{name} -> MyGame**
+##### @mn{name}      
+* Create Method **{name} -> mymethod**
+##### @cc{name}      
+* Create Class **{name} -> myclass**
+##### @kdd           
+* Create Input KeyDown 4 direcction Left,Right,Up,Down
+##### @kd-{key}      
+* Create Input KeyDown, **{key} -> R,ENTER,A,etc.**
+##### @khd           
+* Create Input KeyHit 4 direcction Left,Right,Up,Down
+##### @kh-{key}      
+* Create Input KeyHit, **{key} -> R,ENTER,A,etc.**
 
-Result :
-```blitzmax
-Import mojo
+### Examples snippers:
 
-Class MyGame Extends App
-	 Method OnCreate()
-		  SetUpdateRate 30
-	 End
-	 Method OnUpdate()
 
-	 End
-     
-	 Method OnRender()
-		  Cls
-		  DrawText("Welcome Monkey", 302, 240)
-	 End
-End
+#### Snippet :
+##### @mnMyMethod
 
-Function Main()
-	 New MyGame()
-End
 ```
-Snippet :
-@mnMyMethod
-
-Result :
-```blitzmax
     Method MyMethod()
 
     End
 ```
-Snippet :
-@kd-Enter
 
-Result :
-```blitzmax
+#### Snippet :
+##### @kd-Enter
+```
         If KeyDown(KEY_ENTER)
 
         End
 ```
-# Themes / Temas
+### Themes / Temas
 * Android Studio, dark.
 * Qt Creator, light.
 * Netbeans ,light, is default.
-* Monokai Dark Soda (Sublime Text)  #new Theme Code
-* Light Table                       #new Theme Code
+* Monokai Dark Soda (Sublime Text) --**new Theme Code**
+* Light Table --------------------------------- **new Theme Code**
 * Also monkey's docs have dark style when current theme is Android Studio (need to restart app).
 
-# Code Analyzer
+[![Themes](http://i.imgur.com/CvI5flx.jpg)](http://fingerdev.com/apps/jentos/)
+
+
+### Code Analyzer
 * Correct multiple inheritance.
 * Folding for "if,while,for,select" statements; and local variables is local for analyzer inside of them.
 * Analyze user's imports.
@@ -82,17 +69,17 @@ Result :
 * Autocomplete for function, condition, cycles, etc. by pressing Ctrl+Enter.
 * All monkey's modules analyzing at startup, so you always work with actual items.
 
-# Autocompletion list
+### Autocompletion list
 * Works for monkey's and user's words.
 * List opens when ident reachs 3 chars, or by pressing Ctrl+Space.
 * Contains inherited members from base class and interfaces.
 
-# Templates
+### Templates
 * Allow you to insert big expression by typing just few symbols.
 * Type template symbols and press Tab: fu+tab => function, me+tab => method , etc.
 * Templates are stored in templates.txt, you can add your own templates.
 
-# Smart navigation
+### Smart navigation
 * Improved CodeTree with icons and class/function members.
 * Additional list 'Source', which contains members of selected class or function.
 * Shows variable's info when hold Ctrl and mouse over.
