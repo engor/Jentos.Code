@@ -12,22 +12,22 @@ It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official
 
 
 
-##### @mojoapp      
-* Create template basic, by default name Class is "Game"
-##### @mojoapp{name} 
-* Create template basic, **{name} -> MyGame**
-##### @mn{name}      
-* Create Method **{name} -> mymethod**
-##### @cc{name}      
-* Create Class **{name} -> myclass**
-##### @kdd           
-* Create Input KeyDown 4 direcction Left,Right,Up,Down
-##### @kd-{key}      
-* Create Input KeyDown, **{key} -> R,ENTER,A,etc.**
-##### @khd           
-* Create Input KeyHit 4 direcction Left,Right,Up,Down
-##### @kh-{key}      
-* Create Input KeyHit, **{key} -> R,ENTER,A,etc.**
+* **@mojoapp**   
+ Create template basic, by default name Class is "Game"
+* **@mojoapp{name}**  
+ Create template basic, **{name} -> MyGame**
+* **@mn{name}**    
+ Create Method **{name} -> mymethod**
+* **@cc{name}**     
+ Create Class **{name} -> myclass**
+* **@kdd**           
+ Create Input KeyDown 4 direcction Left,Right,Up,Down
+* **@kd-{key}**      
+ Create Input KeyDown, **{key} -> R,ENTER,A,etc.**
+* **@khd**          
+ Create Input KeyHit 4 direcction Left,Right,Up,Down
+* **@kh-{key}**      
+ Create Input KeyHit, **{key} -> R,ENTER,A,etc.**
 
 ### Examples snippers:
 
