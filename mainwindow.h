@@ -234,6 +234,10 @@ private slots:
 
     void on_actionClose_all_Tabs_triggered();
 
+    void on_actionThemeMonokaiDarkSoda_triggered();
+
+    void on_actionThemeLightTable_triggered();
+
 private:
 
 

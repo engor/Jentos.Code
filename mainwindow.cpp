@@ -399,6 +399,9 @@ void MainWindow::updateTheme() {
     //
     _ui->actionThemeAndroidStudio->setChecked( Theme::isCurrent("android") );
     _ui->actionThemeNetBeans->setChecked( Theme::isCurrent("netbeans") );
+    _ui->actionThemeMonokaiDarkSoda->setChecked( Theme::isCurrent("Monokai-Dark-Soda") );
+    _ui->actionThemeLightTable->setChecked( Theme::isCurrent("lighttable") );
+
     _ui->actionThemeQt->setChecked( Theme::isCurrent("qt") );
     //update all icons
     //
@@ -2310,10 +2313,10 @@ void MainWindow::onThemeAndroidStudio() {
 }
 
 void MainWindow::onThemeNetBeans() {
+
     Theme::set("netbeans");
     updateTheme();
 }
-
 void MainWindow::onThemeQtCreator() {
     Theme::set("qt");
     updateTheme();
@@ -2508,4 +2511,16 @@ void MainWindow::on_docsDockWidget_allowedAreasChanged(const Qt::DockWidgetAreas
 void MainWindow::on_actionClose_all_Tabs_triggered()
 {
 
+}
+
+void MainWindow::on_actionThemeMonokaiDarkSoda_triggered()
+{
+    Theme::set("Monokai-Dark-Soda");
+    updateTheme();
+}
+
+void MainWindow::on_actionThemeLightTable_triggered()
+{
+    Theme::set("lighttable");
+    updateTheme();
 }

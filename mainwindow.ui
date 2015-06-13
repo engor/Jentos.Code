@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>891</width>
+    <width>1015</width>
     <height>695</height>
    </rect>
   </property>
@@ -510,7 +510,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>891</width>
+     <width>1015</width>
      <height>21</height>
     </rect>
    </property>
@@ -648,6 +648,8 @@
      <addaction name="actionThemeAndroidStudio"/>
      <addaction name="actionThemeNetBeans"/>
      <addaction name="actionThemeQt"/>
+     <addaction name="actionThemeMonokaiDarkSoda"/>
+     <addaction name="actionThemeLightTable"/>
     </widget>
     <addaction name="actionFilePrevious"/>
     <addaction name="actionFileNext"/>
@@ -2049,6 +2051,25 @@ Don't change documents between find usages and rename</string>
     <string>Locks the drop down box so you cannot accidentally switch targets when scrolling</string>
    </property>
   </action>
+  <action name="actionThemeMonokaiDarkSoda">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Monokai Dark Soda(Sublime Text)</string>
+   </property>
+   <property name="toolTip">
+    <string>Monokai-Dark-Soda</string>
+   </property>
+  </action>
+  <action name="actionThemeLightTable">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>LightTable</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -2996,8 +3017,8 @@ Don't change documents between find usages and rename</string>
    <slot>onCloseSearch()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>909</x>
-     <y>395</y>
+     <x>392</x>
+     <y>415</y>
     </hint>
     <hint type="destinationlabel">
      <x>353</x>
@@ -3012,8 +3033,8 @@ Don't change documents between find usages and rename</string>
    <slot>onEditFindNext()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>532</x>
-     <y>419</y>
+     <x>370</x>
+     <y>444</y>
     </hint>
     <hint type="destinationlabel">
      <x>406</x>
@@ -3028,8 +3049,8 @@ Don't change documents between find usages and rename</string>
    <slot>onEditReplace()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>658</x>
-     <y>419</y>
+     <x>378</x>
+     <y>444</y>
     </hint>
     <hint type="destinationlabel">
      <x>406</x>
@@ -3044,8 +3065,8 @@ Don't change documents between find usages and rename</string>
    <slot>onEditReplaceAll()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>738</x>
-     <y>419</y>
+     <x>391</x>
+     <y>444</y>
     </hint>
     <hint type="destinationlabel">
      <x>406</x>
@@ -3060,8 +3081,8 @@ Don't change documents between find usages and rename</string>
    <slot>onEditFindPrev()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>493</x>
-     <y>407</y>
+     <x>362</x>
+     <y>444</y>
     </hint>
     <hint type="destinationlabel">
      <x>406</x>
@@ -3188,8 +3209,8 @@ Don't change documents between find usages and rename</string>
    <slot>onChangeAnalyzerProperties(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>18</x>
-     <y>407</y>
+     <x>23</x>
+     <y>320</y>
     </hint>
     <hint type="destinationlabel">
      <x>456</x>
@@ -3204,8 +3225,8 @@ Don't change documents between find usages and rename</string>
    <slot>onChangeAnalyzerProperties(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>46</x>
-     <y>407</y>
+     <x>72</x>
+     <y>320</y>
     </hint>
     <hint type="destinationlabel">
      <x>456</x>
@@ -3220,8 +3241,8 @@ Don't change documents between find usages and rename</string>
    <slot>onChangeAnalyzerProperties(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>74</x>
-     <y>407</y>
+     <x>107</x>
+     <y>320</y>
     </hint>
     <hint type="destinationlabel">
      <x>456</x>
@@ -3236,8 +3257,8 @@ Don't change documents between find usages and rename</string>
    <slot>onEditFindNext()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>467</x>
-     <y>395</y>
+     <x>342</x>
+     <y>412</y>
     </hint>
     <hint type="destinationlabel">
      <x>270</x>

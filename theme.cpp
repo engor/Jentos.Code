@@ -101,6 +101,46 @@ void Theme::save() {
         prefs->setValue( "paramsColor",QColor( 0xc80808 ) );
         //cur line #c2e1ff
     }
+
+    else if(_theme == "Monokai-Dark-Soda") {
+        prefs->setValue( "backgroundColor",QColor( 0x242424 ) );
+        prefs->setValue( "defaultColor",QColor( 0xDDDDDD ) );
+        prefs->setValue( "numbersColor",QColor( 0xAE81FF ) );
+        prefs->setValue( "stringsColor",QColor( 0xE3D874 ) );
+        prefs->setValue( "identifiersColor",QColor( 0x009900 ) );
+        prefs->setValue( "keywordsColor",QColor( 0xF92672 ) );
+        prefs->setValue( "constantsColor",QColor( 0xA6E22E ) );
+        prefs->setValue( "funcDeclsColor",QColor( 0xFD971F ) );
+        prefs->setValue( "commentsColor",QColor( 0x8c8c8c ) );
+        prefs->setValue( "highlightColor",QColor( 0xB5B5B5 ) );
+        prefs->setValue( "highlightColorError",QColor( 0xE9EFF8 ) );
+        prefs->setValue( "highlightColorCaretRow",QColor( 0x3A2A21 ) );
+        prefs->setValue( "monkeywordsColor",QColor( 0x2BBF1C ) );
+        prefs->setValue( "userwordsColor",QColor( 0xfd971f ) );
+        prefs->setValue( "userwordsDeclColor",QColor( 0xa6e22e ) );
+        prefs->setValue( "userwordsVarColor",QColor( 0x9effff ) );
+        prefs->setValue( "paramsColor",QColor( 0x66D9EF ) );
+    }
+
+    else if(_theme == "lighttable") {
+        prefs->setValue( "backgroundColor",QColor( 0x202020 ) );
+        prefs->setValue( "defaultColor",QColor( 0xA2A2A2 ) );
+        prefs->setValue( "numbersColor",QColor( 0xFEFEFE ) );
+        prefs->setValue( "stringsColor",QColor( 0x318F8F ) );
+        prefs->setValue( "identifiersColor",QColor( 0x009900 ) );
+        prefs->setValue( "keywordsColor",QColor( 0x43AA79 ) );
+        prefs->setValue( "constantsColor",QColor( 0xA6E22E ) );
+        prefs->setValue( "funcDeclsColor",QColor( 0xAACCFF ) );
+        prefs->setValue( "commentsColor",QColor( 0x6688CD ) );
+        prefs->setValue( "highlightColor",QColor( 0xB5B5B5 ) );
+        prefs->setValue( "highlightColorError",QColor( 0xE9EFF8 ) );
+        prefs->setValue( "highlightColorCaretRow",QColor( 0x3A2A21 ) );
+        prefs->setValue( "monkeywordsColor",QColor( 0xAFCDFB ) );
+        prefs->setValue( "userwordsColor",QColor( 0x2886AC ) );
+        prefs->setValue( "userwordsDeclColor",QColor( 0xCCAAFF ) );
+        prefs->setValue( "userwordsVarColor",QColor( 0x2CA2A2 ) );
+        prefs->setValue( "paramsColor",QColor( 0x66D9EF ) );
+    }
     prefs->blockEmitPrefsChanged(false, true);
 }
 
@@ -145,6 +185,8 @@ QString Theme::hexColor(const QColor &color) {
 }
 
 QColor Theme::selWordColor() {
+    static QColor cn1(83,120,183);
+    static QColor cn2(201,157,17);
     static QColor c1(66,66,66);
     static QColor c2(236,235,163);//(225,225,225);
     static QColor c3(225,225,225);
@@ -152,6 +194,10 @@ QColor Theme::selWordColor() {
         return c1;
     else if(_theme == "netbeans")
         return c2;
+    else if(_theme == "Monokai-Dark-Soda")
+        return cn1;
+    else if(_theme == "lighttable")
+        return cn2;
     else
         return c3;
 }
