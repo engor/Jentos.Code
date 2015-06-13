@@ -2186,9 +2186,9 @@ void MainWindow::onHelpQuickHelp(){
 }
 
 void MainWindow::onHelpAbout(){
-    QString href = "https://github.com/nerionx/Jentos_IDE";
+    QString href = "https://github.com/EnkiEA/Jentos_IDE";
     QString APP_ABOUT = "<html><head><style>a{color:#CC8030;}</style></head><body bgcolor2='#ff3355'><b>"APP_NAME"</b> is a powefull code editor for the Monkey programming language.<br>"
-            "Based on Ted V"TED_VERSION".<br> This binary is Fryman's fork<br>Please send bug reports to him on monkey-x.com<br>"
+            "Based on Ted V"TED_VERSION".<br> This binary is Luis Francisco fork<br>Please send bug reports to him on monkey-x.com<br>"
             "Visit <a href='"+href+"'>"+href+"</a> for more information.<br><br>"
             "Version: "APP_VERSION+"<br>Trans: "+_transVersion+"<br>Qt: "_STRINGIZE(QT_VERSION)+"<br><br>"
             "Jentos is free and always be free.<br>But you may support engor/nerobot via <a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE\">donation</a>.<br>"

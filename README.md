@@ -1,10 +1,5 @@
 Jentos_IDE [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE)
 ==========
-[![Build Status](https://travis-ci.org/engor/Jentos_IDE.svg?branch=master)](https://travis-ci.org/engor/Jentos_IDE)
-[![Releses](http://img.shields.io/github/release/engor/Jentos_IDE.svg)](http://www.monkey-x.com/Community/posts.php?topic=8288)
-[![Open Issues](http://img.shields.io/github/issues/engor/Jentos_IDE.svg)](https://github.com/engor/Jentos_IDE/issues)
-[![Project Type](http://img.shields.io/badge/Type-Monkey IDE-lightgrey.svg)](http://www.monkey-x.com) [![Platforms](http://img.shields.io/badge/Platforms-Windows_%7C Mac %7C_Linux-orange.svg)](http://fingerdev.com/apps/jentos/) [![License](http://img.shields.io/badge/License-GPL-ff69b4.svg)](http://www.gnu.org/licenses/)
-
 ## About
 [Jentos IDE](http://fingerdev.com/apps/jentos/) is a powerfull open source IDE for [Monkey](http://www.monkey-x.com) programming language.
 
@@ -21,6 +16,33 @@ It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official
 ![Linux](http://fingerdev.com/img_targets/linux.png)Download Sources: [[Google Drive](https://drive.google.com/uc?id=0Bx2zoIlA6GzKR1JKc0Jpbmpfb0k)] - [[Yandex Disk](https://yadi.sk/d/UokJw-WMWNm5g)]
 
 ## Features
+
+### snippets 
+@mojoapp
+```blitzmax
+Import mojo
+
+Class Game Extends App
+
+	 Method OnCreate()
+		  SetUpdateRate 30
+	 End
+
+	 Method OnUpdate()
+
+	 End
+
+	 Method OnRender()
+		  Cls
+		  DrawText("Welcome Monkey", 302, 240)
+	 End
+
+End
+
+Function Main()
+	 New Game()
+End
+```
 ### Code Analyzer
 * Correct multiple inheritance.
 * Folding for "if,while,for,select" statements; and local variables is local for analyzer inside of them.

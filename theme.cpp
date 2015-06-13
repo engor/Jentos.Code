@@ -20,6 +20,7 @@ void Theme::init() {
         p->setValue( "tabSize",4 );
     if(!p->contains("smoothFonts"))
         p->setValue( "smoothFonts",true );
+
     _prevTheme = "";
     QString s = p->getString("theme","netbeans");
     set(s);
