@@ -156,6 +156,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
 
     //init browser widgets
     _projectTreeModel=new ProjectTreeModel;
+
     _ui->projectTreeView->setModel( _projectTreeModel );
     _ui->projectTreeView->hideColumn( 1 );
     _ui->projectTreeView->hideColumn( 2 );

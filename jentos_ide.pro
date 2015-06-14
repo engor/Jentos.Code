@@ -49,7 +49,8 @@ HEADERS  += mainwindow.h \
     theme.h
 
 RESOURCES += \
-    resources.qrc
+    resources.qrc \
+    myresource.qrc
 
 TARGET = JentosIDE
 #OK, this seems to prevent latest Windows QtCreator from being able to run Ted (builds fine).

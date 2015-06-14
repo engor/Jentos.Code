@@ -17,7 +17,7 @@
    <item>
     <widget class="QToolBox" name="toolBox">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="pageEditor">
       <property name="geometry">
@@ -59,7 +59,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-306</y>
+            <y>0</y>
             <width>428</width>
             <height>571</height>
            </rect>
@@ -497,6 +497,9 @@
            </item>
            <item>
             <widget class="QCheckBox" name="checkBoxReplaceDocsStyle">
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>Replace docs style for dark theme</string>
              </property>
@@ -631,8 +634,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>441</width>
-        <height>247</height>
+        <width>89</width>
+        <height>69</height>
        </rect>
       </property>
       <attribute name="label">
@@ -664,8 +667,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>439</width>
-            <height>245</height>
+            <width>313</width>
+            <height>114</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -776,8 +779,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>441</width>
-        <height>247</height>
+        <width>89</width>
+        <height>69</height>
        </rect>
       </property>
       <attribute name="label">
@@ -809,8 +812,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>439</width>
-            <height>245</height>
+            <width>127</width>
+            <height>110</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">

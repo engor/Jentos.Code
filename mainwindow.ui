@@ -1275,8 +1275,8 @@ Don't change documents between find usages and rename</string>
   </widget>
   <action name="actionOpen">
    <property name="icon">
-    <iconset>
-     <normaloff>icons/circle/Open.png</normaloff>icons/circle/Open.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/Open.png</normaloff>:/icons/circle/Open.png</iconset>
    </property>
    <property name="text">
     <string>Open File...</string>
@@ -1326,8 +1326,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionBuildRun">
    <property name="icon">
-    <iconset>
-     <normaloff>icons/circle/Build-Run.png</normaloff>icons/circle/Build-Run.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/Build-Run.png</normaloff>:/icons/circle/Build-Run.png</iconset>
    </property>
    <property name="text">
     <string>Build and Run</string>
@@ -1341,8 +1341,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset>
-     <normaloff>icons/circle/New.png</normaloff>icons/circle/New.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/New.png</normaloff>:/icons/circle/New.png</iconset>
    </property>
    <property name="text">
     <string>New (choose path)...</string>
@@ -1376,8 +1376,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionKill">
    <property name="icon">
-    <iconset>
-     <normaloff>icons/circle/Stop.png</normaloff>icons/circle/Stop.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/Stop.png</normaloff>:/icons/circle/Stop.png</iconset>
    </property>
    <property name="text">
     <string>Kill</string>
@@ -1652,8 +1652,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionBuildBuild">
    <property name="icon">
-    <iconset>
-     <normaloff>icons/circle/Build.png</normaloff>icons/circle/Build.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/Build.png</normaloff>:/icons/circle/Build.png</iconset>
    </property>
    <property name="text">
     <string>Build</string>
@@ -1773,8 +1773,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionGoBack">
    <property name="icon">
-    <iconset>
-     <normaloff>icons/circle/Back.png</normaloff>icons/circle/Back.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/Back.png</normaloff>:/icons/circle/Back.png</iconset>
    </property>
    <property name="text">
     <string>Go Back</string>
@@ -1785,8 +1785,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionGoForward">
    <property name="icon">
-    <iconset>
-     <normaloff>icons/circle/Forward.png</normaloff>icons/circle/Forward.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/Forward.png</normaloff>:/icons/circle/Forward.png</iconset>
    </property>
    <property name="text">
     <string>Go Forward</string>
@@ -1934,8 +1934,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionNew_temp">
    <property name="icon">
-    <iconset>
-     <normaloff>icons/circle/NewTemp.png</normaloff>icons/circle/NewTemp.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/NewTemp.png</normaloff>:/icons/circle/NewTemp.png</iconset>
    </property>
    <property name="text">
     <string>New (temp)</string>
@@ -2045,8 +2045,8 @@ Don't change documents between find usages and rename</string>
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/icons/light/lock.png</normaloff>:/icons/light/lock.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/lock.png</normaloff>:/icons/circle/lock.png</iconset>
    </property>
    <property name="text">
     <string>Lock Target</string>
@@ -2100,6 +2100,7 @@ Don't change documents between find usages and rename</string>
  </tabstops>
  <resources>
   <include location="resources.qrc"/>
+  <include location="myresource.qrc"/>
  </resources>
  <connections>
   <connection>

@@ -89,5 +89,38 @@
         <file>txt/android.css</file>
         <file>icons/light/Options.png</file>
         <file>icons/light/lock.png</file>
+        <file>codeanalyzer.cpp</file>
+        <file>codeanalyzer.h</file>
+        <file>codeeditor.cpp</file>
+        <file>codeeditor.h</file>
+        <file>colorswatch.cpp</file>
+        <file>colorswatch.h</file>
+        <file>debugtreemodel.cpp</file>
+        <file>debugtreemodel.h</file>
+        <file>finddialog.cpp</file>
+        <file>finddialog.h</file>
+        <file>findinfilesdialog.cpp</file>
+        <file>findinfilesdialog.h</file>
+        <file>listwidgetcomplete.cpp</file>
+        <file>listwidgetcomplete.h</file>
+        <file>main.cpp</file>
+        <file>mainwindow.cpp</file>
+        <file>mainwindow.h</file>
+        <file>prefs.cpp</file>
+        <file>prefs.h</file>
+        <file>prefsdialog.cpp</file>
+        <file>prefsdialog.h</file>
+        <file>proc.cpp</file>
+        <file>proc.h</file>
+        <file>projecttreemodel.cpp</file>
+        <file>projecttreemodel.h</file>
+        <file>quickhelp.cpp</file>
+        <file>quickhelp.h</file>
+        <file>std.cpp</file>
+        <file>std.h</file>
+        <file>tabwidgetdrop.cpp</file>
+        <file>tabwidgetdrop.h</file>
+        <file>theme.cpp</file>
+        <file>theme.h</file>
     </qresource>
 </RCC>
