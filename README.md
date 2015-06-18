@@ -5,6 +5,8 @@ Jentos_IDE [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gi
 
 It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official IDE for Monkey.
 
+## Build with QTCreator
+
 ## Features
 
 ### snippets 
