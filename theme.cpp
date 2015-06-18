@@ -4,7 +4,8 @@
 QString Theme::_theme;
 QString Theme::_prevTheme;
 bool Theme::_isDark;
-
+bool Theme::_isDark2;
+bool Theme::_isDark3;
 Theme::Theme(QObject *parent) : QObject(parent) {
 
 }
@@ -40,6 +41,8 @@ void Theme::setLocal(QString kind) {
 
 void Theme::save() {
     _isDark = (_theme=="android");
+    _isDark2 = (_theme=="Monokai-Dark-Soda");
+    _isDark3 = (_theme=="lighttable");
     Prefs *prefs = Prefs::prefs();
     prefs->blockEmitPrefsChanged(true);
     prefs->setValue("theme", _theme);
@@ -170,6 +173,14 @@ QImage Theme::image(QString name, int theme) {
 bool Theme::isDark() {
     return _isDark;
 }
+bool Theme::isDark2() {
+    return _isDark2;
+}
+
+bool Theme::isDark3() {
+    return _isDark3;
+}
+
 
 QString Theme::hexColor(const QColor &color) {
     QString r = QString::number(color.red(),16);
@@ -185,9 +196,7 @@ QString Theme::hexColor(const QColor &color) {
 }
 
 QColor Theme::selWordColor() {
-    static QColor cn1(83,120,183);
-    static QColor cn2(201,157,17);
-    static QColor c1(66,66,66);
+    static QColor c1(166,166,166);
     static QColor c2(236,235,163);//(225,225,225);
     static QColor c3(225,225,225);
     if(_theme == "android")
@@ -195,9 +204,9 @@ QColor Theme::selWordColor() {
     else if(_theme == "netbeans")
         return c2;
     else if(_theme == "Monokai-Dark-Soda")
-        return cn1;
+        return c1;
     else if(_theme == "lighttable")
-        return cn2;
+        return c1;
     else
         return c3;
 }

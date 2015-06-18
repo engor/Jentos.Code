@@ -15,5 +15,6 @@
         <file>icons/circle/Forward.png</file>
         <file>icons/circle/lock.png</file>
         <file>icons/circle/New.png</file>
+        <file>icons/circle/Project.png</file>
     </qresource>
 </RCC>

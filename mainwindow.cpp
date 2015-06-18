@@ -394,6 +394,20 @@ void MainWindow::updateTheme() {
         }
         f.close();
     }
+    if(Theme::isDark2()) {
+        QFile f(":/txt/android.css");
+        if(f.open(QFile::ReadOnly)) {
+            css = f.readAll();
+        }
+        f.close();
+    }
+    if(Theme::isDark3()) {
+        QFile f(":/txt/android.css");
+        if(f.open(QFile::ReadOnly)) {
+            css = f.readAll();
+        }
+        f.close();
+    }
     css += "QDockWidget::title{text-align:center;}";
     qApp->setStyleSheet(css);
     QApplication::processEvents();

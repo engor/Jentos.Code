@@ -23,6 +23,8 @@ public:
     static QIcon icon(QString name);
     static QImage image(QString name, int theme=0);
     static bool isDark();
+    static bool isDark2();
+    static bool isDark3();
     static QString hexColor(const QColor &color);
     static QColor selWordColor();
     static Theme* instance() {
@@ -41,7 +43,8 @@ private:
 
     static QString _theme, _prevTheme;
     static bool _isDark;
-
+    static bool _isDark2;
+    static bool _isDark3;
 
 };
 

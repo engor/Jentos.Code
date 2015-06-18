@@ -6,26 +6,29 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>457</width>
+    <width>491</width>
     <height>470</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Options</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QToolBox" name="toolBox">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="pageEditor">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>441</width>
-        <height>247</height>
+        <width>473</width>
+        <height>233</height>
        </rect>
       </property>
       <attribute name="label">
@@ -60,8 +63,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>428</width>
-            <height>571</height>
+            <width>460</width>
+            <height>616</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -202,9 +205,6 @@
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="1">
-                 <widget class="ColorSwatch" name="backgroundColorWidget" native="true"/>
-                </item>
                 <item row="1" column="0">
                  <widget class="QLabel" name="defaultColorLabel">
                   <property name="text">
@@ -245,6 +245,13 @@
                 <item row="4" column="1">
                  <widget class="ColorSwatch" name="stringsColorWidget" native="true"/>
                 </item>
+                <item row="5" column="0">
+                 <widget class="QLabel" name="identifiersColorLabel">
+                  <property name="text">
+                   <string>Identifiers</string>
+                  </property>
+                 </widget>
+                </item>
                 <item row="5" column="1">
                  <widget class="ColorSwatch" name="identifiersColorWidget" native="true"/>
                 </item>
@@ -258,23 +265,6 @@
                 <item row="6" column="1">
                  <widget class="ColorSwatch" name="keywordsColorWidget" native="true"/>
                 </item>
-                <item row="16" column="0">
-                 <widget class="QLabel" name="commentsColorLabel">
-                  <property name="text">
-                   <string>Comments</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="16" column="1">
-                 <widget class="ColorSwatch" name="commentsColorWidget" native="true"/>
-                </item>
-                <item row="5" column="0">
-                 <widget class="QLabel" name="identifiersColorLabel">
-                  <property name="text">
-                   <string>Identifiers</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="7" column="0">
                  <widget class="QLabel" name="constantsColorLabel">
                   <property name="text">
@@ -282,15 +272,15 @@
                   </property>
                  </widget>
                 </item>
+                <item row="7" column="1">
+                 <widget class="ColorSwatch" name="constantsColorWidget" native="true"/>
+                </item>
                 <item row="8" column="0">
                  <widget class="QLabel" name="funcDeclsColorLabel">
                   <property name="text">
                    <string>funcDecls</string>
                   </property>
                  </widget>
-                </item>
-                <item row="7" column="1">
-                 <widget class="ColorSwatch" name="constantsColorWidget" native="true"/>
                 </item>
                 <item row="8" column="1">
                  <widget class="ColorSwatch" name="funcDeclsColorWidget" native="true"/>
@@ -365,6 +355,19 @@
                 <item row="15" column="1">
                  <widget class="ColorSwatch" name="paramsColorWidget" native="true"/>
                 </item>
+                <item row="16" column="0">
+                 <widget class="QLabel" name="commentsColorLabel">
+                  <property name="text">
+                   <string>Comments</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="16" column="1">
+                 <widget class="ColorSwatch" name="commentsColorWidget" native="true"/>
+                </item>
+                <item row="0" column="1">
+                 <widget class="ColorSwatch" name="backgroundColorWidget" native="true"/>
+                </item>
                </layout>
               </item>
              </layout>
@@ -394,8 +397,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>441</width>
-        <height>247</height>
+        <width>473</width>
+        <height>233</height>
        </rect>
       </property>
       <attribute name="label">
@@ -427,8 +430,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>439</width>
-            <height>245</height>
+            <width>471</width>
+            <height>231</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -532,8 +535,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>441</width>
-        <height>247</height>
+        <width>473</width>
+        <height>233</height>
        </rect>
       </property>
       <attribute name="label">
@@ -565,8 +568,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>439</width>
-            <height>245</height>
+            <width>471</width>
+            <height>231</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -634,8 +637,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>89</width>
-        <height>69</height>
+        <width>473</width>
+        <height>233</height>
        </rect>
       </property>
       <attribute name="label">
@@ -667,8 +670,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>313</width>
-            <height>114</height>
+            <width>471</width>
+            <height>231</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -779,8 +782,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>89</width>
-        <height>69</height>
+        <width>473</width>
+        <height>233</height>
        </rect>
       </property>
       <attribute name="label">
@@ -812,8 +815,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>127</width>
-            <height>110</height>
+            <width>471</width>
+            <height>231</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -1000,118 +1003,6 @@
  <resources/>
  <connections>
   <connection>
-   <sender>stringsColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>190</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>keywordsColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>230</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>defaultColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>130</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>numbersColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>170</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>backgroundColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>110</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>identifiersColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>210</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>commentsColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>250</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>fontComboBox</sender>
    <signal>currentFontChanged(QFont)</signal>
    <receiver>PrefsDialog</receiver>
@@ -1160,22 +1051,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>highlightColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>150</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>143</x>
-     <y>213</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>chbSmoothFonts</sender>
    <signal>toggled(bool)</signal>
    <receiver>PrefsDialog</receiver>
@@ -1188,22 +1063,6 @@
     <hint type="destinationlabel">
      <x>176</x>
      <y>270</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>okayButton</sender>
-   <signal>clicked()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>383</x>
-     <y>450</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>182</x>
-     <y>283</y>
     </hint>
    </hints>
   </connection>
@@ -1348,6 +1207,150 @@
     <hint type="destinationlabel">
      <x>199</x>
      <y>268</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>okayButton</sender>
+   <signal>clicked()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>383</x>
+     <y>450</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>182</x>
+     <y>283</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>stringsColorWidget</sender>
+   <signal>colorChanged()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onColorChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>190</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>highlightColorWidget</sender>
+   <signal>colorChanged()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onColorChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>150</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>143</x>
+     <y>213</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>identifiersColorWidget</sender>
+   <signal>colorChanged()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onColorChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>210</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>defaultColorWidget</sender>
+   <signal>colorChanged()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onColorChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>130</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>backgroundColorWidget</sender>
+   <signal>colorChanged()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onColorChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>110</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>keywordsColorWidget</sender>
+   <signal>colorChanged()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onColorChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>230</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>commentsColorWidget</sender>
+   <signal>colorChanged()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onColorChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>250</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>numbersColorWidget</sender>
+   <signal>colorChanged()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onColorChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>170</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
     </hint>
    </hints>
   </connection>

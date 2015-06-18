@@ -1584,8 +1584,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionOpenProject">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/icons/light/Project.png</normaloff>:/icons/light/Project.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/Project.png</normaloff>:/icons/circle/Project.png</iconset>
    </property>
    <property name="text">
     <string>Open project...</string>
