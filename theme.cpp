@@ -116,7 +116,7 @@ void Theme::save() {
         prefs->setValue( "funcDeclsColor",QColor( 0xFD971F ) );
         prefs->setValue( "commentsColor",QColor( 0x8c8c8c ) );
         prefs->setValue( "highlightColor",QColor( 0xB5B5B5 ) );
-        prefs->setValue( "highlightColorError",QColor( 0xE9EFF8 ) );
+        prefs->setValue( "highlightColorError",QColor( 0xe40000 ) );
         prefs->setValue( "highlightColorCaretRow",QColor( 0x3A2A21 ) );
         prefs->setValue( "monkeywordsColor",QColor( 0x2BBF1C ) );
         prefs->setValue( "userwordsColor",QColor( 0xfd971f ) );
@@ -127,7 +127,7 @@ void Theme::save() {
 
     else if(_theme == "lighttable") {
         prefs->setValue( "backgroundColor",QColor( 0x202020 ) );
-        prefs->setValue( "defaultColor",QColor( 0xA2A2A2 ) );
+        prefs->setValue( "defaultColor",QColor( 0xc6c6c6 ) );
         prefs->setValue( "numbersColor",QColor( 0xFEFEFE ) );
         prefs->setValue( "stringsColor",QColor( 0x318F8F ) );
         prefs->setValue( "identifiersColor",QColor( 0x009900 ) );
@@ -135,9 +135,9 @@ void Theme::save() {
         prefs->setValue( "constantsColor",QColor( 0xA6E22E ) );
         prefs->setValue( "funcDeclsColor",QColor( 0xAACCFF ) );
         prefs->setValue( "commentsColor",QColor( 0x6688CD ) );
-        prefs->setValue( "highlightColor",QColor( 0xB5B5B5 ) );
-        prefs->setValue( "highlightColorError",QColor( 0xE9EFF8 ) );
-        prefs->setValue( "highlightColorCaretRow",QColor( 0x3A2A21 ) );
+        prefs->setValue( "highlightColor",QColor( 0xea1717 ) );
+        prefs->setValue( "highlightColorError",QColor( 0x40000 ) );
+        prefs->setValue( "highlightColorCaretRow",QColor( 0x423434 ) );
         prefs->setValue( "monkeywordsColor",QColor( 0xAFCDFB ) );
         prefs->setValue( "userwordsColor",QColor( 0x2886AC ) );
         prefs->setValue( "userwordsDeclColor",QColor( 0xCCAAFF ) );
