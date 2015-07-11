@@ -18,7 +18,7 @@ It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official
  Create template basic, by default name Class is "Game"
 * **@mojoapp{name}**  
  Create template basic, **{name} -> MyGame**
-* **@mn{name}**    
+* **@m{name}**    
  Create Method **{name} -> mymethod**
 * **@cc{name}**     
  Create Class **{name} -> myclass**
@@ -31,11 +31,34 @@ It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official
 * **@kh-{key}**      
  Create Input KeyHit, **{key} -> R,ENTER,A,etc.**
 
+**Strict**  
+* **@:mojoapp**   
+ Create template basic, by default name Class is "Game"
+* **@:mojoapp{name}**  
+ Create template basic, **{name} -> MyGame**
+* **@vm{name}**  
+ Create Method Not Return Void **{name} -> mymethod**
+* **@im{name}**  
+ Create Method Return Integer **{name} -> mymethod**
+* **@fm{name}**  
+ Create Method Return Field **{name} -> mymethod**
+* **@sm{name}**  
+ Create Method Return String **{name} -> mymethod**
+* **@bm{name}**  
+ Create Method Return Bool **{name} -> mymethod**
+* **@fl{name}**  
+ Create List Field **{name} -> mynamelist**
+* **@ll{name}**  
+ Create List Local **{name} -> mynamelist**
+* **@Fore{name}**  
+ Create For EachIn loop **{collection} -> namecollection**
+
+
 ### Examples snippers:
 
 
 #### Snippet :
-##### @mnMyMethod
+##### @mMyMethod
 
 ```
     Method MyMethod()
@@ -66,7 +89,7 @@ It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official
 * Folding for "if,while,for,select" statements; and local variables is local for analyzer inside of them.
 * Analyze user's imports.
 * Autoformat code with adding (or removing) nessesary spaces.
-* Replacement for variables type: # $ % ? with :Int, :Float, :String, :Bool.
+* Replacement for variables type: % # $ ? with :Int, :Float, :String, :Bool.
 * Autocomplete for (), "", '', [].
 * Autocomplete for function, condition, cycles, etc. by pressing Ctrl+Enter.
 * All monkey's modules analyzing at startup, so you always work with actual items.
