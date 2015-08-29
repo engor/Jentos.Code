@@ -95,8 +95,8 @@ QVariant ProjectTreeModel::data( const QModelIndex &index,int role)const{
         QString txtfilename = fileName(index);
         txtfilename = txtfilename.right(5);
 
-        qDebug() << txtfilename;
-        qDebug() << type(index);
+        //qDebug() << txtfilename;
+        //qDebug() << type(index);
 
         if(type(index).endsWith("Folder") && !txtfilename.endsWith(".data"))
         {
@@ -118,8 +118,9 @@ QVariant ProjectTreeModel::data( const QModelIndex &index,int role)const{
         {
             return QPixmap(":/icons/circle/tree/text.png");
         }
-        if(txtfilename.endsWith(".data"))
+        if(txtfilename.endsWith(".data") && !type(index).endsWith("data File"))
         {
+            //qDebug() << type(index);
             return QPixmap(":/icons/circle/tree/data.png");
         }
 

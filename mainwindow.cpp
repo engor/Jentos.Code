@@ -1119,6 +1119,10 @@ void MainWindow::updateActions(){
     //edit menu
     _ui->actionEditUndo->setEnabled( wr && _codeEditor->document()->isUndoAvailable() );
     _ui->actionEditRedo->setEnabled( wr && _codeEditor->document()->isRedoAvailable() );
+
+    _ui->actionGoBack->setEnabled( wr && _codeEditor->document()->isUndoAvailable() );
+    _ui->actionGoForward->setEnabled( wr && _codeEditor->document()->isRedoAvailable() );
+
     _ui->actionEditCut->setEnabled( wr && sel );
     _ui->actionEditCopy->setEnabled( sel );
     _ui->actionEditPaste->setEnabled( wr );
@@ -2310,17 +2314,23 @@ void MainWindow::onUnfoldAll() {
 }
 
 void MainWindow::onGoBack() {
-    if( _codeEditor )
+    if( !_codeEditor ) return;
+
+    _codeEditor->undo();
+   /* if( _codeEditor )
         _codeEditor->goBack();
     else
-        onHelpBack();
+        onHelpBack();*/
 }
 
 void MainWindow::onGoForward() {
-    if( _codeEditor )
+    if( !_codeEditor ) return;
+
+    _codeEditor->redo();
+    /*if( _codeEditor )
         _codeEditor->goForward();
     else
-        onHelpForward();
+        onHelpForward();*/
 }
 
 void MainWindow::onThemeAndroidStudio() {
