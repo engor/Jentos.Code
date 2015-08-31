@@ -55,7 +55,7 @@ void ProjectTreeModel::removeProject( const QString &dir ){
 
 bool ProjectTreeModel::isProject( const QModelIndex &index ){
     for( int i=0;i<_projs.size();++i ){
-        qDebug() << _projs[i];
+
         if( index==_projs[i] ) return true;
     }
     return false;

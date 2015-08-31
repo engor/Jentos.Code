@@ -1,13 +1,31 @@
-Jentos_IDE [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE)
+### Jentos_IDE [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE)
 ==========
-# About
+### About
 [Jentos IDE](http://fingerdev.com/apps/jentos/) is a powerfull open source IDE for [Monkey](http://www.monkey-x.com) programming language.
 
 It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official IDE for Monkey.
 
-## Build with QTCreator
+#### Jentos IDE 1.3.1
+News
 
-## Features
+- Add View Image(popup window) in area Project.
+- Add Edit Image (popup window) in area Project..
+- Add Build and Run (popup window) in area Project..
+- Add Build (popup window) in area Project..
+- Add Build and Run (popup window) in editor Project..
+- Add Run (popup window) in editor Project..
+
+Corrected
+
+- Corrected Theme Monokai Dark Soda.
+- Corrected Theme  LightTable.
+- Corrected "Open on Desktop"
+- Corrected: and you can not open images in the code editor
+
+
+### Build with QTCreator
+
+### Features
 
 ### snippets 
 [![Snippers](http://i.imgur.com/oQc0ut3.gif)](http://fingerdev.com/apps/jentos/)

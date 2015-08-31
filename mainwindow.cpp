@@ -494,6 +494,7 @@ void MainWindow::updateTheme() {
         if(!QFile::exists(jent)) {
             QFile::copy(monk,jent);
         }
+
         jent = QApplication::applicationDirPath() + (Theme::isDark() ? "/help_dark.css" : "/pagestyle.css");
         if(QFile::exists(jent)) {
             bool b = QFile::remove(monk);
@@ -1426,6 +1427,7 @@ void MainWindow::onProjectMenu( const QPoint &pos ){
     }else if( action==_ui->actionView_Image ){
 
         QLabel* label = new QLabel();
+        label->setStyleSheet("QLabel {background-color : #989898;}");
         QPixmap pix(info.filePath());
         label->setPixmap(pix);
         label->setAlignment(Qt::AlignCenter);
@@ -1589,7 +1591,7 @@ void MainWindow::onCodeTreeViewClicked( const QModelIndex &index ) {
         int index = -1;
         for( int i = 0; i < _mainTabWidget->count(); ++i ){
             if( CodeEditor *editor = qobject_cast<CodeEditor*>( _mainTabWidget->widget( i ) ) ){
-                qDebug()<<"123456789";
+
                 if( editor->path() == path ) {
                     index = i;
                     break;
@@ -1621,6 +1623,7 @@ void MainWindow::onSourceListViewClicked( const QModelIndex &index ) {
 //Console...
 //
 void MainWindow::print(const QString &str, QString kind ){
+
     if(kind == "") {
         _ui->outputTextEdit->setTextColor( Theme::isDark() ? QColor(0xc8c8c8) : QColor(0x050505) );
     }
