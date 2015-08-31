@@ -70,7 +70,7 @@ private:
 
     void print(const QString &str , QString kind);
     void runCommand( QString cmd,QWidget *fileWidget );
-    void build( QString mode );
+    void build( QString mode,QString pathmonkey);
 
     bool confirmQuit();
     void closeEvent( QCloseEvent *event );
@@ -277,6 +277,8 @@ private:
     QMenu *_projectPopupMenu;
     QMenu *_dirPopupMenu;
     QMenu *_filePopupMenu;
+    QMenu *_fileImagePopupMenu;
+    QMenu *_fileMonkeyPopupMenu;
     QMenu *_sourcePopupMenu;
     QMenu *_editorPopupMenu;
     QMenu *_usagesPopupMenu;

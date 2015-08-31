@@ -17,6 +17,7 @@ bool ProjectTreeModel::addProject( const QString &dir ){
 
     QString sdir=dir.endsWith( '/' ) ? dir : dir+'/';
     for( int i=0;i<_dirs.size();++i ){
+
         if( _dirs[i].startsWith( sdir  ) ) return false;
         QString idir=_dirs[i].endsWith( '/' ) ? _dirs[i] : _dirs[i]+'/';
         if( dir.startsWith( idir ) ) return false;
@@ -54,6 +55,7 @@ void ProjectTreeModel::removeProject( const QString &dir ){
 
 bool ProjectTreeModel::isProject( const QModelIndex &index ){
     for( int i=0;i<_projs.size();++i ){
+        qDebug() << _projs[i];
         if( index==_projs[i] ) return true;
     }
     return false;
@@ -110,6 +112,18 @@ QVariant ProjectTreeModel::data( const QModelIndex &index,int role)const{
         {
             return QPixmap(":/icons/circle/tree/image.png");
         }
+        if(type(index).endsWith("jpg File"))
+        {
+            return QPixmap(":/icons/circle/tree/image.png");
+        }
+        if(type(index).endsWith("gif File"))
+        {
+            return QPixmap(":/icons/circle/tree/image.png");
+        }
+        if(type(index).endsWith("ico File"))
+        {
+            return QPixmap(":/icons/circle/tree/image.png");
+        }
         if(type(index).endsWith("fnt File"))
         {
             return QPixmap(":/icons/circle/tree/font.png");
@@ -120,7 +134,6 @@ QVariant ProjectTreeModel::data( const QModelIndex &index,int role)const{
         }
         if(txtfilename.endsWith(".data") && !type(index).endsWith("data File"))
         {
-            //qDebug() << type(index);
             return QPixmap(":/icons/circle/tree/data.png");
         }
 

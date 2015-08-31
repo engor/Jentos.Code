@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Big Ted</string>
+   <string>Jentos IDE 1.3.1</string>
   </property>
   <property name="documentMode">
    <bool>false</bool>
@@ -2074,6 +2074,38 @@ Don't change documents between find usages and rename</string>
     <string>LightTable</string>
    </property>
   </action>
+  <action name="actionView_Image">
+   <property name="text">
+    <string>View Image</string>
+   </property>
+   <property name="toolTip">
+    <string>ViewImage</string>
+   </property>
+  </action>
+  <action name="actionEdit_Image">
+   <property name="text">
+    <string>Edit Image</string>
+   </property>
+   <property name="toolTip">
+    <string>EditImage</string>
+   </property>
+  </action>
+  <action name="actionMonkeyBuild">
+   <property name="text">
+    <string>Build</string>
+   </property>
+   <property name="toolTip">
+    <string>MonkeyBuild</string>
+   </property>
+  </action>
+  <action name="actionMonkeyBuild_and_Run">
+   <property name="text">
+    <string>Build and Run</string>
+   </property>
+   <property name="toolTip">
+    <string>MonkeyBuildandRun</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -2099,8 +2131,8 @@ Don't change documents between find usages and rename</string>
   <tabstop>toolButtonSortByName</tabstop>
  </tabstops>
  <resources>
-  <include location="resources.qrc"/>
   <include location="myresource.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections>
   <connection>
