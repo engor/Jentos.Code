@@ -28,6 +28,7 @@ class Prefs;
 class PrefsDialog;
 class QuickHelp;
 class TabWidgetDrop;
+class PreviewHtml5;
 
 
 class MainWindow : public QMainWindow{
@@ -256,7 +257,7 @@ private:
     QWebView *_helpWidget;
 
     PrefsDialog *_prefsDialog;
-    //FindDialog *_findDialog;
+    PreviewHtml5 *_previewHtml5Dialog;
     FindInFilesDialog *_findInFilesDialog;
 
     QMenu *_tabsPopupMenu;

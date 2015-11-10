@@ -11,6 +11,7 @@ See LICENSE.TXT for licensing terms.
 
 #include "codeeditor.h"
 #include "prefsdialog.h"
+#include "previewhtml5.h"
 #include "projecttreemodel.h"
 #include "debugtreemodel.h"
 #include "finddialog.h"
@@ -1526,7 +1527,9 @@ void MainWindow::cdebug( const QString &str ){
 
 void MainWindow::runCommand( QString cmd, QWidget *fileWidget ){
 
-    cmd=cmd.replace( "${TARGET}",_targetsWidget->currentText().replace( ' ','_' ) );
+    QString targetStr = _targetsWidget->currentText().replace( ' ','_' );
+    qDebug() << "targetStr"<<targetStr;
+    cmd=cmd.replace( "${TARGET}",targetStr );
     cmd=cmd.replace( "${CONFIG}",_configsWidget->currentText() );
     cmd=cmd.replace( "${MONKEYPATH}",_monkeyPath );
     //cmd=cmd.replace( "${BLITZMAXPATH}",_blitzmaxPath );
@@ -1549,6 +1552,13 @@ void MainWindow::runCommand( QString cmd, QWidget *fileWidget ){
     }
 
     updateActions();
+
+    if (targetStr == "Html5_Game") {
+        if (_previewHtml5Dialog == 0)
+            _previewHtml5Dialog = new PreviewHtml5(this);
+        _previewHtml5Dialog->showMe();
+    }
+
 }
 
 void MainWindow::onProcStdout(){

@@ -11,7 +11,8 @@ TEMPLATE = app
 FORMS    += mainwindow.ui \
     finddialog.ui \
     prefsdialog.ui \
-    findinfilesdialog.ui
+    findinfilesdialog.ui \
+    previewhtml5.ui
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -29,7 +30,8 @@ SOURCES += main.cpp\
     codeanalyzer.cpp \
     tabwidgetdrop.cpp \
     proc.cpp \
-    theme.cpp
+    theme.cpp \
+    previewhtml5.cpp
 
 HEADERS  += mainwindow.h \
     codeeditor.h \
@@ -46,7 +48,8 @@ HEADERS  += mainwindow.h \
     codeanalyzer.h \
     tabwidgetdrop.h \
     proc.h \
-    theme.h
+    theme.h \
+    previewhtml5.h
 
 RESOURCES += \
     resources.qrc
