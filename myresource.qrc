@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/circle/tree/folder.png</file>
+        <file>icons/circle/tree/monkey.png</file>
+        <file>icons/circle/tree/image.png</file>
+        <file>icons/circle/tree/font.png</file>
+        <file>icons/circle/tree/text.png</file>
+        <file>icons/circle/tree/data.png</file>
+        <file>icons/circle/NewTemp.png</file>
+        <file>icons/circle/Open.png</file>
+        <file>icons/circle/Stop.png</file>
+        <file>icons/circle/Back.png</file>
+        <file>icons/circle/Build.png</file>
+        <file>icons/circle/Build-Run.png</file>
+        <file>icons/circle/Forward.png</file>
+        <file>icons/circle/lock.png</file>
+        <file>icons/circle/New.png</file>
+        <file>icons/circle/Project.png</file>
+    </qresource>
+</RCC>

@@ -9,7 +9,7 @@ See LICENSE.TXT for licensing terms.
 #ifndef LISTWIDGETCOMPLETE_H
 #define LISTWIDGETCOMPLETE_H
 
-#include <std.h>
+#include "std.h"
 
 class CodeItem;
 

@@ -88,6 +88,6 @@
         <file>icons/dark/Unfold.png</file>
         <file>txt/android.css</file>
         <file>icons/light/Options.png</file>
-        <file>icons/app_icon.png</file>
+        <file>icons/light/lock.png</file>
     </qresource>
 </RCC>
