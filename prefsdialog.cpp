@@ -64,8 +64,29 @@ int PrefsDialog::exec(){
     _ui->stringsColorWidget->setColor( _prefs->getColor( "stringsColor" ) );
     _ui->identifiersColorWidget->setColor( _prefs->getColor( "identifiersColor" ) );
     _ui->keywordsColorWidget->setColor( _prefs->getColor( "keywordsColor" ) );
+
+
+    _ui->constantsColorWidget->setColor( _prefs->getColor( "constantsColor" ) );
+    _ui->funcDeclsColorWidget->setColor( _prefs->getColor( "funcDeclsColor" ) );
+
+
     _ui->commentsColorWidget->setColor( _prefs->getColor( "commentsColor" ) );
     _ui->highlightColorWidget->setColor( _prefs->getColor( "highlightColor" ) );
+
+
+    _ui->highlightColorErrorWidget->setColor( _prefs->getColor( "highlightColorError" ) );
+    _ui->highlightColorCaretRowWidget->setColor( _prefs->getColor( "highlightColorCaretRow" ) );
+    _ui->monkeywordsColorWidget->setColor( _prefs->getColor( "monkeywordsColor" ) );
+    _ui->userwordsColorWidget->setColor( _prefs->getColor( "userwordsColor" ) );
+
+
+    _ui->userwordsDeclColorWidget->setColor( _prefs->getColor( "userwordsDeclColor" ) );
+    _ui->userwordsVarColorWidget->setColor( _prefs->getColor( "userwordsVarColor" ) );
+    _ui->paramsColorWidget->setColor( _prefs->getColor( "paramsColor" ) );
+
+
+
+
     _ui->tabSizeWidget->setValue( _prefs->getInt( "tabSize" ) );
 
     _ui->monkeyPathWidget->setText( _prefs->getString( "monkeyPath" ) );
@@ -75,6 +96,7 @@ int PrefsDialog::exec(){
     _ui->checkBoxFillAucompInherit->setChecked( _prefs->getBool( "codeFillAucompInherit" ) );
 
     _ui->checkBoxCheckUpdates->setChecked( _prefs->getBool( "updates" ) );
+    _ui->checkBoxAutoBracket->setChecked(_prefs->getBool("AutoBracket"));
     _ui->checkBoxShowHelpInDock->setChecked(_prefs->getBool("showHelpInDock"));
     _ui->checkBoxReplaceDocsStyle->setChecked(_prefs->getBool("replaceDocsStyle"));
 
@@ -175,4 +197,9 @@ void PrefsDialog::onShowHelpInDockChanged() {
 
 void PrefsDialog::onReplaceDocsStyleChanged() {
     _prefs->setValue("replaceDocsStyle", _ui->checkBoxReplaceDocsStyle->isChecked());
+}
+
+void PrefsDialog::on_checkBoxAutoBracket_stateChanged(int arg1)
+{
+     _prefs->setValue( "AutoBracket", _ui->checkBoxAutoBracket->isChecked() );
 }

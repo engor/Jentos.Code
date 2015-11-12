@@ -661,7 +661,7 @@ CodeItem* CodeAnalyzer::isBlockHasClassOrFunc(const QTextBlock &block) {
     }
     return 0;
 }
-
+//Modify this code to stop the autobracing
 QStringList CodeAnalyzer::extractParams(const QString &text) {
     QStringList list;
     int st1=0, st2=0, st3=0, pos = 0;
@@ -691,7 +691,7 @@ QStringList CodeAnalyzer::extractParams(const QString &text) {
         else if(ch == '[')
             ++st1;
         else if(ch == ']')
-            --st1;
+           --st1;
         else if(ch == '(')
             ++st2;
         else if(ch == ')')
@@ -1617,6 +1617,188 @@ bool CodeAnalyzer::autoFormat( QString &s, bool force ) {
         return repl;
     static QStringList *sFrom = 0, *sTo = 0;
     static int cnt = 0;
+
+    QString snippetmojox;
+    snippetmojox += "Import mojo\n";
+    snippetmojox += "\n";
+    snippetmojox += "Class {{Xname}} Extends App\n";
+    snippetmojox += "\n";
+    snippetmojox += "<---->Method OnCreate()\n";
+    snippetmojox += "<----....>SetUpdateRate 30\n";
+    snippetmojox += "<---->End\n";
+    snippetmojox += "\n";
+    snippetmojox += "<---->Method OnUpdate()\n";
+    snippetmojox += "\n";
+    snippetmojox += "<---->End\n";
+    snippetmojox += "\n";
+    snippetmojox += "<---->Method OnRender()\n";
+    snippetmojox += "<----....>Cls\n";
+    snippetmojox += "<----....>DrawText(\"Welcome Monkey\",302,240)\n";
+    snippetmojox += "<---->End\n";
+    snippetmojox += "\n";
+    snippetmojox += "End\n";
+    snippetmojox += "\n";
+    snippetmojox += "Function Main()\n";
+    snippetmojox += "<---->New {{Xname}}()\n";
+    snippetmojox += "End\n";
+
+
+    QString snippetmojoxstrict;
+    snippetmojoxstrict += "Strict\n";
+    snippetmojoxstrict += "\n";
+    snippetmojoxstrict += "Import mojo\n";
+    snippetmojoxstrict += "\n";
+    snippetmojoxstrict += "Class {{Xname}} Extends App\n";
+    snippetmojoxstrict += "\n";
+    snippetmojoxstrict += "<---->Method OnCreate:Int()\n";
+    snippetmojoxstrict += "<----....>SetUpdateRate 30\n";
+    snippetmojoxstrict += "<----....>Return 0\n";
+    snippetmojoxstrict += "<---->End\n";
+    snippetmojoxstrict += "\n";
+    snippetmojoxstrict += "<---->Method OnUpdate:Int()\n";
+    snippetmojoxstrict += "\n";
+    snippetmojoxstrict += "<----....>Return 0\n";
+    snippetmojoxstrict += "<---->End\n";
+    snippetmojoxstrict += "\n";
+    snippetmojoxstrict += "<---->Method OnRender:Int()\n";
+    snippetmojoxstrict += "<----....>Cls\n";
+    snippetmojoxstrict += "<----....>DrawText(\"Welcome Monkey\",302,240)\n";
+    snippetmojoxstrict += "<----....>Return 0\n";
+    snippetmojoxstrict += "<---->End\n";
+    snippetmojoxstrict += "\n";
+    snippetmojoxstrict += "End\n";
+    snippetmojoxstrict += "\n";
+    snippetmojoxstrict += "Function Main:Int()\n";
+    snippetmojoxstrict += "<---->New {{Xname}}()\n";
+    snippetmojoxstrict += "<---->Return 0\n";
+    snippetmojoxstrict += "End\n";
+
+
+    QString snippetmethodname;
+    snippetmethodname += "<---->Method {{Xname}}\n";
+    snippetmethodname += "\n";
+    snippetmethodname += "<---->End";
+
+    QString snippetmethodnamestrictVoid;
+    snippetmethodnamestrictVoid += "<---->Method {{Xname}}:Void()\n";
+    snippetmethodnamestrictVoid += "\n";
+    snippetmethodnamestrictVoid += "<---->End";
+
+    QString snippetmethodnamestrictInt;
+    snippetmethodnamestrictInt += "<---->Method {{Xname}}:Int()\n";
+    snippetmethodnamestrictInt += "\n";
+    snippetmethodnamestrictInt += "<----....>Return 0\n";
+    snippetmethodnamestrictInt += "<---->End";
+
+    QString snippetmethodnamestrictField;
+    snippetmethodnamestrictField += "<---->Method {{Xname}}:Float()\n";
+    snippetmethodnamestrictField += "\n";
+    snippetmethodnamestrictField += "<----....>Return 0\n";
+    snippetmethodnamestrictField += "<---->End";
+
+    QString snippetmethodnamestrictString;
+    snippetmethodnamestrictString += "<---->Method {{Xname}}:String()\n";
+    snippetmethodnamestrictString += "\n";
+    snippetmethodnamestrictString += "<----....>Return \"\"\n";
+    snippetmethodnamestrictString += "<---->End";
+
+    QString snippetmethodnamestrictBool;
+    snippetmethodnamestrictBool += "<---->Method {{Xname}}:Bool()\n";
+    snippetmethodnamestrictBool += "\n";
+    snippetmethodnamestrictBool += "<----....>Return False\n";
+    snippetmethodnamestrictBool += "<---->End";
+
+    QString snippetclasename;
+    snippetclasename += "Class {{Xname}}\n";
+    snippetclasename += "\n";
+    snippetclasename += "End\n";
+
+    //key down
+    QString snippetkeydowndireccional;
+    snippetkeydowndireccional += "<----....>If KeyDown(KEY_LEFT)\n";
+    snippetkeydowndireccional += "\n";
+    snippetkeydowndireccional += "<----....>End\n";
+    snippetkeydowndireccional += "\n";
+    snippetkeydowndireccional += "<----....>If KeyDown(KEY_RIGHT)\n";
+    snippetkeydowndireccional += "\n";
+    snippetkeydowndireccional += "<----....>End\n";
+    snippetkeydowndireccional += "\n";
+    snippetkeydowndireccional += "<----....>If KeyDown(KEY_UP)\n";
+    snippetkeydowndireccional += "\n";
+    snippetkeydowndireccional += "<----....>End\n";
+    snippetkeydowndireccional += "\n";
+    snippetkeydowndireccional += "<----....>If KeyDown(KEY_DOWN)\n";
+    snippetkeydowndireccional += "\n";
+    snippetkeydowndireccional += "<----....>End\n";
+
+    QString snippetkeydownkey;
+    snippetkeydownkey += "<----....>If KeyDown(KEY_{{Xname}})\n";
+    snippetkeydownkey += "\n";
+    snippetkeydownkey += "<----....>End\n";
+
+    // key hit
+    QString snippetkeyhitdireccional;
+    snippetkeyhitdireccional += "<----....>If KeyHit(KEY_LEFT)\n";
+    snippetkeyhitdireccional += "\n";
+    snippetkeyhitdireccional += "<----....>End\n";
+    snippetkeyhitdireccional += "\n";
+    snippetkeyhitdireccional += "<----....>If KeyHit(KEY_RIGHT)\n";
+    snippetkeyhitdireccional += "\n";
+    snippetkeyhitdireccional += "<----....>End\n";
+    snippetkeyhitdireccional += "\n";
+    snippetkeyhitdireccional += "<----....>If KeyHit(KEY_UP)\n";
+    snippetkeyhitdireccional += "\n";
+    snippetkeyhitdireccional += "<----....>End\n";
+    snippetkeyhitdireccional += "\n";
+    snippetkeyhitdireccional += "<----....>If KeyHit(KEY_DOWN)\n";
+    snippetkeyhitdireccional += "\n";
+    snippetkeyhitdireccional += "<----....>End\n";
+
+    QString snippetkeyhitkey;
+    snippetkeyhitkey += "<----....>If KeyHit(KEY_{{Xname}})\n";
+    snippetkeyhitkey += "\n";
+    snippetkeyhitkey += "<----....>End\n";
+
+    QString snippetfieldlist;
+    snippetfieldlist += "<---->Field {{Xnameminuscula}}s:List<{{Xname}}> = New List<{{Xname}}>\n";
+
+    QString snippetlocallist;
+    snippetlocallist += "<---->Local {{Xnameminuscula}}s:List<{{Xname}}> = New List<{{Xname}}>\n";
+
+    QString snippetForEachin;
+    snippetForEachin += "<---->For Local {{Xnameminuscula}}:Type = Eachin {{Xname}}\n";
+    snippetForEachin += "<----....>\'Statements\n";
+    snippetForEachin += "<---->Next\n";
+
+    QString snippetlvec2df;
+    snippetlvec2df += "Class Vec2Df\n";
+    snippetlvec2df += "<---->Field x:Float\n";
+    snippetlvec2df += "<---->Field y:Float\n";
+    snippetlvec2df += "\n";
+    snippetlvec2df += "<---->Method New(x:Float = 0, y:Float = 0)\n";
+    snippetlvec2df += "<----....>Set(x, y)\n";
+    snippetlvec2df += "<---->End\n";
+    snippetlvec2df += "<---->Method Set:Void(x:Float, y:Float)\n";
+    snippetlvec2df += "<----....>Self.x = x\n";
+    snippetlvec2df += "<----....>Self.y = y\n";
+    snippetlvec2df += "<---->End\n";
+    snippetlvec2df += "End";
+
+    QString snippetlvec2di;
+    snippetlvec2di += "Class Vec2Di\n";
+    snippetlvec2di += "<---->Field x:Int\n";
+    snippetlvec2di += "<---->Field y:Int\n";
+    snippetlvec2di += "\n";
+    snippetlvec2di += "<---->Method New(x:Int = 0, y:Int = 0)\n";
+    snippetlvec2di += "<----....>Set(x, y)\n";
+    snippetlvec2di += "<---->End\n";
+    snippetlvec2di += "<---->Method Set:Void(x:Int, y:Int)\n";
+    snippetlvec2di += "<----....>Self.x = x\n";
+    snippetlvec2di += "<----....>Self.y = y\n";
+    snippetlvec2di += "<---->End\n";
+    snippetlvec2di += "End";
+
+
     if(!sFrom) {
         sFrom = new QStringList;
         sTo = new QStringList;
@@ -1632,9 +1814,44 @@ bool CodeAnalyzer::autoFormat( QString &s, bool force ) {
         sTo->append("#Rem");
         sFrom->append("*/");
         sTo->append("#End");
-        cnt = 6;
+        sFrom->append("@mojoapp");
+        sTo->append(snippetmojox);
+        sFrom->append("@m");
+        sTo->append(snippetmethodname);
+        sFrom->append("@cc");
+        sTo->append(snippetclasename);
+        sFrom->append("@kdd");
+        sTo->append(snippetkeydowndireccional);
+        sFrom->append("@kd-");
+        sTo->append(snippetkeydownkey);
+        sFrom->append("@khd");
+        sTo->append(snippetkeyhitdireccional);
+        sFrom->append("@kh-");
+        sTo->append(snippetkeyhitkey);
+        sFrom->append("@:mojoapp");
+        sTo->append(snippetmojoxstrict);
+        sFrom->append("@vm");
+        sTo->append(snippetmethodnamestrictVoid);
+        sFrom->append("@im");
+        sTo->append(snippetmethodnamestrictInt);
+        sFrom->append("@fm");
+        sTo->append(snippetmethodnamestrictField);
+        sFrom->append("@sm");
+        sTo->append(snippetmethodnamestrictString);
+        sFrom->append("@bm");
+        sTo->append(snippetmethodnamestrictBool);
+        sFrom->append("@fl");
+        sTo->append(snippetfieldlist);
+        sFrom->append("@ll");
+        sTo->append(snippetlocallist);
+        sFrom->append("@Fore");
+        sTo->append(snippetForEachin);
+        sFrom->append("@vec2df");
+        sTo->append(snippetlvec2df);
+        sFrom->append("@vec2di");
+        sTo->append(snippetlvec2di);
+        cnt = 24;
     }
-
     int pos = -1;
     bool checkQuotes = (s.indexOf("\"") > 0);
     if(trimmed.indexOf("'") == 0) {//skip comments
@@ -1643,6 +1860,7 @@ bool CodeAnalyzer::autoFormat( QString &s, bool force ) {
     if(trimmed.indexOf("#") == 0) {//skip preprocessor directives
         return false;
     }
+
     int comPos = s.indexOf("'");
     for(i = 0 ; i < cnt ; ++i) {
         pos = -1;
@@ -1659,6 +1877,216 @@ bool CodeAnalyzer::autoFormat( QString &s, bool force ) {
             if(i < 4 && !isIdent(s.at(pos-1)))
                 continue;
             s = s.left(pos) + sTo->at(i) + s.mid(pos+sFrom->at(i).length());
+
+            // create new method init
+            QString mncreate= sFrom->at(i);
+            if(mncreate == QString("@m")){
+                QString snippetcreatemethod = sTo->at(i);
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+
+                if(reemplazenameX == QString("")){
+                    s = "'require name method";
+                }
+                if(reemplazenameX != QString("")){
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX)+"()");
+                    s = snippetcreatemethod;
+                }
+
+            }
+            if(mncreate == QString("@vm")){
+                QString snippetcreatemethod = sTo->at(i);
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+
+                if(reemplazenameX == QString("")){
+                    s = "'require name method";
+                }
+                if(reemplazenameX != QString("")){
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
+                    s = snippetcreatemethod;
+                }
+            }
+            if(mncreate == QString("@im")){
+                QString snippetcreatemethod = sTo->at(i);
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+
+                if(reemplazenameX == QString("")){
+                    s = "'require name method";
+                }
+                if(reemplazenameX != QString("")){
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
+                    s = snippetcreatemethod;
+                }
+            }
+            if(mncreate == QString("@fm")){
+                QString snippetcreatemethod = sTo->at(i);
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+
+                if(reemplazenameX == QString("")){
+                    s = "'require name method";
+                }
+                if(reemplazenameX != QString("")){
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
+                    s = snippetcreatemethod;
+                }
+            }
+            if(mncreate == QString("@sm")){
+                QString snippetcreatemethod = sTo->at(i);
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+
+                if(reemplazenameX == QString("")){
+                    s = "'require name method";
+                }
+                if(reemplazenameX != QString("")){
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
+                    s = snippetcreatemethod;
+                }
+            }
+            if(mncreate == QString("@bm")){
+                QString snippetcreatemethod = sTo->at(i);
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+
+                if(reemplazenameX == QString("")){
+                    s = "'require name method";
+                }
+                if(reemplazenameX != QString("")){
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
+                    s = snippetcreatemethod;
+                }
+            }
+            if(mncreate == QString("@cc")){
+                QString snippetcreatemethod = sTo->at(i);
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+
+                if(reemplazenameX == QString("")){
+                    s = "'require name class";
+                }
+                if(reemplazenameX != QString("")){
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
+                    s = snippetcreatemethod;
+                }
+            }
+            if(mncreate == QString("@mojoapp")){
+                QString snippetcreatemethod = sTo->at(i); // all
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+
+                if(reemplazenameX == QString("")){
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString("Game"));
+                }
+                if(reemplazenameX != QString("")){
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
+                }
+
+                //qDebug() << reemplazenameX;
+                s = snippetcreatemethod;
+            }
+            if(mncreate == QString("@:mojoapp")){
+                QString snippetcreatemethod = sTo->at(i); // all
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+
+                if(reemplazenameX == QString("")){
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString("Game"));
+                }
+                if(reemplazenameX != QString("")){
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
+                }
+
+                //qDebug() << reemplazenameX;
+                s = snippetcreatemethod;
+            }
+            if(mncreate == QString("@kd-")){
+                QString snippetcreatemethod = sTo->at(i); // all
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+
+                if(reemplazenameX == QString("")){
+                    s = "'require key down";
+                }
+                if(reemplazenameX != QString("")){
+                    reemplazenameX = reemplazenameX.toUpper();
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
+                    s = snippetcreatemethod;
+                }
+            }
+
+            if(mncreate == QString("@kh-")){
+                QString snippetcreatemethod = sTo->at(i); // all
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+                if(reemplazenameX == QString("")){
+                    s = "'require key hit";
+                }
+                if(reemplazenameX != QString("")){
+                    reemplazenameX = reemplazenameX.toUpper();
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
+                    s = snippetcreatemethod;
+                }
+            }
+            if(mncreate == QString("@fl")){
+                QString snippetcreatemethod = sTo->at(i); // all
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+
+                if(reemplazenameX == QString("")){
+                    s = "'require name List";
+                }
+                if(reemplazenameX != QString("")){
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
+                    snippetcreatemethod.replace(QString("{{Xnameminuscula}}"), QString(reemplazenameX.toLower()));
+                    s = snippetcreatemethod;
+                }
+            }
+            if(mncreate == QString("@ll")){
+                QString snippetcreatemethod = sTo->at(i); // all
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+
+                if(reemplazenameX == QString("")){
+                    s = "'require name List";
+                }
+                if(reemplazenameX != QString("")){
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
+                    snippetcreatemethod.replace(QString("{{Xnameminuscula}}"), QString(reemplazenameX.toLower()));
+                    s = snippetcreatemethod;
+                }
+            }
+            if(mncreate == QString("@Fore")){
+                QString snippetcreatemethod = sTo->at(i); // all
+                QString reemplazenameX = s.mid((sTo->at(i)).length()); // name
+
+                reemplazenameX.replace(QString(" "), QString(""));
+
+                if(reemplazenameX == QString("")){
+                    s = "'require name collection";
+                }
+                if(reemplazenameX != QString("")){
+                    snippetcreatemethod.replace(QString("{{Xname}}"), QString(reemplazenameX));
+                    snippetcreatemethod.replace(QString("{{Xnameminuscula}}"), QString(  (reemplazenameX.toLower()).left(1) ));
+                    s = snippetcreatemethod;
+                }
+            }
+            // create new method end
             repl = true;
         }
     }
@@ -1733,6 +2161,10 @@ bool CodeAnalyzer::autoFormat( QString &s, bool force ) {
         s = res;
         repl = true;
     }
+    //--------add space method and others init
+    s.replace(QString("<---->"), QString("    "));
+    s.replace(QString("<----....>"), QString("        "));
+    //--------add space method and others end
     return repl;
 }
 

@@ -1,32 +1,113 @@
-Jentos_IDE [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE)
+### Jentos_IDE [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE)
 ==========
-[![Build Status](https://travis-ci.org/engor/Jentos_IDE.svg?branch=master)](https://travis-ci.org/engor/Jentos_IDE)
-[![Releses](http://img.shields.io/github/release/engor/Jentos_IDE.svg)](http://www.monkey-x.com/Community/posts.php?topic=8288)
-[![Open Issues](http://img.shields.io/github/issues/engor/Jentos_IDE.svg)](https://github.com/engor/Jentos_IDE/issues)
-[![Project Type](http://img.shields.io/badge/Type-Monkey IDE-lightgrey.svg)](http://www.monkey-x.com) [![Platforms](http://img.shields.io/badge/Platforms-Windows_%7C Mac %7C_Linux-orange.svg)](http://fingerdev.com/apps/jentos/) [![License](http://img.shields.io/badge/License-GPL-ff69b4.svg)](http://www.gnu.org/licenses/)
-
-## About
+### About
 [Jentos IDE](http://fingerdev.com/apps/jentos/) is a powerfull open source IDE for [Monkey](http://www.monkey-x.com) programming language.
 
 It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official IDE for Monkey.
 
-[![Jentos Screenshot](http://fingerdev.com/apps/jentos/qt.png)](http://fingerdev.com/apps/jentos/)
+#### Jentos IDE 1.3.1
+News
 
-## Download Links:
-### Windows (version 1.1)
-![Windows](http://fingerdev.com/img_targets/windows.png)Download Sources: [[Google Drive](https://drive.google.com/uc?id=0Bx2zoIlA6GzKQmM4cTcteGxTQzg)] - [[Yandex Disk](https://yadi.sk/d/92ucsHehUAw3Q)]
-### Mac OS X (version 1.1)
-![Mac OS X](http://fingerdev.com/img_targets/mac.png)Download Sources: [[Google Drive](https://drive.google.com/uc?id=0Bx2zoIlA6GzKV0RwblRnVURWVDQ)] - [[Yandex Disk](https://yadi.sk/d/PyOHi9LGUGr7P)]
-### Linux (version 1.1)
-![Linux](http://fingerdev.com/img_targets/linux.png)Download Sources: [[Google Drive](https://drive.google.com/uc?id=0Bx2zoIlA6GzKR1JKc0Jpbmpfb0k)] - [[Yandex Disk](https://yadi.sk/d/UokJw-WMWNm5g)]
+- Add View Image(popup window) in area Project.
+- Add Edit Image (popup window) in area Project..
+- Add Build and Run (popup window) in area Project..
+- Add Build (popup window) in area Project..
+- Add Build and Run (popup window) in editor Project..
+- Add Run (popup window) in editor Project..
 
-## Features
+Corrected
+
+- Corrected Theme Monokai Dark Soda.
+- Corrected Theme  LightTable.
+- Corrected "Open on Desktop"
+- Corrected: and you can not open images in the code editor
+
+
+### Build with QTCreator
+
+### Features
+
+### snippets 
+[![Snippers](http://i.imgur.com/oQc0ut3.gif)](http://fingerdev.com/apps/jentos/)
+
+
+
+* **@mojoapp**   
+ Create template basic, by default name Class is "Game"
+* **@mojoapp{name}**  
+ Create template basic, **{name} -> MyGame**
+* **@m{name}**    
+ Create Method **{name} -> mymethod**
+* **@cc{name}**     
+ Create Class **{name} -> myclass**
+* **@kdd**           
+ Create Input KeyDown 4 direcction Left,Right,Up,Down
+* **@kd-{key}**      
+ Create Input KeyDown, **{key} -> R,ENTER,A,etc.**
+* **@khd**          
+ Create Input KeyHit 4 direcction Left,Right,Up,Down
+* **@kh-{key}**      
+ Create Input KeyHit, **{key} -> R,ENTER,A,etc.**
+
+**Strict**  
+* **@:mojoapp**   
+ Create template basic, by default name Class is "Game"
+* **@:mojoapp{name}**  
+ Create template basic, **{name} -> MyGame**
+* **@vm{name}**  
+ Create Method Not Return Void **{name} -> mymethod**
+* **@im{name}**  
+ Create Method Return Integer **{name} -> mymethod**
+* **@fm{name}**  
+ Create Method Return Field **{name} -> mymethod**
+* **@sm{name}**  
+ Create Method Return String **{name} -> mymethod**
+* **@bm{name}**  
+ Create Method Return Bool **{name} -> mymethod**
+* **@fl{name}**  
+ Create List Field **{name} -> mynamelist**
+* **@ll{name}**  
+ Create List Local **{name} -> mynamelist**
+* **@Fore{name}**  
+ Create For EachIn loop **{collection} -> namecollection**
+
+
+### Examples snippers:
+
+
+#### Snippet :
+##### @mMyMethod
+
+```
+    Method MyMethod()
+
+    End
+```
+
+#### Snippet :
+##### @kd-Enter
+```
+        If KeyDown(KEY_ENTER)
+
+        End
+```
+### Themes / Temas
+* Android Studio, dark.
+* Qt Creator, light.
+* Netbeans ,light, is default.
+* Monokai Dark Soda (Sublime Text) --**new Theme Code**
+* Light Table --------------------------------- **new Theme Code**
+* Also monkey's docs have dark style when current theme is Android Studio (need to restart app).
+
+[![Themes](http://i.imgur.com/CvI5flx.jpg)](http://fingerdev.com/apps/jentos/)
+
+
 ### Code Analyzer
 * Correct multiple inheritance.
 * Folding for "if,while,for,select" statements; and local variables is local for analyzer inside of them.
 * Analyze user's imports.
 * Autoformat code with adding (or removing) nessesary spaces.
-* Replacement for variables type: # $ % ? with :Int, :Float, :String, :Bool.
+* Replacement for variables type: % # $ ? with :Int, :Float, :String, :Bool.
 * Autocomplete for (), "", '', [].
 * Autocomplete for function, condition, cycles, etc. by pressing Ctrl+Enter.
 * All monkey's modules analyzing at startup, so you always work with actual items.
@@ -58,9 +139,3 @@ It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official
 * Contextual help
 * First press F1 - shows help in status bar, second press - open help page.
 * Shows variable's info when hold Ctrl and mouse over.
-
-### Themes
-* Android Studio, dark.
-* Qt Creator, light.
-* Netbeans ,light, is default.
-* Also monkey's docs have dark style when current theme is Android Studio (need to restart app).

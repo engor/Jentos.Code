@@ -11,6 +11,7 @@ See LICENSE.TXT for licensing terms.
 
 #include "codeeditor.h"
 #include "prefsdialog.h"
+#include "previewhtml5.h"
 #include "projecttreemodel.h"
 #include "debugtreemodel.h"
 #include "finddialog.h"
@@ -41,7 +42,7 @@ See LICENSE.TXT for licensing terms.
 #define _STRINGIZE( X ) _QUOTE(X)
 
 #define TED_VERSION "1.17"
-#define APP_VERSION "1.1"
+#define APP_VERSION "1.3.1"
 #define APP_NAME "Jentos IDE"
 
 
@@ -156,6 +157,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
 
     //init browser widgets
     _projectTreeModel=new ProjectTreeModel;
+
     _ui->projectTreeView->setModel( _projectTreeModel );
     _ui->projectTreeView->hideColumn( 1 );
     _ui->projectTreeView->hideColumn( 2 );
@@ -211,6 +213,26 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
     _filePopupMenu->addAction( _ui->actionRenameFile );
     _filePopupMenu->addAction( _ui->actionDeleteFile );
 
+    _fileImagePopupMenu=new QMenu;
+    _fileImagePopupMenu->addAction( _ui->actionView_Image );
+    _fileImagePopupMenu->addSeparator();
+    _fileImagePopupMenu->addAction( _ui->actionEdit_Image );
+    _fileImagePopupMenu->addSeparator();
+    _fileImagePopupMenu->addAction( _ui->actionOpen_on_Desktop );
+    _fileImagePopupMenu->addSeparator();
+    _fileImagePopupMenu->addAction( _ui->actionRenameFile );
+    _fileImagePopupMenu->addAction( _ui->actionDeleteFile );
+
+    _fileMonkeyPopupMenu=new QMenu;
+    _fileMonkeyPopupMenu->addAction( _ui->actionMonkeyBuild_and_Run );
+    _fileMonkeyPopupMenu->addSeparator();
+    _fileMonkeyPopupMenu->addAction( _ui->actionMonkeyBuild );
+    _fileMonkeyPopupMenu->addSeparator();
+    _fileMonkeyPopupMenu->addAction( _ui->actionOpen_on_Desktop );
+    _fileMonkeyPopupMenu->addSeparator();
+    _fileMonkeyPopupMenu->addAction( _ui->actionRenameFile );
+    _fileMonkeyPopupMenu->addAction( _ui->actionDeleteFile );
+
     _dirPopupMenu=new QMenu;
     _dirPopupMenu->addAction( _ui->actionNewFile );
     _dirPopupMenu->addAction( _ui->actionNewFolder );
@@ -226,6 +248,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
     _sourcePopupMenu->addAction( _ui->actionView_Class_Summary );
 
     _editorPopupMenu = new QMenu;
+    _editorPopupMenu->addAction( _ui->actionBuildRun );
+    _editorPopupMenu->addSeparator();
+    _editorPopupMenu->addAction( _ui->actionBuildBuild );
+    _editorPopupMenu->addSeparator();
     _editorPopupMenu->addAction( _ui->actionFind_Usages );
     _editorPopupMenu->addSeparator();
     QMenu *bm = new QMenu("Bookmarks",_editorPopupMenu);
@@ -311,6 +337,8 @@ MainWindow::~MainWindow(){
     delete _tabsPopupMenu;
     delete _projectPopupMenu;
     delete _filePopupMenu;
+    delete _fileImagePopupMenu;
+    delete _fileMonkeyPopupMenu;
     delete _dirPopupMenu;
     delete _sourcePopupMenu;
     delete _editorPopupMenu;
@@ -393,16 +421,34 @@ void MainWindow::updateTheme() {
         }
         f.close();
     }
+    if(Theme::isDark2()) {
+        QFile f(":/txt/android.css");
+        if(f.open(QFile::ReadOnly)) {
+            css = f.readAll();
+        }
+        f.close();
+    }
+    if(Theme::isDark3()) {
+        QFile f(":/txt/android.css");
+        if(f.open(QFile::ReadOnly)) {
+            css = f.readAll();
+        }
+        f.close();
+    }
     css += "QDockWidget::title{text-align:center;}";
     qApp->setStyleSheet(css);
     QApplication::processEvents();
     //
     _ui->actionThemeAndroidStudio->setChecked( Theme::isCurrent("android") );
     _ui->actionThemeNetBeans->setChecked( Theme::isCurrent("netbeans") );
+    _ui->actionThemeMonokaiDarkSoda->setChecked( Theme::isCurrent("Monokai-Dark-Soda") );
+    _ui->actionThemeLightTable->setChecked( Theme::isCurrent("lighttable") );
+
     _ui->actionThemeQt->setChecked( Theme::isCurrent("qt") );
     //update all icons
     //
     _ui->actionNew->setIcon(Theme::icon("New.png"));
+
     _ui->actionOpen->setIcon(Theme::icon("Open.png"));
     _ui->actionOpenProject->setIcon(Theme::icon("Project.png"));
     _ui->actionSave->setIcon(Theme::icon("Save.png"));
@@ -449,6 +495,7 @@ void MainWindow::updateTheme() {
         if(!QFile::exists(jent)) {
             QFile::copy(monk,jent);
         }
+
         jent = QApplication::applicationDirPath() + (Theme::isDark() ? "/help_dark.css" : "/pagestyle.css");
         if(QFile::exists(jent)) {
             bool b = QFile::remove(monk);
@@ -507,7 +554,7 @@ bool MainWindow::isBuildable( CodeEditor *editor ){
 
 QString MainWindow::widgetPath( QWidget *widget ){
     if( CodeEditor *editor=qobject_cast<CodeEditor*>( widget ) ){
-        return editor->path();
+       return editor->path();
     }else if( QWebView *webView=qobject_cast<QWebView*>( widget ) ){
         return webView->url().toString();
     }
@@ -516,7 +563,8 @@ QString MainWindow::widgetPath( QWidget *widget ){
 
 CodeEditor *MainWindow::editorWithPath( const QString &path ){
     for( int i=0;i<_mainTabWidget->count();++i ){
-        if( CodeEditor *editor=qobject_cast<CodeEditor*>( _mainTabWidget->widget( i ) ) ){
+       if( CodeEditor *editor=qobject_cast<CodeEditor*>( _mainTabWidget->widget( i ) ) ){
+
             if( editor->path()==path ) return editor;
         }
     }
@@ -705,10 +753,25 @@ QWidget *MainWindow::openFile( const QString &cpath,bool addToRecent ){
 
     editor->setContextMenuPolicy(Qt::CustomContextMenu);
     connect( editor,SIGNAL(customContextMenuRequested(const QPoint&)),SLOT(onEditorMenu(const QPoint&)) );
+    QStringList filemonkeynamelist = path.split('/');
+    QString filemonkeyname = filemonkeynamelist.value(filemonkeynamelist.length()-1);
+    QString filemonkeytype = ( filemonkeyname.right(3) ).toLower();
 
-    //qDebug()<<"work2";
-    _mainTabWidget->addTab( editor,stripDir( path ) );
-    _mainTabWidget->setCurrentWidget( editor );
+    bool fileinvalidbool = false;
+    int fileinvalidsnum = 4;
+    QString fileinvalids[fileinvalidsnum] = {"png","ico","jpg","gif"};
+    for(int a=0; a<fileinvalidsnum;a++){
+
+        if( filemonkeytype.endsWith(fileinvalids[a])){
+              fileinvalidbool = true;
+             //qDebug() << "archivo no valido";
+              a=fileinvalidsnum;
+        }
+    }
+    if(!fileinvalidbool){
+        _mainTabWidget->addTab( editor,stripDir( path ) );
+        _mainTabWidget->setCurrentWidget( editor );
+    }
 
     //qDebug()<<"work3";
 
@@ -1100,6 +1163,10 @@ void MainWindow::updateActions(){
     //edit menu
     _ui->actionEditUndo->setEnabled( wr && _codeEditor->document()->isUndoAvailable() );
     _ui->actionEditRedo->setEnabled( wr && _codeEditor->document()->isRedoAvailable() );
+
+    _ui->actionGoBack->setEnabled( wr && _codeEditor->document()->isUndoAvailable() );
+    _ui->actionGoForward->setEnabled( wr && _codeEditor->document()->isRedoAvailable() );
+
     _ui->actionEditCut->setEnabled( wr && sel );
     _ui->actionEditCopy->setEnabled( sel );
     _ui->actionEditPaste->setEnabled( wr );
@@ -1176,13 +1243,16 @@ void MainWindow::onChangeAnalyzerProperties(bool) {
 void MainWindow::updateWindowTitle(){
     QWidget *widget=_mainTabWidget->currentWidget();
     if( CodeEditor *editor=qobject_cast<CodeEditor*>( widget ) ){
-        setWindowTitle( editor->path() + " - "APP_NAME);
+        //setWindowTitle( editor->path() + " - "APP_NAME);
+         setWindowTitle( APP_NAME" v"APP_VERSION );
     }else if( QWebView *webView=qobject_cast<QWebView*>( widget ) ){
-        QString s = webView->url().toString();
-        s = s.mid(8,s.length());
-        setWindowTitle( s  + " - "APP_NAME);
+        //QString s = webView->url().toString();
+       // s = s.mid(8,s.length());
+       // setWindowTitle( s  + " - "APP_NAME);
+         setWindowTitle( APP_NAME" v"APP_VERSION );
     }else{
         setWindowTitle( APP_NAME" v"APP_VERSION );
+
     }
 }
 
@@ -1267,11 +1337,35 @@ void MainWindow::onProjectMenu( const QPoint &pos ){
     QFileInfo info=_projectTreeModel->fileInfo( index );
 
     QMenu *menu=0;
+    QString typefile = (info.fileName().right( (info.fileName().length()-info.baseName().length())-1 ) ).toLower();
+
+
+    bool typeimagefile = false;
+    int fileinvalidimgsnum = 4;
+    QString fileinvalidimg[fileinvalidimgsnum] = {"png","jpg","gif","ico"};
+
+        for(int a=0; a<fileinvalidimgsnum;a++){
+
+            if( typefile.endsWith(fileinvalidimg[a])){
+                  typeimagefile = true;
+                  a=fileinvalidimgsnum;
+            }
+        }
 
     if( _projectTreeModel->isProject( index ) ){
         menu=_projectPopupMenu;
-    }else if( info.isFile() ){
-        menu=_filePopupMenu;
+    }else if( info.isFile()){
+        if(!typeimagefile){
+
+            if(typefile.endsWith("monkey")){
+                menu=_fileMonkeyPopupMenu;
+            }else{
+                menu=_filePopupMenu;
+            }
+        }else if(typeimagefile){
+          menu=_fileImagePopupMenu;
+        }
+
     }else{
         menu=_dirPopupMenu;
     }
@@ -1323,8 +1417,36 @@ void MainWindow::onProjectMenu( const QPoint &pos ){
         }
     }else if( action==_ui->actionOpen_on_Desktop ){
 
-        QDesktopServices::openUrl( "file:/"+info.filePath() );
+        QString path=info.filePath();
+        int lenpath = info.filePath().length();
+        int lenfile = info.fileName().length();
+        if (info.isFile()){
+                   path = path.left((lenpath-lenfile)-1);
+        }
+        QDesktopServices::openUrl(path);
 
+    }else if( action==_ui->actionView_Image ){
+
+        QLabel* label = new QLabel();
+        label->setStyleSheet("QLabel {background-color : #989898;}");
+        QPixmap pix(info.filePath());
+        label->setPixmap(pix);
+        label->setAlignment(Qt::AlignCenter);
+        int imagewidth = pix.toImage().width();
+        int imageheight = pix.toImage().height();
+        QString sizeimg = QString::number(imagewidth)+"x"+ QString::number(imageheight);
+        label->setMinimumWidth(150);
+        label->setMinimumHeight(125);
+        label->setWindowTitle(sizeimg+": "+info.fileName());
+        label->show();
+
+    }else if( action==_ui->actionEdit_Image ){
+        QString path=info.filePath();
+        QDesktopServices::openUrl(path);
+    }else if( action==_ui->actionMonkeyBuild ){
+        build( "build", info.filePath() );
+    }else if( action==_ui->actionMonkeyBuild_and_Run ){
+        build( "run", info.filePath() );
     }else if( action==_ui->actionDeleteFile ){
 
         QString path=info.filePath();
@@ -1427,6 +1549,7 @@ void MainWindow::onShowCode( const QString &path, int line, bool error ){
     //qDebug()<<"onShowCode";
     if( CodeEditor *editor=qobject_cast<CodeEditor*>( openFile( path,true ) ) ){
         //
+
         editor->gotoLine( line );
         editor->highlightLine( line, (error ? CodeEditor::HlError : CodeEditor::HlCommon) );
         //
@@ -1461,7 +1584,7 @@ void MainWindow::onCodeTreeViewClicked( const QModelIndex &index ) {
         //qDebug()<<"parent1:"<<i->text();
         if(i && i->parent() != 0) {
             i = i->parent();
-            //qDebug()<<"parent2:"<<i->text();
+           //qDebug()<<"parent2:"<<i->text();
         }
     }
     if(i) {
@@ -1469,6 +1592,7 @@ void MainWindow::onCodeTreeViewClicked( const QModelIndex &index ) {
         int index = -1;
         for( int i = 0; i < _mainTabWidget->count(); ++i ){
             if( CodeEditor *editor = qobject_cast<CodeEditor*>( _mainTabWidget->widget( i ) ) ){
+
                 if( editor->path() == path ) {
                     index = i;
                     break;
@@ -1500,6 +1624,7 @@ void MainWindow::onSourceListViewClicked( const QModelIndex &index ) {
 //Console...
 //
 void MainWindow::print(const QString &str, QString kind ){
+
     if(kind == "") {
         _ui->outputTextEdit->setTextColor( Theme::isDark() ? QColor(0xc8c8c8) : QColor(0x050505) );
     }
@@ -1526,7 +1651,9 @@ void MainWindow::cdebug( const QString &str ){
 
 void MainWindow::runCommand( QString cmd, QWidget *fileWidget ){
 
-    cmd=cmd.replace( "${TARGET}",_targetsWidget->currentText().replace( ' ','_' ) );
+    QString targetStr = _targetsWidget->currentText().replace( ' ','_' );
+    qDebug() << "targetStr"<<targetStr;
+    cmd=cmd.replace( "${TARGET}",targetStr );
     cmd=cmd.replace( "${CONFIG}",_configsWidget->currentText() );
     cmd=cmd.replace( "${MONKEYPATH}",_monkeyPath );
     //cmd=cmd.replace( "${BLITZMAXPATH}",_blitzmaxPath );
@@ -1549,6 +1676,13 @@ void MainWindow::runCommand( QString cmd, QWidget *fileWidget ){
     }
 
     updateActions();
+
+    if (targetStr == "Html5_Game") {
+        if (_previewHtml5Dialog == 0)
+            _previewHtml5Dialog = new PreviewHtml5(this);
+        _previewHtml5Dialog->showMe();
+    }
+
 }
 
 void MainWindow::onProcStdout(){
@@ -1667,7 +1801,7 @@ void MainWindow::onProcFinished(){
     statusBar()->showMessage( "Ready." );
 }
 
-void MainWindow::build( QString mode ){
+void MainWindow::build( QString mode, QString pathmonkey){
 
     CodeEditor *editor = (_lockedEditor ? _lockedEditor : _codeEditor);
     if( !isBuildable( editor ) )
@@ -1682,9 +1816,23 @@ void MainWindow::build( QString mode ){
 
     if( editor->fileType()=="monkey" ){
         if( mode=="run" ){
-            cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} -run \"${FILEPATH}\"";
+            if(pathmonkey.endsWith("run")){
+
+                cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} -run \"${FILEPATH}\"";
+
+            }else {
+
+                cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} -run "+pathmonkey;
+            }
         }else if( mode=="build" ){
-            cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} \"${FILEPATH}\"";
+
+            if(pathmonkey.endsWith("run")){
+                 cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} \"${FILEPATH}\"";
+
+            }else {
+                 cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} "+pathmonkey;
+            }
+
         }else if( mode=="update" ){
             cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} -update \"${FILEPATH}\"";
             msg="Updating: "+filePath+"...";
@@ -1824,6 +1972,7 @@ void MainWindow::onFilePrefs(){
     if(!_monkeyPath.isEmpty() && _monkeyPath != mpath){
         enumTargets();
         initKeywords();
+
         if(!_codeEditor)
             onHelpHome();
     }
@@ -2023,23 +2172,23 @@ void MainWindow::onViewWindow(){
 //***** Build menu *****
 
 void MainWindow::onBuildBuild(){
-    build( "build" );
+    build( "build","run" );
 }
 
 void MainWindow::onBuildRun(){
     if( _debugTreeModel ){
         _debugTreeModel->run();
     }else{
-        build( "run" );
+        build( "run","run" );
     }
 }
 
 void MainWindow::onBuildCheck(){
-    build( "check" );
+    build( "check" ,"run");
 }
 
 void MainWindow::onBuildUpdate(){
-    build( "update" );
+    build( "update" ,"run");
 }
 
 void MainWindow::onDebugStep(){
@@ -2186,12 +2335,12 @@ void MainWindow::onHelpQuickHelp(){
 }
 
 void MainWindow::onHelpAbout(){
-    QString href = "http://fingerdev.com/apps/jentos/";
+    QString href = "https://github.com/EnkiEA/Jentos_IDE";
     QString APP_ABOUT = "<html><head><style>a{color:#CC8030;}</style></head><body bgcolor2='#ff3355'><b>"APP_NAME"</b> is a powefull code editor for the Monkey programming language.<br>"
-            "Based on Ted V"TED_VERSION".<br>"
+            "Based on Ted V"TED_VERSION".<br> This binary is Luis Francisco ( twitter @crearmijuego ) fork <br>Please send bug reports to him on monkey-x.com<br>"
             "Visit <a href='"+href+"'>"+href+"</a> for more information.<br><br>"
             "Version: "APP_VERSION+"<br>Trans: "+_transVersion+"<br>Qt: "_STRINGIZE(QT_VERSION)+"<br><br>"
-            "Jentos is free and always be free.<br>But you may support the author via <a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE\">donation</a>.<br>"
+            "Jentos is free and always be free.<br>But you may support engor/nerobot via <a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE\">donation</a>.<br>"
 
             "</body></html>";
     QMessageBox::information( this, "About", APP_ABOUT );
@@ -2291,17 +2440,23 @@ void MainWindow::onUnfoldAll() {
 }
 
 void MainWindow::onGoBack() {
-    if( _codeEditor )
+    if( !_codeEditor ) return;
+
+    _codeEditor->undo();
+   /* if( _codeEditor )
         _codeEditor->goBack();
     else
-        onHelpBack();
+        onHelpBack();*/
 }
 
 void MainWindow::onGoForward() {
-    if( _codeEditor )
+    if( !_codeEditor ) return;
+
+    _codeEditor->redo();
+    /*if( _codeEditor )
         _codeEditor->goForward();
     else
-        onHelpForward();
+        onHelpForward();*/
 }
 
 void MainWindow::onThemeAndroidStudio() {
@@ -2310,10 +2465,10 @@ void MainWindow::onThemeAndroidStudio() {
 }
 
 void MainWindow::onThemeNetBeans() {
+
     Theme::set("netbeans");
     updateTheme();
 }
-
 void MainWindow::onThemeQtCreator() {
     Theme::set("qt");
     updateTheme();
@@ -2349,7 +2504,7 @@ void MainWindow::onCheckForUpdates() {
 }
 
 void MainWindow::onCheckForUpdatesSilent() {
-    QUrl url("http://fingerdev.com/apps/jentos/update.txt");
+    QUrl url("https://raw.githubusercontent.com/nerionx/Jentos_IDE/master/updates.txt");
     if(_networkManager)
         delete _networkManager;
     _networkManager = new QNetworkAccessManager(this);
@@ -2379,7 +2534,7 @@ void MainWindow::onNetworkFinished(QNetworkReply *reply) {
         QMessageBox::information(this,"New version",s);
     }
     else if(_showMsgbox){
-        QMessageBox::information(this,"New version","<html><head><style>a{color:#CC8030;}</style></head><body>No updates available.<br><b>You are using the latest version "+v+".</b><br><br><a href='http://fingerdev.com/apps/jentos/'>Jentos IDE Homepage</a></body></html>");
+        QMessageBox::information(this,"New version","<html><head><style>a{color:#CC8030;}</style></head><body>No updates available.<br><b>You are using the latest version "+v+".</b><br><br><a href='https://github.com/nerionx/Jentos_IDE'>Jentos IDE - Frymans Fork HomePage</a></body></html>");
     }
 }
 
@@ -2475,4 +2630,49 @@ void MainWindow::onUsagesUnselectAll() {
 
 void MainWindow::onDocsZoomChanged(int) {
     _ui->webView->setZoomFactor(_ui->zoomSlider->value()/100.0f);
+}
+
+void MainWindow::on_actionLock_Target_triggered()
+{
+
+
+}
+
+void MainWindow::on_actionLock_Target_toggled(bool arg1)
+{
+    if(arg1==true){
+        _targetsWidget->setEnabled(false);
+        _configsWidget->setEnabled(false);
+    }
+    if(arg1==false){
+        _targetsWidget->setEnabled(true);
+        _configsWidget->setEnabled(true);
+    }
+}
+
+void MainWindow::on_webView_selectionChanged()
+{
+
+}
+
+void MainWindow::on_docsDockWidget_allowedAreasChanged(const Qt::DockWidgetAreas &allowedAreas)
+{
+
+}
+
+void MainWindow::on_actionClose_all_Tabs_triggered()
+{
+
+}
+
+void MainWindow::on_actionThemeMonokaiDarkSoda_triggered()
+{
+    Theme::set("Monokai-Dark-Soda");
+    updateTheme();
+}
+
+void MainWindow::on_actionThemeLightTable_triggered()
+{
+    Theme::set("lighttable");
+    updateTheme();
 }

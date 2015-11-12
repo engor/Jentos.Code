@@ -21,6 +21,7 @@ QList<QTextEdit::ExtraSelection> extraSels;
 QTextEdit::ExtraSelection rowSelection;
 QString _extraSelWord;
 int _extraSelScrollPos;
+QTextEdit::ExtraSelection hintWordSelection;
 
 //static QList<QTextEdit::ExtraSelection> extraSelsWords;
 
@@ -1070,6 +1071,15 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event) {
     static QColor clrGray1 = QColor(0x313334);
     static QColor clrGray2 = QColor(0xE9E8E2);
     bool d = Theme::isDark();
+    if(Theme::isDark()){
+        d = Theme::isDark();
+    }
+    if(Theme::isDark2()){
+        d = Theme::isDark2();
+    }
+    if(Theme::isDark3()){
+        d = Theme::isDark3();
+    }
     QColor clrGray = (d ? clrGray1 : clrGray2);
     static QImage imgBookmark1 = Theme::image("Bookmark.png",1);
     static QImage imgBookmark2 = Theme::image("Bookmark.png",2);
@@ -1226,13 +1236,14 @@ void CodeEditor::mouseMoveEvent(QMouseEvent *e) {
         cursor.select(QTextCursor::WordUnderCursor);
         //flushExtraSels();
         QTextBlock block = cursor.block();
-        if( block.isValid() ){
-            QTextEdit::ExtraSelection selection;
-            selection.format.setForeground( (Theme::isDark() ? QColor(250,250,250) : QColor(0,0,255)) );
-            selection.format.setFontUnderline( true );
-            selection.format.setFontWeight( QFont::Bold );
-            selection.cursor = cursor;
-            extraSels.append( selection );
+        if( block.isValid() ) {
+            QTextEdit::ExtraSelection es = hintWordSelection;
+            flushWordsExtraSels();
+            es.format.setForeground( (Theme::isDark() ? QColor(250,250,250) : QColor(0,0,255)) );
+            es.format.setFontUnderline( true );
+            es.format.setFontWeight( QFont::Bold );
+            es.cursor = cursor;
+            extraSels.append( es );
         }
         setExtraSelections( extraSels );
         extraSelsEditor = this;
@@ -1585,6 +1596,7 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     }
 
     //autocomplete for "",'',(),[]
+if(Prefs::prefs()->getBool("AutoBracket")==true){
     QString evtxt = e->text();
     bool k1 = (evtxt == "\"");
     bool k2 = false;//(evtxt == "'");
@@ -1628,6 +1640,8 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
             e->accept();
             return;
         }
+    }
+    //Disabled in options so do nothing
     }
 
 

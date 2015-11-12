@@ -4,7 +4,8 @@
 QString Theme::_theme;
 QString Theme::_prevTheme;
 bool Theme::_isDark;
-
+bool Theme::_isDark2;
+bool Theme::_isDark3;
 Theme::Theme(QObject *parent) : QObject(parent) {
 
 }
@@ -20,6 +21,7 @@ void Theme::init() {
         p->setValue( "tabSize",4 );
     if(!p->contains("smoothFonts"))
         p->setValue( "smoothFonts",true );
+
     _prevTheme = "";
     QString s = p->getString("theme","netbeans");
     set(s);
@@ -39,6 +41,8 @@ void Theme::setLocal(QString kind) {
 
 void Theme::save() {
     _isDark = (_theme=="android");
+    _isDark2 = (_theme=="Monokai-Dark-Soda");
+    _isDark3 = (_theme=="lighttable");
     Prefs *prefs = Prefs::prefs();
     prefs->blockEmitPrefsChanged(true);
     prefs->setValue("theme", _theme);
@@ -100,6 +104,46 @@ void Theme::save() {
         prefs->setValue( "paramsColor",QColor( 0xc80808 ) );
         //cur line #c2e1ff
     }
+
+    else if(_theme == "Monokai-Dark-Soda") {
+        prefs->setValue( "backgroundColor",QColor( 0x242424 ) );
+        prefs->setValue( "defaultColor",QColor( 0xDDDDDD ) );
+        prefs->setValue( "numbersColor",QColor( 0xAE81FF ) );
+        prefs->setValue( "stringsColor",QColor( 0xE3D874 ) );
+        prefs->setValue( "identifiersColor",QColor( 0x009900 ) );
+        prefs->setValue( "keywordsColor",QColor( 0xF92672 ) );
+        prefs->setValue( "constantsColor",QColor( 0xA6E22E ) );
+        prefs->setValue( "funcDeclsColor",QColor( 0xFD971F ) );
+        prefs->setValue( "commentsColor",QColor( 0x8c8c8c ) );
+        prefs->setValue( "highlightColor",QColor( 0xB5B5B5 ) );
+        prefs->setValue( "highlightColorError",QColor( 0xe40000 ) );
+        prefs->setValue( "highlightColorCaretRow",QColor( 0x3A2A21 ) );
+        prefs->setValue( "monkeywordsColor",QColor( 0x2BBF1C ) );
+        prefs->setValue( "userwordsColor",QColor( 0xfd971f ) );
+        prefs->setValue( "userwordsDeclColor",QColor( 0xa6e22e ) );
+        prefs->setValue( "userwordsVarColor",QColor( 0x9effff ) );
+        prefs->setValue( "paramsColor",QColor( 0x66D9EF ) );
+    }
+
+    else if(_theme == "lighttable") {
+        prefs->setValue( "backgroundColor",QColor( 0x202020 ) );
+        prefs->setValue( "defaultColor",QColor( 0xc6c6c6 ) );
+        prefs->setValue( "numbersColor",QColor( 0xFEFEFE ) );
+        prefs->setValue( "stringsColor",QColor( 0x318F8F ) );
+        prefs->setValue( "identifiersColor",QColor( 0x009900 ) );
+        prefs->setValue( "keywordsColor",QColor( 0x43AA79 ) );
+        prefs->setValue( "constantsColor",QColor( 0xA6E22E ) );
+        prefs->setValue( "funcDeclsColor",QColor( 0xAACCFF ) );
+        prefs->setValue( "commentsColor",QColor( 0x6688CD ) );
+        prefs->setValue( "highlightColor",QColor( 0xea1717 ) );
+        prefs->setValue( "highlightColorError",QColor( 0x40000 ) );
+        prefs->setValue( "highlightColorCaretRow",QColor( 0x423434 ) );
+        prefs->setValue( "monkeywordsColor",QColor( 0xAFCDFB ) );
+        prefs->setValue( "userwordsColor",QColor( 0x2886AC ) );
+        prefs->setValue( "userwordsDeclColor",QColor( 0xCCAAFF ) );
+        prefs->setValue( "userwordsVarColor",QColor( 0x2CA2A2 ) );
+        prefs->setValue( "paramsColor",QColor( 0x66D9EF ) );
+    }
     prefs->blockEmitPrefsChanged(false, true);
 }
 
@@ -129,6 +173,14 @@ QImage Theme::image(QString name, int theme) {
 bool Theme::isDark() {
     return _isDark;
 }
+bool Theme::isDark2() {
+    return _isDark2;
+}
+
+bool Theme::isDark3() {
+    return _isDark3;
+}
+
 
 QString Theme::hexColor(const QColor &color) {
     QString r = QString::number(color.red(),16);
@@ -144,13 +196,17 @@ QString Theme::hexColor(const QColor &color) {
 }
 
 QColor Theme::selWordColor() {
-    static QColor c1(66,66,66);
+    static QColor c1(166,166,166);
     static QColor c2(236,235,163);//(225,225,225);
     static QColor c3(225,225,225);
     if(_theme == "android")
         return c1;
     else if(_theme == "netbeans")
         return c2;
+    else if(_theme == "Monokai-Dark-Soda")
+        return c1;
+    else if(_theme == "lighttable")
+        return c1;
     else
         return c3;
 }

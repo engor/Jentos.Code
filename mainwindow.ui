@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>891</width>
+    <width>1015</width>
     <height>695</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Big Ted</string>
+   <string>Jentos IDE 1.3.1</string>
   </property>
   <property name="documentMode">
    <bool>false</bool>
@@ -491,6 +491,7 @@
    <addaction name="actionStep_In"/>
    <addaction name="actionStep_Out"/>
    <addaction name="actionKill"/>
+   <addaction name="actionLock_Target"/>
   </widget>
   <widget class="QToolBar" name="helpToolBar">
    <property name="windowTitle">
@@ -509,8 +510,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>891</width>
-     <height>21</height>
+     <width>1015</width>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -647,6 +648,8 @@
      <addaction name="actionThemeAndroidStudio"/>
      <addaction name="actionThemeNetBeans"/>
      <addaction name="actionThemeQt"/>
+     <addaction name="actionThemeMonokaiDarkSoda"/>
+     <addaction name="actionThemeLightTable"/>
     </widget>
     <addaction name="actionFilePrevious"/>
     <addaction name="actionFileNext"/>
@@ -1173,7 +1176,7 @@ Don't change documents between find usages and rename</string>
       <widget class="QWebView" name="webView">
        <property name="url">
         <url>
-         <string>about:blank</string>
+         <string>file:///home/luis/Desarrollo/MonkeyX/monkey-83a/docs/html/Home.html</string>
         </url>
        </property>
        <property name="zoomFactor">
@@ -1272,8 +1275,8 @@ Don't change documents between find usages and rename</string>
   </widget>
   <action name="actionOpen">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/icons/light/Open.png</normaloff>:/icons/light/Open.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/Open.png</normaloff>:/icons/circle/Open.png</iconset>
    </property>
    <property name="text">
     <string>Open File...</string>
@@ -1323,8 +1326,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionBuildRun">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/icons/light/Build-Run.png</normaloff>:/icons/light/Build-Run.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/Build-Run.png</normaloff>:/icons/circle/Build-Run.png</iconset>
    </property>
    <property name="text">
     <string>Build and Run</string>
@@ -1338,8 +1341,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/icons/light/Build.png</normaloff>:/icons/light/Build.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/New.png</normaloff>:/icons/circle/New.png</iconset>
    </property>
    <property name="text">
     <string>New (choose path)...</string>
@@ -1373,8 +1376,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionKill">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/icons/light/Stop.png</normaloff>:/icons/light/Stop.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/Stop.png</normaloff>:/icons/circle/Stop.png</iconset>
    </property>
    <property name="text">
     <string>Kill</string>
@@ -1581,8 +1584,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionOpenProject">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/icons/light/Project.png</normaloff>:/icons/light/Project.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/Project.png</normaloff>:/icons/circle/Project.png</iconset>
    </property>
    <property name="text">
     <string>Open project...</string>
@@ -1649,8 +1652,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionBuildBuild">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/icons/light/Build.png</normaloff>:/icons/light/Build.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/Build.png</normaloff>:/icons/circle/Build.png</iconset>
    </property>
    <property name="text">
     <string>Build</string>
@@ -1770,8 +1773,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionGoBack">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/icons/light/Back.png</normaloff>:/icons/light/Back.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/Back.png</normaloff>:/icons/circle/Back.png</iconset>
    </property>
    <property name="text">
     <string>Go Back</string>
@@ -1782,8 +1785,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionGoForward">
    <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/icons/light/Forward.png</normaloff>:/icons/light/Forward.png</iconset>
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/Forward.png</normaloff>:/icons/circle/Forward.png</iconset>
    </property>
    <property name="text">
     <string>Go Forward</string>
@@ -1930,6 +1933,10 @@ Don't change documents between find usages and rename</string>
    </property>
   </action>
   <action name="actionNew_temp">
+   <property name="icon">
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/NewTemp.png</normaloff>:/icons/circle/NewTemp.png</iconset>
+   </property>
    <property name="text">
     <string>New (temp)</string>
    </property>
@@ -2033,6 +2040,72 @@ Don't change documents between find usages and rename</string>
     <string>Docs</string>
    </property>
   </action>
+  <action name="actionLock_Target">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="myresource.qrc">
+     <normaloff>:/icons/circle/lock.png</normaloff>:/icons/circle/lock.png</iconset>
+   </property>
+   <property name="text">
+    <string>Lock Target</string>
+   </property>
+   <property name="toolTip">
+    <string>Locks the drop down box so you cannot accidentally switch targets when scrolling</string>
+   </property>
+  </action>
+  <action name="actionThemeMonokaiDarkSoda">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Monokai Dark Soda(Sublime Text)</string>
+   </property>
+   <property name="toolTip">
+    <string>Monokai-Dark-Soda</string>
+   </property>
+  </action>
+  <action name="actionThemeLightTable">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>LightTable</string>
+   </property>
+  </action>
+  <action name="actionView_Image">
+   <property name="text">
+    <string>View Image</string>
+   </property>
+   <property name="toolTip">
+    <string>ViewImage</string>
+   </property>
+  </action>
+  <action name="actionEdit_Image">
+   <property name="text">
+    <string>Edit Image</string>
+   </property>
+   <property name="toolTip">
+    <string>EditImage</string>
+   </property>
+  </action>
+  <action name="actionMonkeyBuild">
+   <property name="text">
+    <string>Build</string>
+   </property>
+   <property name="toolTip">
+    <string>MonkeyBuild</string>
+   </property>
+  </action>
+  <action name="actionMonkeyBuild_and_Run">
+   <property name="text">
+    <string>Build and Run</string>
+   </property>
+   <property name="toolTip">
+    <string>MonkeyBuildandRun</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -2058,6 +2131,7 @@ Don't change documents between find usages and rename</string>
   <tabstop>toolButtonSortByName</tabstop>
  </tabstops>
  <resources>
+  <include location="myresource.qrc"/>
   <include location="resources.qrc"/>
  </resources>
  <connections>
@@ -2980,8 +3054,8 @@ Don't change documents between find usages and rename</string>
    <slot>onCloseSearch()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>909</x>
-     <y>395</y>
+     <x>392</x>
+     <y>415</y>
     </hint>
     <hint type="destinationlabel">
      <x>353</x>
@@ -2996,8 +3070,8 @@ Don't change documents between find usages and rename</string>
    <slot>onEditFindNext()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>532</x>
-     <y>419</y>
+     <x>370</x>
+     <y>444</y>
     </hint>
     <hint type="destinationlabel">
      <x>406</x>
@@ -3012,8 +3086,8 @@ Don't change documents between find usages and rename</string>
    <slot>onEditReplace()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>658</x>
-     <y>419</y>
+     <x>378</x>
+     <y>444</y>
     </hint>
     <hint type="destinationlabel">
      <x>406</x>
@@ -3028,8 +3102,8 @@ Don't change documents between find usages and rename</string>
    <slot>onEditReplaceAll()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>738</x>
-     <y>419</y>
+     <x>391</x>
+     <y>444</y>
     </hint>
     <hint type="destinationlabel">
      <x>406</x>
@@ -3044,8 +3118,8 @@ Don't change documents between find usages and rename</string>
    <slot>onEditFindPrev()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>493</x>
-     <y>407</y>
+     <x>362</x>
+     <y>444</y>
     </hint>
     <hint type="destinationlabel">
      <x>406</x>
@@ -3105,7 +3179,7 @@ Don't change documents between find usages and rename</string>
    <sender>actionClose_all_Tabs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>onTabsCloseAllTabs()</slot>
+   <slot>onFileCloseAll()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -3172,8 +3246,8 @@ Don't change documents between find usages and rename</string>
    <slot>onChangeAnalyzerProperties(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>18</x>
-     <y>407</y>
+     <x>23</x>
+     <y>320</y>
     </hint>
     <hint type="destinationlabel">
      <x>456</x>
@@ -3188,8 +3262,8 @@ Don't change documents between find usages and rename</string>
    <slot>onChangeAnalyzerProperties(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>46</x>
-     <y>407</y>
+     <x>72</x>
+     <y>320</y>
     </hint>
     <hint type="destinationlabel">
      <x>456</x>
@@ -3204,8 +3278,8 @@ Don't change documents between find usages and rename</string>
    <slot>onChangeAnalyzerProperties(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>74</x>
-     <y>407</y>
+     <x>107</x>
+     <y>320</y>
     </hint>
     <hint type="destinationlabel">
      <x>456</x>
@@ -3220,8 +3294,8 @@ Don't change documents between find usages and rename</string>
    <slot>onEditFindNext()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>467</x>
-     <y>395</y>
+     <x>342</x>
+     <y>412</y>
     </hint>
     <hint type="destinationlabel">
      <x>270</x>

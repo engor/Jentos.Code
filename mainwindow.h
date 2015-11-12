@@ -28,6 +28,7 @@ class Prefs;
 class PrefsDialog;
 class QuickHelp;
 class TabWidgetDrop;
+class PreviewHtml5;
 
 
 class MainWindow : public QMainWindow{
@@ -70,7 +71,7 @@ private:
 
     void print(const QString &str , QString kind);
     void runCommand( QString cmd,QWidget *fileWidget );
-    void build( QString mode );
+    void build( QString mode,QString pathmonkey);
 
     bool confirmQuit();
     void closeEvent( QCloseEvent *event );
@@ -224,6 +225,20 @@ private slots:
     void onUsagesUnselectAll();
 
 
+    void on_actionLock_Target_triggered();
+
+    void on_actionLock_Target_toggled(bool arg1);
+
+    void on_webView_selectionChanged();
+
+    void on_docsDockWidget_allowedAreasChanged(const Qt::DockWidgetAreas &allowedAreas);
+
+    void on_actionClose_all_Tabs_triggered();
+
+    void on_actionThemeMonokaiDarkSoda_triggered();
+
+    void on_actionThemeLightTable_triggered();
+
 private:
 
 
@@ -256,13 +271,15 @@ private:
     QWebView *_helpWidget;
 
     PrefsDialog *_prefsDialog;
-    //FindDialog *_findDialog;
+    PreviewHtml5 *_previewHtml5Dialog;
     FindInFilesDialog *_findInFilesDialog;
 
     QMenu *_tabsPopupMenu;
     QMenu *_projectPopupMenu;
     QMenu *_dirPopupMenu;
     QMenu *_filePopupMenu;
+    QMenu *_fileImagePopupMenu;
+    QMenu *_fileMonkeyPopupMenu;
     QMenu *_sourcePopupMenu;
     QMenu *_editorPopupMenu;
     QMenu *_usagesPopupMenu;
