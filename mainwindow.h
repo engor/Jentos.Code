@@ -238,6 +238,9 @@ private slots:
 
     void on_actionThemeLightTable_triggered();
 
+    void on_actionThemeMondayMorning_triggered();
+
+
 private:
 
 

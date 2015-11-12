@@ -511,7 +511,7 @@
      <x>0</x>
      <y>0</y>
      <width>1015</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -645,9 +645,11 @@
      <property name="title">
       <string>Themes</string>
      </property>
-     <addaction name="actionThemeAndroidStudio"/>
      <addaction name="actionThemeNetBeans"/>
      <addaction name="actionThemeQt"/>
+     <addaction name="actionThemeMondayMorning"/>
+     <addaction name="separator"/>
+     <addaction name="actionThemeAndroidStudio"/>
      <addaction name="actionThemeMonokaiDarkSoda"/>
      <addaction name="actionThemeLightTable"/>
     </widget>
@@ -2060,7 +2062,7 @@ Don't change documents between find usages and rename</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Monokai Dark Soda(Sublime Text)</string>
+    <string>Monokai Dark Soda (Sublime Text)</string>
    </property>
    <property name="toolTip">
     <string>Monokai-Dark-Soda</string>
@@ -2104,6 +2106,11 @@ Don't change documents between find usages and rename</string>
    </property>
    <property name="toolTip">
     <string>MonkeyBuildandRun</string>
+   </property>
+  </action>
+  <action name="actionThemeMondayMorning">
+   <property name="text">
+    <string>Monday Morning</string>
    </property>
   </action>
  </widget>

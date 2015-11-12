@@ -144,6 +144,26 @@ void Theme::save() {
         prefs->setValue( "userwordsVarColor",QColor( 0x2CA2A2 ) );
         prefs->setValue( "paramsColor",QColor( 0x66D9EF ) );
     }
+
+    else if(_theme == "MondayMorning") {
+        prefs->setValue( "backgroundColor",QColor( 0xDCDCDE ) );
+        prefs->setValue( "defaultColor",QColor( 0x160050 ) );
+        prefs->setValue( "numbersColor",QColor( 0x3D3D3D ) );
+        prefs->setValue( "stringsColor",QColor( 0x226AF0 ) );
+        prefs->setValue( "identifiersColor",QColor( 0x009900 ) );
+        prefs->setValue( "keywordsColor",QColor( 0x084FD1 ) );
+        prefs->setValue( "constantsColor",QColor( 0x160050 ) );
+        prefs->setValue( "funcDeclsColor",QColor( 0x160050 ) );
+        prefs->setValue( "commentsColor",QColor( 0xF2740C ) );
+        prefs->setValue( "highlightColor",QColor( 0x40a3e1 ) );
+        prefs->setValue( "highlightColorError",QColor( 0x40000 ) );
+        prefs->setValue( "highlightColorCaretRow",QColor( 0xCEBEF7 ) );
+        prefs->setValue( "monkeywordsColor",QColor( 0x6969e1 ) );
+        prefs->setValue( "userwordsColor",QColor( 0x0073BF ) );
+        prefs->setValue( "userwordsDeclColor",QColor( 0x160050 ) );
+        prefs->setValue( "userwordsVarColor",QColor( 0x221177 ) );
+        prefs->setValue( "paramsColor",QColor( 0x160050 ) );
+    }
     prefs->blockEmitPrefsChanged(false, true);
 }
 
@@ -207,6 +227,8 @@ QColor Theme::selWordColor() {
         return c1;
     else if(_theme == "lighttable")
         return c1;
+    else if(_theme == "MondayMorning")
+        return c2;
     else
         return c3;
 }

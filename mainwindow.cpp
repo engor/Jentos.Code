@@ -442,6 +442,8 @@ void MainWindow::updateTheme() {
     _ui->actionThemeNetBeans->setChecked( Theme::isCurrent("netbeans") );
     _ui->actionThemeMonokaiDarkSoda->setChecked( Theme::isCurrent("Monokai-Dark-Soda") );
     _ui->actionThemeLightTable->setChecked( Theme::isCurrent("lighttable") );
+    _ui->actionThemeMondayMorning->setChecked( Theme::isCurrent("Monday Morning") );
+
 
     _ui->actionThemeQt->setChecked( Theme::isCurrent("qt") );
     //update all icons
@@ -1671,7 +1673,6 @@ void MainWindow::runCommand( QString cmd, QWidget *fileWidget ){
         QMessageBox::warning( this,"Process Error","Failed to start process: "+cmd );
         return;
     }
-
     updateActions();
 }
 
@@ -1772,7 +1773,6 @@ void MainWindow::onProcFinished(){
     while( _consoleProc->waitLineAvailable( 0,100 ) ){
         onProcLineAvailable( 0 );
     }
-
     print( "Done.","finish" );
 
     if( _debugTreeModel ){
@@ -1806,6 +1806,7 @@ void MainWindow::build( QString mode, QString pathmonkey){
 
     if( editor->fileType()=="monkey" ){
         if( mode=="run" ){
+
             if(pathmonkey.endsWith("run")){
 
                 cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} -run \"${FILEPATH}\"";
@@ -2278,7 +2279,6 @@ void MainWindow::onSwitchFullscreen() {
 //***** Help menu *****
 
 void MainWindow::onHelpHome(){
-
     QString htmlDocs=_monkeyPath+"/docs/html/Home.html";
 
     if( QFile::exists( htmlDocs ) ){
@@ -2325,7 +2325,7 @@ void MainWindow::onHelpQuickHelp(){
 }
 
 void MainWindow::onHelpAbout(){
-    QString href = "https://github.com/EnkiEA/Jentos_IDE";
+    QString href = "https://github.com/luisfranciscocesar/Jentos_IDE";
     QString APP_ABOUT = "<html><head><style>a{color:#CC8030;}</style></head><body bgcolor2='#ff3355'><b>"APP_NAME"</b> is a powefull code editor for the Monkey programming language.<br>"
             "Based on Ted V"TED_VERSION".<br> This binary is Luis Francisco ( twitter @crearmijuego ) fork <br>Please send bug reports to him on monkey-x.com<br>"
             "Visit <a href='"+href+"'>"+href+"</a> for more information.<br><br>"
@@ -2664,5 +2664,11 @@ void MainWindow::on_actionThemeMonokaiDarkSoda_triggered()
 void MainWindow::on_actionThemeLightTable_triggered()
 {
     Theme::set("lighttable");
+    updateTheme();
+}
+
+void MainWindow::on_actionThemeMondayMorning_triggered()
+{
+    Theme::set("MondayMorning");
     updateTheme();
 }
