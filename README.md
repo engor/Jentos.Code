@@ -1,5 +1,5 @@
 ### Jentos_IDE (Donation comming soon)
-### ![Alt text](https://api.travis-ci.org/malublu/Jentos_IDE.svg "Build Status")
+### ![Alt text](https://api.travis-ci.org/malublu/Jentos_IDE.svg "Build Status") [![GitHub issues](https://img.shields.io/github/issues/malublu/Jentos_IDE.svg)](https://github.com/malublu/Jentos_IDE/issues) [![GitHub license](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://raw.githubusercontent.com/malublu/Jentos_IDE/master/LICENSE.TXT) [![Github All Releases](https://img.shields.io/github/downloads/malublu/Jentos_IDE/total.svg)]()
 ==========
 ### About
 [Jentos IDE](http://malublu.github.io/Jentos_IDE/) is a powerfull open source IDE for [Monkey](http://www.monkey-x.com) programming language.
