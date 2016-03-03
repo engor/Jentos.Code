@@ -1,7 +1,8 @@
-### Jentos_IDE [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE)
+### Jentos_IDE (Donation comming soon)
+### ![Alt text](https://api.travis-ci.org/malublu/Jentos_IDE.svg "Build Status")
 ==========
 ### About
-[Jentos IDE](http://fingerdev.com/apps/jentos/) is a powerfull open source IDE for [Monkey](http://www.monkey-x.com) programming language.
+[Jentos IDE](http://malublu.github.io/Jentos_IDE/) is a powerfull open source IDE for [Monkey](http://www.monkey-x.com) programming language.
 
 It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official IDE for Monkey.
 
