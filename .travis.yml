@@ -6,12 +6,12 @@ install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
       && sudo apt-get update -qq
-      && apt-get install qt5-default
+      && sudo apt-get install qt5-default
       ;
     else
          brew update
       && brew install qt5
-      && chmod -R 755 /usr/local/opt/qt5/*
+      && brew link --force qt5
       ;
     fi
 script:
