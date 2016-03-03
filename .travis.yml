@@ -15,8 +15,7 @@ install:
       ;
     fi
 script:
-  - qmake -project
-  - qmake jentos_ide.pro
+  - qmake -makefile -o Makefile jentos_ide.pro
   - make all
 os:
   - linux
