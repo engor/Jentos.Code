@@ -3,9 +3,17 @@ compiler:
   - gcc
   - clang
 install:
-  - yes | sudo add-apt-repository ppa:ubuntu-sdk-team/ppa
-  - sudo apt-get update
-  - sudo apt-get install qtcreator libqt5webkit5-dev qtlocation5-dev qtsensors5-dev libxslt-dev libsqlite3-dev libgstreamer-plugins-base0.10-dev
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+         sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+      && sudo apt-get update -qq
+      && apt-get install qt5-default
+      ;
+    else
+         brew update
+      && brew install qt5
+      && chmod -R 755 /usr/local/opt/qt5/*
+      ;
+    fi
 script:
   - qmake -project
   - qmake jentos_ide.pro
