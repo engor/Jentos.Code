@@ -759,7 +759,7 @@ QWidget *MainWindow::openFile( const QString &cpath,bool addToRecent ){
     QString filemonkeytype = ( filemonkeyname.right(3) ).toLower();
 
     bool fileinvalidbool = false;
-    int fileinvalidsnum = 4;
+    const int fileinvalidsnum = 4;
     QString fileinvalids[fileinvalidsnum] = {"png","ico","jpg","gif"};
     for(int a=0; a<fileinvalidsnum;a++){
 
@@ -1342,7 +1342,7 @@ void MainWindow::onProjectMenu( const QPoint &pos ){
 
 
     bool typeimagefile = false;
-    int fileinvalidimgsnum = 4;
+    const int fileinvalidimgsnum = 4;
     QString fileinvalidimg[fileinvalidimgsnum] = {"png","jpg","gif","ico"};
 
         for(int a=0; a<fileinvalidimgsnum;a++){
