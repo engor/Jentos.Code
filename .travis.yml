@@ -34,5 +34,10 @@ after_success:
   - mv * build
   - tar -czf "${TRAVIS_OS_NAME}-${TRAVIS_COMMIT_RANGE}-${TRAVIS_BRANCH}-${TRAVIS_JOB_NUMBER}.tgz" build
   - echo "${TRAVIS_OS_NAME}-${TRAVIS_COMMIT_RANGE}-${TRAVIS_BRANCH}-${TRAVIS_JOB_NUMBER}.tgz"
+  - echo $DEPLOY_PASS
+  - echo $DEPLOY_USER
+  - echo $DEPLOY_PORT
+  - echo $DEPLOY_HOST
+  - echo $DEPLOY_PATH
   - export SSHPASS=$DEPLOY_PASS
   - sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P $DEPLOY_PORT package.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
