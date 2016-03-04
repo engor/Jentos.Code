@@ -53,9 +53,6 @@ RESOURCES += \
     myresource.qrc
 
 TARGET = JentosIDE
-#OK, this seems to prevent latest Windows QtCreator from being able to run Ted (builds fine).
-#Solved by using qtcreator-2.4.1
-DESTDIR = jentos_exec
 
 win32{
         RC_FILE = appicon.rc
