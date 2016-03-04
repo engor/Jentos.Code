@@ -16,7 +16,9 @@ install:
       ;
     fi
 script:
-  - qmake -makefile -o Makefile jentos_ide.pro -r
+  - mkdir release
+  - cd release
+  - qmake -makefile -o Makefile ../jentos_ide.pro -r
   - make
   - make clean
 os:
@@ -30,6 +32,7 @@ env:
       - secure: "U4AYmCxgKefIhIgFKqIBZ0S+3taCs3gm33DzYOnkHxym1ZptKEWP20lOb7S8jDkUJ3IFcYdO0+oNW7C5BlTVYFDKbrX2eprBLnYE6Fzxl6pmVlSbIo0n7/t+Nx0vcorP6z9WXpHgZMA9vBN7CeGgkTpKPVSQdBxH2djPGlzzTwlVTfla4zy+Pt0FGyuHIgkA7WGI9EUGBiV4VSC7l2FgRlHPoMnRo434Vxtv7YChfXhZqBlM9Z9+8pG+3VIYKXm0PTaENjlYdDsSIpYx+1t7ReVRdphoUN1o5lAChRwDFLZS2XROvFZeQDSDsUdvzT2Chrkmw6QXa99MVsRYLLL8Sbf2/M32fsQq7sm0qvTiKqGTVgyCjYQiU8HjoUN++es9Al7jRSPu/LC66kZWRLzNl25fVGcs2ke2ZBk/1FxUdX00K7Xu33vhUCnLdeoXsrkaQ5mQsizReF9mkSg8XoMBihEzOVhQwINukdywSGkMzMDcIPNwxQ+osjvWOkvlXECRyEFCSZW5U64gNAsthRVBwmx1uyJ8Hn4rWpKfr0607F+dlMWWVa/Fw+/g0b1A3fpuo6kRi6KUoiIh6YQtgl6VOFKnJ98T6Nz9B2PAygI7eyqSwYy8AzP8gIYmA0vzMknudfVqnH8r5a1bVsxUOE4Mkx+GGP/T/uzR239ALtXZLgc="
       - secure: "id1cZTexfeUoTd3PSgg/+H9AH7MXDhJfQYDHCnRTnYwOfhSX5/WbTHMo+xgGuKn/3HdqOfgildrxbZ2dXC7wXIpJSoHMSt0pkK5grQBafIe9PpF5V6r41ntnyZoGavuYz7jcsk1mOxt3/FZhmOGSPUDIU8Iv70q+a5i11s3qMSaggn4iOVXQs23QpZ5xMHoLs5YgmP0kBwG9F90noxb0CaFuehl34ah5JYaQUrdEJ5B+gSKgmMXYarGZWHEdK8p2AZT/3VNmtEQIkVlsNKwt6ftUKBs2NsaqbPfOyZvaDXwThAz+WxhuAGBi27Ai7ZsPUQ7nneoltm8d+h5XZPR8Ios8q1iiF4kHzVn5DqtJIBp5/RwVnpdHzn/qK0pknTJiSOzfgkaeIfj8z6Ty2Y5MAmeqdChBZNWf2Ug/3vuQQTbS0Bjt9rw8KMe7frXINisa3XX63GDwlRn276T7BqzY0YE3Fgq9+JnywgfeKnUK8QPMQb+nGByfp4WOC6hWP+h8f/SRvLOFYzgIWIGOS+ruBAxB583MoKIO1pU9BJ0i4f9QqF6JawTZpUJh/9V5kM2wNXjfqIxS4fL4UaB80HHgDRvfAfLDRV0ZdNUOM7H9n2BjJ7DKLrje6E9D7ssLFJTJusvDIIuEUfuV97MXw5RzyeMkM8D4hfWKujPdQtCrJWQ="
 after_success:
+  - cd $TRAVIS_BUILD_DIR
   - ls -l
   - tar -czf "${TRAVIS_OS_NAME}-${TRAVIS_COMMIT_RANGE}-${TRAVIS_BRANCH}.tgz" release
   - echo "${TRAVIS_OS_NAME}-${TRAVIS_COMMIT_RANGE}-${TRAVIS_BRANCH}.tgz => ${DEPLOY_HOST}${DEPLOY_PATH}"
