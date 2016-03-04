@@ -34,7 +34,7 @@ after_success:
   - cd ..
   - mkdir build
   - mv $curdir/* build
-  - tar -czf "${TRAVIS_OS_NAME}-${TRAVIS_COMMIT_RANGE}-${TRAVIS_BRANCH}-${TRAVIS_JOB_NUMBER}.tgz" build
-  - echo "${TRAVIS_OS_NAME}-${TRAVIS_COMMIT_RANGE}-${TRAVIS_BRANCH}-${TRAVIS_JOB_NUMBER}.tgz"
+  - tar -czf "${TRAVIS_OS_NAME}-${TRAVIS_COMMIT_RANGE}-${TRAVIS_BRANCH}.tgz" build
+  - echo "${TRAVIS_OS_NAME}-${TRAVIS_COMMIT_RANGE}-${TRAVIS_BRANCH}.tgz"
   - export SSHPASS=$DEPLOY_PASS
-  - sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P $DEPLOY_PORT "${TRAVIS_OS_NAME}-${TRAVIS_COMMIT_RANGE}-${TRAVIS_BRANCH}-${TRAVIS_JOB_NUMBER}.tgz" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+  - sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P $DEPLOY_PORT "${TRAVIS_OS_NAME}-${TRAVIS_COMMIT_RANGE}-${TRAVIS_BRANCH}.tgz" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
