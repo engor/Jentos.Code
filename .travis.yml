@@ -30,12 +30,8 @@ env:
       - secure: "id1cZTexfeUoTd3PSgg/+H9AH7MXDhJfQYDHCnRTnYwOfhSX5/WbTHMo+xgGuKn/3HdqOfgildrxbZ2dXC7wXIpJSoHMSt0pkK5grQBafIe9PpF5V6r41ntnyZoGavuYz7jcsk1mOxt3/FZhmOGSPUDIU8Iv70q+a5i11s3qMSaggn4iOVXQs23QpZ5xMHoLs5YgmP0kBwG9F90noxb0CaFuehl34ah5JYaQUrdEJ5B+gSKgmMXYarGZWHEdK8p2AZT/3VNmtEQIkVlsNKwt6ftUKBs2NsaqbPfOyZvaDXwThAz+WxhuAGBi27Ai7ZsPUQ7nneoltm8d+h5XZPR8Ios8q1iiF4kHzVn5DqtJIBp5/RwVnpdHzn/qK0pknTJiSOzfgkaeIfj8z6Ty2Y5MAmeqdChBZNWf2Ug/3vuQQTbS0Bjt9rw8KMe7frXINisa3XX63GDwlRn276T7BqzY0YE3Fgq9+JnywgfeKnUK8QPMQb+nGByfp4WOC6hWP+h8f/SRvLOFYzgIWIGOS+ruBAxB583MoKIO1pU9BJ0i4f9QqF6JawTZpUJh/9V5kM2wNXjfqIxS4fL4UaB80HHgDRvfAfLDRV0ZdNUOM7H9n2BjJ7DKLrje6E9D7ssLFJTJusvDIIuEUfuV97MXw5RzyeMkM8D4hfWKujPdQtCrJWQ="
 after_success:
   - ls -l
-  - set curdir="$PWD"
-  - cd ..
-  - mkdir build
-  - cd $curdir
-  - mv * ../build
-  - tar -czf "${TRAVIS_OS_NAME}-${TRAVIS_COMMIT_RANGE}-${TRAVIS_BRANCH}.tgz" build
-  - echo "${TRAVIS_OS_NAME}-${TRAVIS_COMMIT_RANGE}-${TRAVIS_BRANCH}.tgz"
+  - cd $TRAVIS_BUILD_DIR/..
+  - tar -czf "${TRAVIS_OS_NAME}-${TRAVIS_COMMIT_RANGE}-${TRAVIS_BRANCH}.tgz" $TRAVIS_BUILD_DIR
+  - echo "${TRAVIS_OS_NAME}-${TRAVIS_COMMIT_RANGE}-${TRAVIS_BRANCH}.tgz => ${DEPLOY_HOST}${DEPLOY_PATH}"
   - export SSHPASS=$DEPLOY_PASS
   - sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P $DEPLOY_PORT "${TRAVIS_OS_NAME}-${TRAVIS_COMMIT_RANGE}-${TRAVIS_BRANCH}.tgz" $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
