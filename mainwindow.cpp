@@ -1178,7 +1178,7 @@ void MainWindow::updateActions(){
     _ui->actionViewSource->setChecked( !_ui->sourceDockWidget->isHidden() );
     _ui->actionViewCodeTree->setChecked( !_ui->codeTreeDockWidget->isHidden() );
     _ui->actionViewDebug->setChecked( !_ui->debugDockWidget->isHidden() );
-    _ui->actionViewDebug->setChecked( !_ui->docsDockWidget->isHidden() );
+    _ui->actionViewDocs->setChecked( !_ui->docsDockWidget->isHidden() );
 
     //build menu
     CodeEditor *buildEditor=_lockedEditor ? _lockedEditor : _codeEditor;
@@ -1268,13 +1268,14 @@ void MainWindow::onMainTabChanged( int index ){
 
     _codeEditor = qobject_cast<CodeEditor*>( widget );
 
+
     _helpWidget = qobject_cast<QWebView*>( widget );
 
     if(_oldEditor) {
         connect( _oldEditor,SIGNAL(showCode(QString,int)),SLOT(onShowCode(QString,int)) );
     }
     if( _codeEditor ){
-
+        _codeEditor->setPlaceholderText("Your Code");
         connect( _codeEditor,SIGNAL(showCode(QString,int)),SLOT(onShowCode(QString,int)) );
         CodeAnalyzer::setCurFilePath(_codeEditor->path());
         //qDebug()<<"111";

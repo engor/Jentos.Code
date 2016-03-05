@@ -174,7 +174,8 @@ void Theme::load(const QString &path) {
         stream.setCodec( "UTF-8" );
         QString text = stream.readAll();
         file.close();
-        QJsonDocument d = QJsonDocument::fromJson(text.toUtf8());
+        QJsonObject d = QJsonDocument::fromJson(text.toUtf8()).object();
+        d.value("backgroundColor").toString();
     }
 }
 

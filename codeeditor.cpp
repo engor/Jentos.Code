@@ -1177,7 +1177,7 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event) {
 }
 
 void CodeEditor::mousePressEvent(QMouseEvent *e) {
-    if( (e->button() & Qt::LeftButton) && (e->modifiers() & Qt::ControlModifier) ) {
+    if( ( (e->button() & Qt::LeftButton) && (e->modifiers() & Qt::ControlModifier) ) || (e->button() & Qt::MiddleButton) ) {
         CodeItem *item = _scope.item;
         if(item) {
             if(!item->isKeyword()) {
@@ -1221,12 +1221,13 @@ void CodeEditor::showToolTip(QPoint pos, QString s, bool nowrap) {
 
 void CodeEditor::mouseMoveEvent(QMouseEvent *e) {
     bool sel = textCursor().hasSelection();
-    if( !sel && (e->modifiers() & Qt::ControlModifier) ) {
+    if( !sel ) {
+        bool ctrl = (e->modifiers() & Qt::ControlModifier);
         QTextCursor cursor = cursorForPosition(e->pos());
         cursor.select(QTextCursor::WordUnderCursor);
-        //flushExtraSels();
+        flushExtraSels();
         QTextBlock block = cursor.block();
-        if( block.isValid() ){
+        if( ctrl && block.isValid() ){
             QTextEdit::ExtraSelection selection;
             selection.format.setForeground( (Theme::isDark() ? QColor(250,250,250) : QColor(0,0,255)) );
             selection.format.setFontUnderline( true );
@@ -1242,28 +1243,25 @@ void CodeEditor::mouseMoveEvent(QMouseEvent *e) {
             QString tip = "";
             if(_scope.ident == word) {
                 tip = _scope.toolTip;
-                if(!tip.isEmpty()) {
+                if(ctrl && !tip.isEmpty()) {
                     showToolTip(e->globalPos(), tip);
-                }
-                else {
+                } else {
                     QToolTip::hideText();
                 }
                 return;
             }
 
-            cursor.setPosition(cursor.selectionEnd());
-            setTextCursor(cursor);
+            // cursor.setPosition(cursor.selectionEnd());
+            // setTextCursor(cursor);
 
             CodeItem *item = CodeAnalyzer::itemKeyword(word);
             if(!item) {
                 item = CodeAnalyzer::findInScope(cursor.block(), cursor.positionInBlock(), 0, true);
             }
-            if(item)
-                tip = CodeAnalyzer::toolTip(item);
-            if(!tip.isEmpty()) {
+            if(item) tip = CodeAnalyzer::toolTip(item);
+            if(ctrl && !tip.isEmpty()) {
                 showToolTip(e->globalPos(), tip);
-            }
-            else {
+            } else {
                 QToolTip::hideText();
             }
             _scope.ident = word;
@@ -1272,7 +1270,7 @@ void CodeEditor::mouseMoveEvent(QMouseEvent *e) {
         }
         return;
     }
-    QToolTip::hideText();
+    //QToolTip::hideText();
     QPlainTextEdit::mouseMoveEvent(e);
 
 }
@@ -1284,8 +1282,12 @@ void CodeEditor::resizeEvent(QResizeEvent *e) {
     }
 }
 
-void CodeEditor::keyReleaseEvent( QKeyEvent *event ) {
+void CodeEditor::keyReleaseEvent( QKeyEvent *e ) {
     //highlightLine( textCursor().blockNumber(), HlCaretRow );
+    if(e->key() == Qt::Key_Control) {
+        flushExtraSels();
+        QToolTip::hideText();
+    }
     QGuiApplication::restoreOverrideCursor();
 }
 
@@ -1673,7 +1675,7 @@ if(Prefs::prefs()->getBool("AutoBracket")==true){
 
     //highlightLine( textCursor().blockNumber(), HlCaretRow );
 
-   // flushExtraSels();
+   flushExtraSels();
 
     bool checkNew = false;
 
