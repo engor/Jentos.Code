@@ -101,6 +101,9 @@ public:
     QString findUsages(QTreeWidget *tree);
     void replaceInRange(int from, int to, const QString &text);
 
+    void setPlaceholderText(const QString &placeholderText);
+    QString placeholderText() const;
+
 public slots:
 
     void undo();

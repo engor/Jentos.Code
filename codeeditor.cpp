@@ -56,7 +56,6 @@ void appendExtraSels(const QTextEdit::ExtraSelection &sel, CodeEditor *editor) {
 
 
 //***** CodeEditor *****
-
 CodeEditor::CodeEditor( QWidget *parent ):QPlainTextEdit( parent ),_modified( 0 ){
 
     _editPosIndex = -1;
@@ -94,6 +93,14 @@ CodeEditor::~CodeEditor(){
     //delete _lcomp;
     //_lcomp = 0;
 
+}
+
+void CodeEditor::setPlaceholderText(const QString &placeHolderText) {
+    QPlainTextEdit::setPlaceholderText(placeHolderText);
+}
+
+QString CodeEditor::placeholderText() const {
+    return QPlainTextEdit::placeholderText();
 }
 
 bool CodeEditor::aucompIsVisible() {
