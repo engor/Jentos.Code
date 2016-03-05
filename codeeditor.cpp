@@ -95,14 +95,6 @@ CodeEditor::~CodeEditor(){
 
 }
 
-void CodeEditor::setPlaceholderText(const QString &placeHolderText) {
-    QPlainTextEdit::setPlaceholderText(placeHolderText);
-}
-
-QString CodeEditor::placeholderText() const {
-    return QPlainTextEdit::placeholderText();
-}
-
 bool CodeEditor::aucompIsVisible() {
     return (_lcomp != 0 && _lcomp->isVisible());
 }

@@ -1275,7 +1275,6 @@ void MainWindow::onMainTabChanged( int index ){
         connect( _oldEditor,SIGNAL(showCode(QString,int)),SLOT(onShowCode(QString,int)) );
     }
     if( _codeEditor ){
-        _codeEditor->setPlaceholderText("Your Code");
         connect( _codeEditor,SIGNAL(showCode(QString,int)),SLOT(onShowCode(QString,int)) );
         CodeAnalyzer::setCurFilePath(_codeEditor->path());
         //qDebug()<<"111";
