@@ -715,6 +715,7 @@ void CodeAnalyzer::analyzeDir( const QString &path, const QStringList &exclude )
     QDir dir(path);
     QStringList filters;
     filters << "*.monkey";
+    filters << "*.monkey2";
     QStringList list = dir.entryList(dir.filter());
     QString file;
     for( int k = 0; k < list.size() ; ++k ) {

@@ -83,7 +83,7 @@ protected:
 
 public slots:
 
-    void onStyleChanged(bool b);
+    // void onStyleChanged(bool b);
     void onCodeTreeViewClicked( const QModelIndex &index );
     void onSourceListViewClicked( const QModelIndex &index );
 

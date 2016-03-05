@@ -4,8 +4,6 @@
 QString Theme::_theme;
 QString Theme::_prevTheme;
 bool Theme::_isDark;
-bool Theme::_isDark2;
-bool Theme::_isDark3;
 Theme::Theme(QObject *parent) : QObject(parent) {
 
 }
@@ -40,13 +38,12 @@ void Theme::setLocal(QString kind) {
 }
 
 void Theme::save() {
-    _isDark = (_theme=="android");
-    _isDark2 = (_theme=="Monokai-Dark-Soda");
-    _isDark3 = (_theme=="lighttable");
+    _isDark = (_theme=="android" || _theme=="Monokai-Dark-Soda" || _theme=="lighttable");
     Prefs *prefs = Prefs::prefs();
     prefs->blockEmitPrefsChanged(true);
     prefs->setValue("theme", _theme);
     if(_theme == "android") {
+        prefs->setValue( "costumCSS", "txt/dark.css" );
         prefs->setValue( "backgroundColor",QColor( 0x2b2b2b ) );
         prefs->setValue( "defaultColor",QColor( 0xAbB9C8 ) );
         prefs->setValue( "numbersColor",QColor( 0x6897BB ) );
@@ -106,6 +103,7 @@ void Theme::save() {
     }
 
     else if(_theme == "Monokai-Dark-Soda") {
+        prefs->setValue( "costumCSS", "txt/dark.css" );
         prefs->setValue( "backgroundColor",QColor( 0x242424 ) );
         prefs->setValue( "defaultColor",QColor( 0xDDDDDD ) );
         prefs->setValue( "numbersColor",QColor( 0xAE81FF ) );
@@ -126,6 +124,7 @@ void Theme::save() {
     }
 
     else if(_theme == "lighttable") {
+        prefs->setValue( "costumCSS", "txt/dark.css" );
         prefs->setValue( "backgroundColor",QColor( 0x202020 ) );
         prefs->setValue( "defaultColor",QColor( 0xc6c6c6 ) );
         prefs->setValue( "numbersColor",QColor( 0xFEFEFE ) );
@@ -167,12 +166,35 @@ void Theme::save() {
     prefs->blockEmitPrefsChanged(false, true);
 }
 
-void Theme::load() {
-    /*_theme = "android";
-    Prefs *prefs = Prefs::prefs();
-    QString s = prefs->getString("theme");
-    if(s != "")
-        _theme = s;*/
+void Theme::load(const QString &path) {
+    QFile file(path);
+    if( file.open( QIODevice::ReadOnly ) ) {
+        //qDebug()<<"parse file:"<<path;
+        QTextStream stream( &file );
+        stream.setCodec( "UTF-8" );
+        QString text = stream.readAll();
+        file.close();
+        QJsonDocument d = QJsonDocument::fromJson(text.toUtf8());
+    }
+}
+
+void Theme::loadDir(const QString &path) {
+    QDir dir(path);
+    QStringList filters;
+    filters << "*.json";
+    QStringList list = dir.entryList(dir.filter());
+    QString file;
+    for( int k = 0; k < list.size() ; ++k ) {
+        file = list.at(k);
+        if(file=="." || file=="..")
+            continue;
+        QFileInfo info(dir,file);
+        if(info.isDir()) {
+            loadDir(path+file+"/");
+        } else if(extractExt(file) == "json"){
+            load(path+file);
+        }
+    }
 }
 
 QIcon Theme::icon(QString name) {
@@ -192,13 +214,6 @@ QImage Theme::image(QString name, int theme) {
 
 bool Theme::isDark() {
     return _isDark;
-}
-bool Theme::isDark2() {
-    return _isDark2;
-}
-
-bool Theme::isDark3() {
-    return _isDark3;
 }
 
 

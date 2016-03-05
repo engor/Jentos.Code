@@ -1070,15 +1070,6 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event) {
     static QColor clrGray1 = QColor(0x313334);
     static QColor clrGray2 = QColor(0xE9E8E2);
     bool d = Theme::isDark();
-    if(Theme::isDark()){
-        d = Theme::isDark();
-    }
-    if(Theme::isDark2()){
-        d = Theme::isDark2();
-    }
-    if(Theme::isDark3()){
-        d = Theme::isDark3();
-    }
     QColor clrGray = (d ? clrGray1 : clrGray2);
     static QImage imgBookmark1 = Theme::image("Bookmark.png",1);
     static QImage imgBookmark2 = Theme::image("Bookmark.png",2);

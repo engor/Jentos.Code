@@ -86,7 +86,6 @@
         <file>icons/dark/Step-Out.png</file>
         <file>icons/dark/Stop.png</file>
         <file>icons/dark/Unfold.png</file>
-        <file>txt/android.css</file>
         <file>icons/light/Options.png</file>
         <file>icons/light/lock.png</file>
         <file>codeanalyzer.cpp</file>
@@ -122,5 +121,6 @@
         <file>tabwidgetdrop.h</file>
         <file>theme.cpp</file>
         <file>theme.h</file>
+        <file>txt/dark.css</file>
     </qresource>
 </RCC>

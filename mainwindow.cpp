@@ -346,7 +346,7 @@ MainWindow::~MainWindow(){
     CodeAnalyzer::finalize();
 }
 
-void MainWindow::onStyleChanged(bool b) {
+// void MainWindow::onStyleChanged(bool b) {
     /*qDebug()<<"style changed";
     QList<QAction*> list = _ui->menuStyles->actions();
     QString style = sender()->objectName();
@@ -356,7 +356,7 @@ void MainWindow::onStyleChanged(bool b) {
         a->setChecked( a->text() == style );
     }
     qApp->setStyle(QStyleFactory::create(style));*/
-}
+// }
 
 void MainWindow::showEvent(QShowEvent * event) {
     QSplashScreen *splash = 0;
@@ -414,21 +414,7 @@ void MainWindow::updateTheme() {
 
     QString css = "";
     if(Theme::isDark()) {
-        QFile f(":/txt/android.css");
-        if(f.open(QFile::ReadOnly)) {
-            css = f.readAll();
-        }
-        f.close();
-    }
-    if(Theme::isDark2()) {
-        QFile f(":/txt/android.css");
-        if(f.open(QFile::ReadOnly)) {
-            css = f.readAll();
-        }
-        f.close();
-    }
-    if(Theme::isDark3()) {
-        QFile f(":/txt/android.css");
+        QFile f(":/txt/dark.css");
         if(f.open(QFile::ReadOnly)) {
             css = f.readAll();
         }
@@ -497,7 +483,7 @@ void MainWindow::updateTheme() {
             QFile::copy(monk,jent);
         }
 
-        jent = QApplication::applicationDirPath() + (Theme::isDark() ? "/help_dark.css" : "/pagestyle.css");
+        jent = QApplication::applicationDirPath() + (Theme::isDark() ? "/help_dark.css" : "/help_default.css");
         if(QFile::exists(jent)) {
             bool b = QFile::remove(monk);
             //qDebug()<<"remove:"<<b<<monk;
@@ -1025,6 +1011,7 @@ void MainWindow::readSettings(){
     }
 
     _isShowHelpInDock = prefs->getBool("showHelpInDock");
+    _ui->docsDockWidget->setVisible( _isShowHelpInDock );
 
     _monkeyPath = prefs->getString( "monkeyPath" );
     _transPath = prefs->getString( "transPath" );
@@ -1191,7 +1178,7 @@ void MainWindow::updateActions(){
     _ui->actionViewSource->setChecked( !_ui->sourceDockWidget->isHidden() );
     _ui->actionViewCodeTree->setChecked( !_ui->codeTreeDockWidget->isHidden() );
     _ui->actionViewDebug->setChecked( !_ui->debugDockWidget->isHidden() );
-    _ui->actionViewDocs->setChecked( !_ui->docsDockWidget->isHidden() );
+    _ui->actionViewDebug->setChecked( !_ui->docsDockWidget->isHidden() );
 
     //build menu
     CodeEditor *buildEditor=_lockedEditor ? _lockedEditor : _codeEditor;
@@ -1969,6 +1956,7 @@ void MainWindow::onFilePrefs(){
     }
 
     _isShowHelpInDock = Prefs::prefs()->getBool("showHelpInDock");
+    _ui->docsDockWidget->setVisible( _isShowHelpInDock );
 
     updateActions();
 }
@@ -2136,7 +2124,7 @@ void MainWindow::onViewWindow(){
         _ui->debugDockWidget->setVisible( _ui->actionViewDebug->isChecked() );
     }
     else if( sender() == _ui->actionViewDocs ){
-        _ui->docsDockWidget->setVisible( _ui->actionViewDocs->isChecked() );
+        _ui->docsDockWidget->setVisible( _ui->actionViewDocs->isChecked() && _isShowHelpInDock );
     }
     else if( sender() == _ui->actionViewDockShowAll ){
         bool vis = true;
@@ -2146,7 +2134,7 @@ void MainWindow::onViewWindow(){
         _ui->debugDockWidget->setVisible( vis );
         _ui->outputDockWidget->setVisible( vis );
         _ui->usagesDockWidget->setVisible( vis );
-        _ui->docsDockWidget->setVisible( vis );
+        _ui->docsDockWidget->setVisible( vis && _isShowHelpInDock );
     }
     else if( sender() == _ui->actionViewDocksHideAll ){
         bool vis = false;
@@ -2156,7 +2144,7 @@ void MainWindow::onViewWindow(){
         _ui->debugDockWidget->setVisible( vis );
         _ui->outputDockWidget->setVisible( vis );
         _ui->usagesDockWidget->setVisible( vis );
-        _ui->docsDockWidget->setVisible( vis );
+        _ui->docsDockWidget->setVisible( vis && _isShowHelpInDock );
     }
 }
 
@@ -2325,12 +2313,12 @@ void MainWindow::onHelpQuickHelp(){
 }
 
 void MainWindow::onHelpAbout(){
-    QString href = "https://github.com/luisfranciscocesar/Jentos_IDE";
+    QString href = "https://github.com/malublu/Jentos_IDE";
     QString APP_ABOUT = "<html><head><style>a{color:#CC8030;}</style></head><body bgcolor2='#ff3355'><b>"APP_NAME"</b> is a powefull code editor for the Monkey programming language.<br>"
-            "Based on Ted V"TED_VERSION".<br> This binary is Luis Francisco ( twitter @crearmijuego ) fork <br>Please send bug reports to him on monkey-x.com<br>"
+            "Based on Ted V"TED_VERSION".<br> This binary is Malublu fork <br>Please send bug reports to him on monkey-x.com<br>"
             "Visit <a href='"+href+"'>"+href+"</a> for more information.<br><br>"
             "Version: "APP_VERSION+"<br>Trans: "+_transVersion+"<br>Qt: "_STRINGIZE(QT_VERSION)+"<br><br>"
-            "Jentos is free and always be free.<br>But you may support engor/nerobot via <a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE\">donation</a>.<br>"
+            "Jentos is free and always be free.<br>But you may support Malublu via <a href=''>Commin Soon</a>.<br>"
 
             "</body></html>";
     QMessageBox::information( this, "About", APP_ABOUT );
