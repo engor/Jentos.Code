@@ -7,7 +7,7 @@ build_script:
 artifacts:
 
   # pushing a single file
-  #- path: test.zip
+  - path: test.zip
 
   # pushing a single file with environment variable in path and "Deployment name" specified
   #- path: MyProject\bin\$(configuration)
