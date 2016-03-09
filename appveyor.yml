@@ -11,6 +11,9 @@ build_script:
   - mingw32-make clean
   - windeployqt .\release\JentosIDE.exe
   - 7z a win32-%APPVEYOR_REPO_COMMIT%-%APPVEYOR_REPO_BRANCH%.zip .\release\
+artifacts:
+  - path: win32-%APPVEYOR_REPO_COMMIT%-%APPVEYOR_REPO_BRANCH%.zip
+    name: win32-%APPVEYOR_REPO_COMMIT%-%APPVEYOR_REPO_BRANCH%
 deploy:
   provider: FTP
   protocol: sftp
@@ -22,4 +25,3 @@ deploy:
     secure: 4bH1k11ldoR+vq10Xz1g7IERBCvoIXwJyEdtiwCe5m54E7ZoQ5FddK8+Eh5f6X5g
   folder:
     secure: otIWNOKYYowUZpiUxgBrXbgXt48uLUx+4Cw97q5zvzE=
-  artifact: win32-%APPVEYOR_REPO_COMMIT%-%APPVEYOR_REPO_BRANCH%.zip
