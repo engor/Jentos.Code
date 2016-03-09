@@ -23,7 +23,7 @@ script:
   - make clean
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
          wget https://raw.githubusercontent.com/malublu/linuxdeployqt/master/linuxdeployqt -O linuxdeployqt
-      && chown 0774 linuxdeployqt
+      && chmod 0774 linuxdeployqt
       && ./linuxdeployqt JentosIDE
       && rm -rf linuxdeployqt
       ;
