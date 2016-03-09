@@ -4,22 +4,5 @@ install:
 build_script:
   - qmake jentos_ide.pro
   - mingw32-make
-before_test:
-  - cd debug
-  - ls
-  - cd QTDIR\bin
-  - ls
 artifacts:
-
-  # pushing a single file
-  #- path: test.zip
-
-  # pushing a single file with environment variable in path and "Deployment name" specified
-  #- path: MyProject\bin\$(configuration)
-  #  name: myapp
-
-  # pushing entire folder as a zip archive
-  - path: logs
-
-  # pushing all *.nupkg files in directory
-  #- path: out\*.nupkg
+  - path: .\release\JentosIDE.exe
