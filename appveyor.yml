@@ -7,6 +7,8 @@ build_script:
 before_test:
   - cd debug
   - ls
+  -cd QTDIR\bin
+  -ls
 artifacts:
 
   # pushing a single file
