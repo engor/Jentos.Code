@@ -7,7 +7,8 @@ build_script:
 before_test:
   - cd debug
   - ls
-  - cd QTDIR\bin
+  - cd ..
+  - cd release
   - ls
 artifacts:
 
