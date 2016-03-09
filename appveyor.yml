@@ -5,7 +5,7 @@ build_script:
   - qmake jentos_ide.pro
   - mingw32-make
 before_test:
-  - echo listing_test
+  - cd debug
   - ls
 artifacts:
 
