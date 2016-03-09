@@ -1,7 +1,7 @@
 branches:
   only:
     - master
-    - production
+    - stable
 install:
   - set QTDIR=C:\Qt\5.5\mingw492_32
   - set PATH=%PATH%;%QTDIR%\bin;C:\MinGW\bin
@@ -10,8 +10,7 @@ build_script:
   - mingw32-make
   - mingw32-make clean
   - windeployqt .\release\JentosIDE.exe
-on_success:
-  - 7z a win32-%APPVEYOR_REPO_COMMIT%-%APPVEYOR_REPO_BRANCH%.zip .\release\*
+  - 7z a win32-%APPVEYOR_REPO_COMMIT%-%APPVEYOR_REPO_BRANCH%.zip .\release\
 artifacts:
   - path: win32-%APPVEYOR_REPO_COMMIT%-%APPVEYOR_REPO_BRANCH%.zip
 deploy:
