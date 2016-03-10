@@ -12,8 +12,8 @@ build_script:
   - windeployqt .\release\JentosIDE.exe
   - 7z a win32-%APPVEYOR_REPO_COMMIT%-%APPVEYOR_REPO_BRANCH%.zip .\release\
 artifacts:
-  - path: win32-%APPVEYOR_REPO_COMMIT%-%APPVEYOR_REPO_BRANCH%.zip
-    name: win32-%APPVEYOR_REPO_COMMIT%-%APPVEYOR_REPO_BRANCH%
+  - path: win32-$(APPVEYOR_REPO_COMMIT)-$(APPVEYOR_REPO_BRANCH).zip
+    name: win32-$(APPVEYOR_REPO_COMMIT)-$(APPVEYOR_REPO_BRANCH)
 deploy:
   provider: FTP
   protocol: sftp
