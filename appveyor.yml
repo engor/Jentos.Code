@@ -13,7 +13,7 @@ build_script:
   - mingw32-make clean
   - windeployqt --release .\release\JentosIDE.exe
   - copy %QTBINDIR%\libwinpthread-1.dll .\release /y
-  - copy %MINGWBIN%\libstdc++-6.dll .\release /y
+  - copy "%QTBINDIR%\libstdc++-6.dll" .\release /y
   - 7z a win32-%APPVEYOR_REPO_COMMIT%-%APPVEYOR_REPO_BRANCH%.zip .\release
 artifacts:
   - path: win32-$(APPVEYOR_REPO_COMMIT)-$(APPVEYOR_REPO_BRANCH).zip
