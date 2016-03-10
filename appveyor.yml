@@ -5,14 +5,15 @@ branches:
 install:
   - set QTDIR=C:\Qt\5.5\mingw492_32
   - set QTBINDIR=%QTDIR%\bin
-  - set PATH=%PATH%;%QTBINDIR%;C:\MinGW\bin
+  - set MINGWBIN=C:\MinGW\bin
+  - set PATH=%PATH%;%QTBINDIR%;%MINGWBIN%
 build_script:
   - qmake jentos_ide.pro -r -spec win32-g++
   - mingw32-make
   - mingw32-make clean
   - windeployqt --release .\release\JentosIDE.exe
   - copy %QTBINDIR%\libwinpthread-1.dll .\release /y
-  - copy %QTBINDIR%\libstdc++-6.dll .\release /y
+  - copy %MINGWBIN%\libstdc++-6.dll .\release /y
   - 7z a win32-%APPVEYOR_REPO_COMMIT%-%APPVEYOR_REPO_BRANCH%.zip .\release
 artifacts:
   - path: win32-$(APPVEYOR_REPO_COMMIT)-$(APPVEYOR_REPO_BRANCH).zip
