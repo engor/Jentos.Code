@@ -165,6 +165,8 @@ private:
     int _editPosIndex;
 
     bool _isHighlightLine, _isHighlightWord;
+    bool _useAutoBrackets;
+    int _charsCountForCompletion;
 
     friend class Highlighter;
 };
@@ -212,7 +214,6 @@ private:
     QColor _commentsColor;
     QColor _highlightColor;
 
-    //QString parseToke(const QTextBlock &block, QString &text, QColor &color );
     void setTextFormat(int start, int end, Formats format, bool italic=false);
     bool _enabled;
     friend class BlockData;

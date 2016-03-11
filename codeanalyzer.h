@@ -57,6 +57,8 @@ public:
     static void fillTree();
     static void fillListFromScope(QListWidget *l, const QString &ident, CodeScope scope );
     static void allClasses(QString ident, bool addSelf, bool addBase, QList<CodeItem *> &list, CodeItem *item=0);
+    static bool checkScopeForPrivate(CodeItem *item, CodeItem *scopeItem);
+    static void tryToAddItemToList(CodeItem *item, CodeItem *scopeItem, QListWidget *list);
     //
     static void setShowVariables(bool value);
     static void setSortByName(bool value);
@@ -206,6 +208,7 @@ public:
     QTextBlock blockEnd() { return _blockEnd; }
     QList<CodeItem*> params() const { return _params; }
     CodeItem* parent() const { return _parent; }
+    CodeItem* parentClass() const;
     QList<CodeItem*> children() { return _children; }
     QString toString() { return "("+_decl+") "+_descr; }
     QString infoShort() { return "("+_decl+") "+_ident; }
@@ -216,6 +219,21 @@ public:
     int blockEndNumber();
     void setFoldable(bool value);
     bool isFoldable(){ return _foldable; }
+
+    bool isProperty(){ return _isProperty; }
+    void markAsProperty(){
+        _isProperty = true;
+        if (_params.size() > 0) {
+            CodeItem *i = _params.at(0);
+            _identType = i->identType();
+        }
+        //_descr = _descrAsItem = "<b>"+_ident+"</b> : <i>"+_identType+"</i>";
+        _descr = _descrAsItem = _ident+" : "+_identType;
+    }
+
+    bool isPrivate(){ return _isPrivate; }
+    void markAsPrivate(){ _isPrivate = true; }
+
     bool hasChildren(){ return !_children.isEmpty(); }
     bool isClassOrInterface(){ return _isClass||_isInterface; }
     bool isClass(){ return _isClass; }
@@ -253,7 +271,7 @@ private:
     QList<CodeItem*> _children;
     int _indent, _blockNumber, _blockEndNumber;
     bool _foldable;
-    bool _isClass, _isFunc, _isField, _isVar, _isKeyword, _isParam, _isInherited, _isInterface;
+    bool _isClass, _isFunc, _isField, _isVar, _isKeyword, _isParam, _isInherited, _isInterface, _isProperty, _isPrivate;
     bool _isMonkey, _isUser;
     QHash<QString,ItemWithData*> _itemsWithData;
     QStringList _baseClasses, _templWords;

@@ -16,6 +16,7 @@ class Prefs : public QObject{
 
 public:
 
+    void setDefaults();
     void setValue( const QString &name,const QVariant &value );
     bool contains(const QString &name) {
         settings()->beginGroup( "userPrefs" );

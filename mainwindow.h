@@ -224,11 +224,6 @@ private slots:
     void onUsagesSelectAll();
     void onUsagesUnselectAll();
 
-
-    void on_actionLock_Target_triggered();
-
-    void on_actionLock_Target_toggled(bool arg1);
-
     void on_webView_selectionChanged();
 
     void on_docsDockWidget_allowedAreasChanged(const Qt::DockWidgetAreas &allowedAreas);

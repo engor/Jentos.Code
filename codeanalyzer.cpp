@@ -1093,7 +1093,7 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
                 continue;
             }
         }
-        if(isPrivateInFile || isPrivateInClass) {
+        if(isPrivateInFile /*|| isPrivateInClass*/) {
             block = block.next();
             continue;
         }
@@ -1146,6 +1146,8 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
                 s = s.trimmed();
                 CodeItem *item = new CodeItem(decl, s, indent, block, path, 0);
                 item->setKind(kind);
+                if (isPrivateInClass)
+                    item->markAsPrivate();
                 if(container) {
                     container->addChild(item);
                 }
@@ -1155,12 +1157,13 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
             }
         }
         else if(decl == "method" || decl == "function") {
-            if(container && container->indent() >= indent) {
+
+            if (container && container->indent() >= indent) {
                 QTextBlock b = block.previous();
                 container->setBlockEnd(b);
-                if(b != container->block())
+                if (b != container->block())
                     container->setFoldable(true);
-                if(kind == KIND_USER) {
+                if (kind == KIND_USER) {
                     BlockData *d = BlockData::data(b,true);
                     d->foldType |= 2;
                 }
@@ -1171,36 +1174,50 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
                 container->setFoldable(false);
                 container = (stack.isEmpty() ? 0 : stack.pop());
             }*/
+
+            bool isProp = line.endsWith("Property");
+
             bool singleLine = false;
-            //if(kind == KIND_MONKEY) {
-                int ii = line.lastIndexOf(')');
-                if(ii && ii != line.length()-1) {
-                    line = line.left(ii+1);
-                    //qDebug()<<"correct func:"<<line;
-                    singleLine = true;
-                }
-            //}
+            int ii = line.lastIndexOf(')');
+            if(!isProp && ii && ii != line.length()-1) {
+                line = line.left(ii+1);
+                singleLine = true;
+            }
+
             CodeItem *item = new CodeItem(decl, line, indent, block, path, 0);
             item->setKind(kind);
-            if(container) {
-                container->addChild(item);
-            }
-            else {
+            if (isProp)
+                item->markAsProperty();
+
+            if (container) {
+
+                bool needAdd = true;
+                if (isProp) {
+                    CodeItem *i = container->child( item->ident() );
+                    needAdd = (i == 0);
+                }
+
+                if (needAdd)
+                    container->addChild(item);
+                //else
+                //    qDebug() << "already added:"<<item->ident();
+            } else {
                 insertItem(item->ident(), item, kind);
             }
-            if(container && container->isInterface())
+            if (container && container->isInterface())
                 singleLine = true;
-            else if(line.contains(" Abstract"))
+            else if (line.endsWith(" Abstract"))
                 singleLine = true;
-            if(!singleLine) {
-                if(container)
+            if (!singleLine) {
+                if (container)
                     stack.push(container);
                 container = item;
             }
-            if(kind == KIND_USER) {
+            if (kind == KIND_USER) {
                 BlockData *d = BlockData::data(block,true);
                 d->foldType |= 1;
             }
+
         }
         else if(container && decl == "local") {
             QStringList l = extractParams(line);
@@ -1377,12 +1394,46 @@ void CodeAnalyzer::fillListFromCommon( QListWidget *l, const QString &ident, con
     }
 
     foreach (item, listRes) {
-        icon = identIcon(item->decl());
-        lwi = new ListWidgetCompleteItem(icon, item->descrAsItem(), item, l);
-        lwi->setToolTip( item->toString() );
-        l->addItem( lwi );
+        tryToAddItemToList(item, scope, l);
     }
 
+}
+
+void CodeAnalyzer::tryToAddItemToList(CodeItem *item, CodeItem *scopeItem, QListWidget *list) {
+    if (item->isPrivate()) {
+        bool ok = checkScopeForPrivate(item, scopeItem);
+        if (!ok)
+            return;
+    }
+    QString descr = item->descrAsItem();
+
+    QStringList templField = scopeItem->templWords();
+    bool hasTempl = !templField.isEmpty();
+    // replacement for template <T> values, i.e. list.Add(value:T) -> list.Add(value:MyClass)
+    if (hasTempl) {
+        QStringList templClass;
+        CodeItem *par = item->parent();
+        if (par != 0) {
+            templClass = par->templWords();
+            hasTempl = (!templField.isEmpty() && templClass.size() == templField.size());
+            if (hasTempl) {
+                for (int k = 0, size = templField.size(); k < size; ++k) {
+                    descr = descr.replace(":"+templClass.at(k), ":"+templField.at(k));
+                }
+            }
+        }
+    }
+    QIcon icon = identIcon(item->decl());
+    ListWidgetCompleteItem *lwi = new ListWidgetCompleteItem(icon, descr, item, list);
+    lwi->setToolTip( item->toString() );
+    list->addItem( lwi );
+}
+
+bool CodeAnalyzer::checkScopeForPrivate(CodeItem *item, CodeItem *scopeItem) {
+    CodeItem *class1 = item->parentClass();
+    CodeItem *class2 = scopeItem->parentClass();
+    // private members are available only for the same class where they declared
+    return (class1 == class2);
 }
 
 void CodeAnalyzer::fillListFromScope( QListWidget *l, const QString &ident, CodeScope scope ) {
@@ -1417,25 +1468,9 @@ void CodeAnalyzer::fillListFromScope( QListWidget *l, const QString &ident, Code
     }
     //qDebug() << "work";
     foreach (CodeItem *child, listRes) {
-        icon = identIcon(child->decl());
-        QString descr = child->descrAsItem();
-        if(hasTempl) {
-            QStringList templClass;
-            CodeItem *par = child->parent();
-            if(par != 0) {
-                templClass = par->templWords();
-                hasTempl = (!templField.isEmpty() && templClass.size() == templField.size());
-                if(hasTempl) {
-                    for(int k = 0, size = templField.size(); k < size; ++k) {
-                        //qDebug() << "templ: "+templClass.at(k)+" : "+templField.at(k);
-                        descr = descr.replace(":"+templClass.at(k), ":"+templField.at(k));
-                    }
-                }
-            }
-        }
-        lwi = new ListWidgetCompleteItem(icon, descr, child, l);
-        lwi->setToolTip( child->toString() );
-        l->addItem( lwi );
+
+        tryToAddItemToList(child, scope.item, l);
+
     }
 }
 
@@ -2267,7 +2302,7 @@ CodeItem::CodeItem(QString decl, QString line, int indent, QTextBlock &block, co
     _identType = "Int";
     _foldable = false;
     _isClass = _isFunc = _isField = _isKeyword = _isMonkey = _isUser = false;
-    _isParam = _isVar = _isInherited = _isInterface = false;
+    _isParam = _isVar = _isInherited = _isInterface = _isProperty = _isPrivate = false;
     _identForInsert = "";
     _filepath = path;
     _filename = stripDir(path);
@@ -2345,21 +2380,20 @@ CodeItem::CodeItem(QString decl, QString line, int indent, QTextBlock &block, co
         //qDebug() << "if 2";
         int i1 = line.indexOf("(");
         int i2 = line.indexOf(":");
-        if(i1 < i2 || i2 < 0) {
+        if (i1 < i2 || i2 < 0) {
             _ident = line.left(i1);
-        }
-        else if(i2) {
+        } else if (i2) {
             _ident = line.left(i2);
             _identType = line.mid(i2+1, i1-i2-1);
         }
         //
-        if( i1 ) {
+        if ( i1 ) {
             i2 = line.indexOf(")");
-            if(!i2)
+            if (!i2)
                 i2 = line.length();
             _descr = _descrAsItem = line.left(i2+1);
             int len = i2-i1-1;
-            if(len > 0) {
+            if (len > 0) {
                 line = line.mid(i1+1,len);
                 QStringList p = CodeAnalyzer::extractParams(line);
                 foreach (QString s, p) {
@@ -2623,6 +2657,17 @@ QString CodeItem::identWithParamsBraces(int &cursorDelta) {
 
 QString CodeItem::identTypeCleared() {
     return clearType(_identType);
+}
+
+CodeItem *CodeItem::parentClass() const
+{
+    CodeItem *p = _parent;
+    while (p != 0) {
+        if (p->isClass())
+            break;
+        p = p->parent();
+    }
+    return p;
 }
 
 QString CodeItem::clearType(QString &s) {

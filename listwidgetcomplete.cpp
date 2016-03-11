@@ -37,6 +37,14 @@ void ListWidgetComplete::mouseDoubleClickEvent(QMouseEvent *event) {
     emit itemActivated( currentItem() );
 }
 
+void ListWidgetComplete::updateItem(QListWidgetItem *item)
+{
+    //qDebug()<<"updateItem";
+    QLabel *widget = new QLabel(this);
+    widget->setText(item->text());
+    setItemWidget(item, widget);
+}
+
 void ListWidgetComplete::selectNear(int dir) {
 
     int cnt = count();
@@ -58,9 +66,22 @@ void ListWidgetComplete::selectNear(int dir) {
     }
 }
 
+/*void ListWidgetComplete::addItem(const QString &label)
+{
+    QListWidget::addItem(label);
+    QListWidgetItem *it = item(count()-1);
+    updateItem(it);
+}*/
+
+void ListWidgetComplete::addWidgetForItem(QListWidgetItem *item)
+{
+    updateItem(item);
+}
+
 
 //----------------------------------------------------------------------
 ListWidgetCompleteItem::ListWidgetCompleteItem(const QIcon &icon, const QString &text, CodeItem *code, QListWidget *parent)
-    : QListWidgetItem(icon,text,parent), _codeItem(code) {
+    : QListWidgetItem(icon,text,parent), _codeItem(code)
+{
 
 }

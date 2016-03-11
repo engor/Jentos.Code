@@ -19,8 +19,17 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QToolBox" name="toolBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
+     </property>
+     <property name="tabSpacing">
+      <number>6</number>
      </property>
      <widget class="QWidget" name="pageEditor">
       <property name="geometry">
@@ -28,11 +37,11 @@
         <x>0</x>
         <y>0</y>
         <width>473</width>
-        <height>233</height>
+        <height>248</height>
        </rect>
       </property>
       <attribute name="label">
-       <string>Editor</string>
+       <string>E D I T O R</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <property name="spacing">
@@ -63,8 +72,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>460</width>
-            <height>616</height>
+            <width>454</width>
+            <height>525</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -90,7 +99,7 @@
                </property>
                <property name="currentFont">
                 <font>
-                 <family>Cousine</family>
+                 <family>Consolas</family>
                 </font>
                </property>
               </widget>
@@ -398,11 +407,11 @@
         <x>0</x>
         <y>0</y>
         <width>473</width>
-        <height>233</height>
+        <height>248</height>
        </rect>
       </property>
       <attribute name="label">
-       <string>Themes</string>
+       <string>T H E M E S</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <property name="spacing">
@@ -431,7 +440,7 @@
             <x>0</x>
             <y>0</y>
             <width>471</width>
-            <height>231</height>
+            <height>246</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -536,11 +545,11 @@
         <x>0</x>
         <y>0</y>
         <width>473</width>
-        <height>233</height>
+        <height>248</height>
        </rect>
       </property>
       <attribute name="label">
-       <string>Analyzer</string>
+       <string>A N A L Y Z E R</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_8">
        <property name="spacing">
@@ -569,7 +578,7 @@
             <x>0</x>
             <y>0</y>
             <width>471</width>
-            <height>231</height>
+            <height>246</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -614,6 +623,76 @@
             </widget>
            </item>
            <item>
+            <widget class="QFrame" name="frame_2">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="label_5">
+                <property name="text">
+                 <string>Show AutoComplete List after</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="spinBoxTypedCharsForCompletion">
+                <property name="minimumSize">
+                 <size>
+                  <width>40</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
+                <property name="maximum">
+                 <number>5</number>
+                </property>
+                <property name="value">
+                 <number>2</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_6">
+                <property name="text">
+                 <string>typed chars</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_4">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
             <spacer name="verticalSpacer_4">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
@@ -638,11 +717,11 @@
         <x>0</x>
         <y>0</y>
         <width>473</width>
-        <height>233</height>
+        <height>248</height>
        </rect>
       </property>
       <attribute name="label">
-       <string>Monkey path</string>
+       <string>P A T H E S</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="spacing">
@@ -671,7 +750,7 @@
             <x>0</x>
             <y>0</y>
             <width>471</width>
-            <height>231</height>
+            <height>246</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -783,11 +862,11 @@
         <x>0</x>
         <y>0</y>
         <width>473</width>
-        <height>233</height>
+        <height>248</height>
        </rect>
       </property>
       <attribute name="label">
-       <string>Info</string>
+       <string>I N F O</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_10">
        <property name="spacing">
@@ -816,7 +895,7 @@
             <x>0</x>
             <y>0</y>
             <width>471</width>
-            <height>231</height>
+            <height>246</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -845,6 +924,19 @@
                 </property>
                 <property name="wordWrap">
                  <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonOpenSettingsFolder">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Open Folder</string>
                 </property>
                </widget>
               </item>

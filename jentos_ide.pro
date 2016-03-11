@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     tabwidgetdrop.cpp \
     proc.cpp \
     theme.cpp \
-    previewhtml5.cpp
+    previewhtml5.cpp \
+    customcombobox.cpp
 
 HEADERS  += mainwindow.h \
     codeeditor.h \
@@ -49,7 +50,8 @@ HEADERS  += mainwindow.h \
     tabwidgetdrop.h \
     proc.h \
     theme.h \
-    previewhtml5.h
+    previewhtml5.h \
+    customcombobox.h
 
 RESOURCES += myresource.qrc \
     resources.qrc

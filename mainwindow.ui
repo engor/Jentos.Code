@@ -491,7 +491,6 @@
    <addaction name="actionStep_In"/>
    <addaction name="actionStep_Out"/>
    <addaction name="actionKill"/>
-   <addaction name="actionLock_Target"/>
   </widget>
   <widget class="QToolBar" name="helpToolBar">
    <property name="windowTitle">
@@ -511,7 +510,7 @@
      <x>0</x>
      <y>0</y>
      <width>1015</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2040,21 +2039,6 @@ Don't change documents between find usages and rename</string>
     <string>Docs</string>
    </property>
   </action>
-  <action name="actionLock_Target">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="myresource.qrc">
-     <normaloff>:/icons/circle/lock.png</normaloff>:/icons/circle/lock.png</iconset>
-   </property>
-   <property name="text">
-    <string>Lock Target</string>
-   </property>
-   <property name="toolTip">
-    <string>Locks the drop down box so you cannot accidentally switch targets when scrolling</string>
-   </property>
-  </action>
   <action name="actionThemeMonokaiDarkSoda">
    <property name="checkable">
     <bool>true</bool>
@@ -2131,8 +2115,8 @@ Don't change documents between find usages and rename</string>
   <tabstop>toolButtonSortByName</tabstop>
  </tabstops>
  <resources>
-  <include location="myresource.qrc"/>
   <include location="resources.qrc"/>
+  <include location="myresource.qrc"/>
  </resources>
  <connections>
   <connection>

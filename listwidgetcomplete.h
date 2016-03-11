@@ -21,6 +21,8 @@ public:
     void selectNear(int dir);
     void setIsForInheritance(bool value) { _isForInheritance = value; }
     bool isForInheritance() { return _isForInheritance; }
+    //void addItem(const QString &label);
+    void addWidgetForItem(QListWidgetItem *item);
 
 signals:
     void activated(CodeItem *item);
@@ -34,6 +36,8 @@ protected:
 
 private:
     bool _isForInheritance;
+    void updateItem(QListWidgetItem *item);
+
 };
 
 

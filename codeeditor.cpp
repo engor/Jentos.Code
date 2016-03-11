@@ -61,6 +61,8 @@ void appendExtraSels(const QTextEdit::ExtraSelection &sel, CodeEditor *editor) {
 CodeEditor::CodeEditor( QWidget *parent ):QPlainTextEdit( parent ),_modified( 0 ){
 
     _editPosIndex = -1;
+    _useAutoBrackets = Prefs::prefs()->getBool("AutoBracket");
+    _charsCountForCompletion = Prefs::prefs()->getInt("CharsForCompletion");
 
     _lineNumberArea = new LineNumberArea(this, 60);
 
@@ -106,7 +108,7 @@ void CodeEditor::aucompProcess( CodeItem *item, bool forInheritance ) {
     QString text = c.block().text();
     int i0 = c.positionInBlock();
     int i = i0-1;
-    while( i >= 0 && isIdent(text[i])) {
+    while ( i >= 0 && isIdent(text[i])) {
         --i;
     }
     ++i;
@@ -117,29 +119,28 @@ void CodeEditor::aucompProcess( CodeItem *item, bool forInheritance ) {
     QString line = item->identForInsert();
     int blockEndPos = c.block().text().length();
     int d = 0;
-    if(forInheritance) {
+    if (forInheritance) {
         line = item->descrAsItem();
-    }
-    else {
-        if(i0 == blockEndPos) {
+    } else {
+        if (item->isProperty()) {
+
+        } else if (i0 == blockEndPos) {
             line = item->identWithParamsBraces(d);
-        }
-        else {
+        } else {
             QString s = text.mid(i0).trimmed();
             QChar ch = s[0];
             bool isident = isIdent(ch);
-            if(ch != '(') {
-                if(!isident) {
+            if (ch != '(') {
+                if (!isident) {
                     line = item->identWithParamsBraces(d);
-                }
-                else if(item->isFunc()) {
+                } else if (item->isFunc()) {
                     line += "(";
                 }
             }
         }
     }
     insertPlainText( line );
-    if( d != 0 ) {
+    if ( d != 0 ) {
         c.setPosition( c.position()+d );
         setTextCursor(c);
     }
@@ -167,12 +168,18 @@ void CodeEditor::aucompShowList(bool process, bool inheritance ) {
     else
         CodeAnalyzer::findInScope(cursor.block(), cursor.positionInBlock(), _lcomp);
 
-    if( _lcomp->count() > 0 ) {
+    int count = _lcomp->count();
+    if( count > 0 ) {
         if( process && _lcomp->count() == 1 ) { //select value if one
             ListWidgetCompleteItem *item = dynamic_cast<ListWidgetCompleteItem*>(_lcomp->item(0));
             aucompProcess(item->codeItem());
         }
         else {
+
+            /*for (int k = 0; k < count; ++k) {
+                _lcomp->addWidgetForItem( _lcomp->item(k) );
+            }*/
+
             int xx=0, yy=0, ww=0, hh=0;
             hh = _lcomp->sizeHintForRow(0)*_lcomp->count()+10;
             if(hh < 60)
@@ -586,6 +593,9 @@ void CodeEditor::onPrefsChanged( const QString &name ){
     QString t( name );
 
     Prefs *prefs = Prefs::prefs();
+
+    _useAutoBrackets = prefs->getBool("AutoBracket");
+    _charsCountForCompletion = prefs->getInt("CharsForCompletion");
 
     if( t=="" || t=="backgroundColor" || t=="fontFamily" || t=="fontSize" || t=="tabSize" || t=="smoothFonts" || t=="highlightLine" || t=="highlightWord" ){
 
@@ -1518,21 +1528,21 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     bool shift = (e->modifiers() & Qt::ShiftModifier);
 
     //escape
-    if(key == Qt::Key_Escape && !aucompIsVisible()) {
+    if (key == Qt::Key_Escape && !aucompIsVisible()) {
         emit keyEscapePressed();
     }
 
     //ctrl + s
-    if(ctrl && key == 83){
+    if (ctrl && key == 83){
         return;
     }
     //ctrl + z
-    if(ctrl && key == Qt::Key_Z){// key == 90) {
+    if (ctrl && key == Qt::Key_Z){// key == 90) {
         undo();
         return;
     }
     //ctrl + y
-    if(ctrl && key == Qt::Key_Y){// && key == 89) {
+    if (ctrl && key == Qt::Key_Y){// && key == 89) {
         redo();
         return;
     }
@@ -1595,58 +1605,72 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
         }
     }
 
-    //autocomplete for "",'',(),[]
-if(Prefs::prefs()->getBool("AutoBracket")==true){
     QString evtxt = e->text();
-    bool k1 = (evtxt == "\"");
-    bool k2 = false;//(evtxt == "'");
-    bool k3 = (evtxt == "(");
-    bool k4 = (evtxt == "[");
+    QChar typedChar = evtxt.length() > 0 ? evtxt.at(0) : QChar();
+    //qDebug()<<"typedChar:"<<typedChar;
 
-    if(k1 || k2 || k3 || k4 ) {
-        QString s = block.text();
-        int len = s.length();
-        int p = cursor.positionInBlock();
-        QChar c1, c2;
-        if(p > 0)
-            c1 = s.at(p-1);
-        if(p < len)
-            c2 = s.at(p);
-        bool skip = false;
-        if(!c1.isNull()) {
-            skip = (k1 && c1 == '\"') || (k2 && c1 == 39);
-        }
-        if(k1) {//calc quotes count
-            int i = -1, cnt = 0;
-            while( (i = s.indexOf("\"", i+1)) >= 0)
-                ++cnt;
-            skip |= (cnt % 2 == 1);
-        }
-        if(!skip && !c2.isNull()) {
-            skip = (k1 && c2 == '\"') || (k2 && c2 == 39) || (k3 && c2 == ')') || (k4 && c2 == ']');
-            skip |= isIdent(c2);
-        }
-        if(!skip) {
-            if(k1)
-                insertPlainText("\"\"");
-            else if(k2)
-                insertPlainText("''");
-            else if(k3)
-                insertPlainText("()");
-            else if(k4)
-                insertPlainText("[]");
-            cursor.setPosition(cursor.position()-1);
+    // skip spec chars if they were already added in this place
+    if (typedChar == '"' || typedChar == '\'' || typedChar == ')' || typedChar == ']') {
+        int i = cursor.positionInBlock();
+        QChar ch = block.text().at(i);
+        if (ch == typedChar) {
+            cursor.setPosition(cursor.position()+1);
             setTextCursor(cursor);
-            e->accept();
             return;
         }
     }
-    //Disabled in options so do nothing
+
+    //autocomplete for "",'',(),[]
+    if (_useAutoBrackets) {
+        bool k1 = (evtxt == "\"");
+        bool k2 = false;//(evtxt == "'");
+        bool k3 = (evtxt == "(");
+        bool k4 = (evtxt == "[");
+
+        if (k1 || k2 || k3 || k4 ) {
+            QString s = block.text();
+            int len = s.length();
+            int p = cursor.positionInBlock();
+            QChar c1, c2;
+            if(p > 0)
+                c1 = s.at(p-1);
+            if(p < len)
+                c2 = s.at(p);
+            bool skip = false;
+            if (!c1.isNull()) {
+                skip = (k1 && c1 == '\"') || (k2 && c1 == 39);
+            }
+            if (k1) {//calc quotes count
+                int i = -1, cnt = 0;
+                while ( (i = s.indexOf("\"", i+1)) >= 0)
+                    ++cnt;
+                skip |= (cnt % 2 == 1);
+            }
+            if (!skip && !c2.isNull()) {
+                skip = (k1 && c2 == '\"') || (k2 && c2 == 39) || (k3 && c2 == ')') || (k4 && c2 == ']');
+                skip |= isIdent(c2);
+            }
+            if (!skip) {
+                if (k1)
+                    insertPlainText("\"\"");
+                else if (k2)
+                    insertPlainText("''");
+                else if (k3)
+                    insertPlainText("()");
+                else if (k4)
+                    insertPlainText("[]");
+                cursor.setPosition(cursor.position()-1);
+                setTextCursor(cursor);
+                e->accept();
+                return;
+            }
+        }
+        //Disabled in options so do nothing
     }
 
 
     //dot, check for ClassInstance.{fields,funcs}
-    if(key == 46) {
+    if (key == 46) {
         int i = cursor.positionInBlock();
         bool flagShow = (i > 0 && isIdent(cursor.block().text()[i-1]));
         insertPlainText(".");
@@ -1974,11 +1998,12 @@ if(Prefs::prefs()->getBool("AutoBracket")==true){
 
 
     if( _monkey ){
-        if( key >= 32 && key <= 255 ){
-            if(!ctrl && !block.text().trimmed().startsWith("'") && (!aucompIsVisible())) {
+        if ( key >= 32 && key <= 255 ) {
+            if (!ctrl && !aucompIsVisible() && !block.text().trimmed().startsWith("'")) {
                 QString ident = identAtCursor(false);
-                if(ident.length() > 2)
+                if (ident.length() >= _charsCountForCompletion) {
                     aucompShowList( false );
+                }
             }
         }
     }

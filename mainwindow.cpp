@@ -22,7 +22,7 @@ See LICENSE.TXT for licensing terms.
 #include "codeanalyzer.h"
 #include "tabwidgetdrop.h"
 #include "theme.h"
-
+#include "customcombobox.h"
 #include <QHostInfo>
 
 
@@ -42,8 +42,8 @@ See LICENSE.TXT for licensing terms.
 #define _STRINGIZE( X ) _QUOTE(X)
 
 #define TED_VERSION "1.17"
-#define APP_VERSION "1.3.1"
-#define APP_NAME "Jentos IDE"
+#define APP_VERSION "1.4"
+#define APP_NAME "Jentos.Code"
 
 
 QString MainWindow::_monkeyPath;
@@ -99,28 +99,31 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
     statusBar()->addPermanentWidget( _statusWidget );
 
     //targets combobox
-    _targetsWidget=new QComboBox;
+    _targetsWidget = new CustomComboBox;
     _targetsWidget->setMinimumWidth(100);
     _ui->buildToolBar->addWidget( _targetsWidget );
+    _targetsWidget->setFocusPolicy(Qt::NoFocus);
 
     QWidget *w = new QWidget;
     w->setFixedWidth(3);
     _ui->buildToolBar->addWidget(w);
 
-    _configsWidget=new QComboBox;
+    _configsWidget = new CustomComboBox;
     _configsWidget->addItem( "Debug" );
     _configsWidget->addItem( "Release" );
     _ui->buildToolBar->addWidget( _configsWidget );
+    _configsWidget->setFocusPolicy(Qt::NoFocus);
 
     //quick help search combo
     w = new QWidget;
     w->setFixedWidth(3);
     _ui->helpToolBar->addWidget(w);
-    _indexWidget = new QComboBox;
+    _indexWidget = new CustomComboBox;
     _indexWidget->setFixedWidth( 180 );
     _indexWidget->setEditable( true );
     _indexWidget->setInsertPolicy( QComboBox::NoInsert );
     _ui->helpToolBar->addWidget( _indexWidget );
+    _indexWidget->setFocusPolicy(Qt::ClickFocus);
 
     //
     /*w = new QWidget;
@@ -345,6 +348,7 @@ MainWindow::~MainWindow(){
     delete _usagesPopupMenu;
 
     CodeAnalyzer::finalize();
+
 }
 
 void MainWindow::onStyleChanged(bool b) {
@@ -489,7 +493,7 @@ void MainWindow::updateTheme() {
     //qDebug() << "update theme: "+Theme::theme();
     Prefs *p = Prefs::prefs();
     if( !_monkeyPath.isEmpty() && p->getBool("replaceDocsStyle") ) {
-        qDebug()<<"replace docs style";
+        //qDebug()<<"replace docs style";
         QString jent = QApplication::applicationDirPath() + "/pagestyle.css";
         QString monk = _monkeyPath+"/docs/html/pagestyle.css";
         if(!QFile::exists(jent)) {
@@ -1030,6 +1034,11 @@ void MainWindow::readSettings(){
 
     onHelpHome();
     enumTargets();
+
+    // hide some panels by default
+    _ui->usagesDockWidget->hide();
+    _ui->debugDockWidget->hide();
+    _ui->docsDockWidget->hide();
 
     set->beginGroup( "mainWindow" );
     restoreGeometry( set->value( "geometry" ).toByteArray() );
@@ -1652,7 +1661,7 @@ void MainWindow::cdebug( const QString &str ){
 void MainWindow::runCommand( QString cmd, QWidget *fileWidget ){
 
     QString targetStr = _targetsWidget->currentText().replace( ' ','_' );
-    qDebug() << "targetStr"<<targetStr;
+    //qDebug() << "targetStr"<<targetStr;
     cmd=cmd.replace( "${TARGET}",targetStr );
     cmd=cmd.replace( "${CONFIG}",_configsWidget->currentText() );
     cmd=cmd.replace( "${MONKEYPATH}",_monkeyPath );
@@ -1677,11 +1686,11 @@ void MainWindow::runCommand( QString cmd, QWidget *fileWidget ){
 
     updateActions();
 
-    if (targetStr == "Html5_Game") {
+    /*if (targetStr == "Html5_Game") {
         if (_previewHtml5Dialog == 0)
             _previewHtml5Dialog = new PreviewHtml5(this);
         _previewHtml5Dialog->showMe();
-    }
+    }*/
 
 }
 
@@ -2335,13 +2344,15 @@ void MainWindow::onHelpQuickHelp(){
 }
 
 void MainWindow::onHelpAbout(){
-    QString href = "https://github.com/EnkiEA/Jentos_IDE";
+    QString hrefGithub = "https://github.com/engor/Jentos_IDE";
+    QString hrefSite = "http://fingerdev.com/jentos";
+    QString hrefPaypal = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE";
     QString APP_ABOUT = "<html><head><style>a{color:#CC8030;}</style></head><body bgcolor2='#ff3355'><b>"APP_NAME"</b> is a powefull code editor for the Monkey programming language.<br>"
-            "Based on Ted V"TED_VERSION".<br> This binary is Luis Francisco ( twitter @crearmijuego ) fork <br>Please send bug reports to him on monkey-x.com<br>"
-            "Visit <a href='"+href+"'>"+href+"</a> for more information.<br><br>"
+            "Based on Ted V"TED_VERSION".<br><br>"
+            "Visit <a href='"+hrefSite+"'>"+hrefSite+"</a> for more information.<br><br>"
+            "Latest sources: <a href='"+hrefGithub+"'>"+hrefGithub+"</a><br><br>"
             "Version: "APP_VERSION+"<br>Trans: "+_transVersion+"<br>Qt: "_STRINGIZE(QT_VERSION)+"<br><br>"
-            "Jentos is free and always be free.<br>But you may support engor/nerobot via <a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE\">donation</a>.<br>"
-
+            "Jentos is free and always be free.<br>But you may support engor/nerobot via <a href=\""+hrefPaypal+"\">donation</a>.<br>"
             "</body></html>";
     QMessageBox::information( this, "About", APP_ABOUT );
 }
@@ -2492,7 +2503,7 @@ void MainWindow::onKeyEscapePressed() {
 }
 
 void MainWindow::onCheckForUpdates() {
-    QUrl url("http://fingerdev.com/apps/jentos/update.txt");
+    QUrl url("http://fingerdev.com/updater.php?id=jentos.code");
     if(_networkManager)
         delete _networkManager;
     _networkManager = new QNetworkAccessManager(this);
@@ -2504,7 +2515,7 @@ void MainWindow::onCheckForUpdates() {
 }
 
 void MainWindow::onCheckForUpdatesSilent() {
-    QUrl url("https://raw.githubusercontent.com/nerionx/Jentos_IDE/master/updates.txt");
+    /*QUrl url("https://raw.githubusercontent.com/nerionx/Jentos_IDE/master/updates.txt");
     if(_networkManager)
         delete _networkManager;
     _networkManager = new QNetworkAccessManager(this);
@@ -2512,7 +2523,7 @@ void MainWindow::onCheckForUpdatesSilent() {
     QNetworkRequest request;
     request.setUrl(url);
     _showMsgbox = false;
-    _networkManager->get(request);
+    _networkManager->get(request);*/
 }
 
 void MainWindow::onNetworkFinished(QNetworkReply *reply) {
@@ -2521,20 +2532,21 @@ void MainWindow::onNetworkFinished(QNetworkReply *reply) {
     QString s(bytes);
     s = s.trimmed();
     //qDebug()<<s;
+    QString title = "New version";
     if(!s.startsWith("$$$") && _showMsgbox) {
-        QMessageBox::information(this,"New version","<html><body>Check new version error.</body></html>");
+        QMessageBox::information(this, title, "<html><head><style>a{color:#CC8030;}</style></head><body>Check new version error.<br><br>Visit <a href=\"http://fingerdev.com/jentos\">Jentos Homepage</a> to get information about latest version.</body></html>");
         return;
     }
     int i = s.indexOf("\n");
     QString ver = s.left(i).mid(3).trimmed();
     QString v = APP_VERSION;
     //qDebug()<<v<<ver;
-    if(ver > v) {
+    if (ver > v) {
         s = s.mid(i+1);
-        QMessageBox::information(this,"New version",s);
+        QMessageBox::information(this, title, s);
     }
     else if(_showMsgbox){
-        QMessageBox::information(this,"New version","<html><head><style>a{color:#CC8030;}</style></head><body>No updates available.<br><b>You are using the latest version "+v+".</b><br><br><a href='https://github.com/nerionx/Jentos_IDE'>Jentos IDE - Frymans Fork HomePage</a></body></html>");
+        QMessageBox::information(this, title, "<html><head><style>a{color:#CC8030;}</style></head><body>No updates available.<br><b>You are using the latest version "+v+".</b><br><br>Visit <a href=\"http://fingerdev.com/jentos\">Jentos Homepage</a> to get information about latest version.</body></html>");
     }
 }
 
@@ -2554,7 +2566,6 @@ void MainWindow::onLowerUpperCase() {
         _codeEditor->lowerUpperCase( sender() == _ui->actionFormatLowercase );
     }
 }
-
 
 void MainWindow::onUsagesRename() {
     QString newIdent = _ui->editUsagesRename->text();
@@ -2630,24 +2641,6 @@ void MainWindow::onUsagesUnselectAll() {
 
 void MainWindow::onDocsZoomChanged(int) {
     _ui->webView->setZoomFactor(_ui->zoomSlider->value()/100.0f);
-}
-
-void MainWindow::on_actionLock_Target_triggered()
-{
-
-
-}
-
-void MainWindow::on_actionLock_Target_toggled(bool arg1)
-{
-    if(arg1==true){
-        _targetsWidget->setEnabled(false);
-        _configsWidget->setEnabled(false);
-    }
-    if(arg1==false){
-        _targetsWidget->setEnabled(true);
-        _configsWidget->setEnabled(true);
-    }
 }
 
 void MainWindow::on_webView_selectionChanged()

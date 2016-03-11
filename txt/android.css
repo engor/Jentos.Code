@@ -36,7 +36,7 @@ QGroupBox::title {
 /*****************************************/
 QSpinBox {
 	border: 1px solid gray;
-	
+	selection-background-color: #636363;
 }
 
 /*****************************************/
@@ -402,4 +402,31 @@ QPlainTextEdit {
 	margin: 0px;
 	padding: 0px;
 	border: 0px;
+}
+
+/*****************************************/
+QToolBox::tab {
+    color: #c8c8c8;
+	background-color: #4A4F51;
+	border: 1px solid #2b2b2b;
+	/*border-radius: 2px;*/
+	padding: 0px 15px;
+}
+QToolBox::tab:selected {
+    font: bold;
+}
+
+/*****************************************/
+QSlider::groove:horizontal {
+    background-color: #4A4F51;
+	border: 1px solid #2b2b2b;
+    height: 10px;
+}
+
+QSlider::handle:horizontal {
+    background-color: #4A4F51;
+    border: 1px solid #2b2b2b;
+    width: 10px;
+	height: 18px;
+	margin-top: -4px;
 }

@@ -25,12 +25,35 @@ void Prefs::setValue( const QString &name,const QVariant &value ){
 
 QSettings* Prefs::settings() {
     static QSettings *s = 0;
-    if(!s) {
+    if (!s) {
         //s = new QSettings(QApplication::applicationDirPath()+"/settings.ini",QSettings::IniFormat);
         s = new QSettings();
-        //qDebug()<<"settings.filename:"<<s->fileName();
+        int size = s->allKeys().size();
+        // if has no data then import from previous version
+        if (size == 0) {
+            QString dir = extractDir(s->fileName())+"/";
+            QString p = dir + "Jentos IDE.ini";
+            QFile f(p);
+            if (f.exists()) {
+                QString p2 = dir + "Jentos.Code.ini";
+                QFile f2(p2);
+                if (f2.exists())
+                    f2.remove();
+                f.copy(p2);
+            }
+        }
+        delete s;
+        s = new QSettings();
+
+        prefs()->setDefaults();
     }
     return s;
+}
+
+void Prefs::setDefaults() {
+    Prefs *p = prefs();
+    if (!p->contains("CharsForCompletion"))
+        p->setValue("CharsForCompletion", 3);
 }
 
 Prefs *Prefs::prefs() {

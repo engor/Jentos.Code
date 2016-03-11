@@ -49,6 +49,11 @@ public slots:
 private slots:
     void on_checkBoxAutoBracket_stateChanged(int arg1);
 
+    void on_pushButtonOpenSettingsFolder_clicked();
+
+
+    void on_spinBoxTypedCharsForCompletion_valueChanged(int arg1);
+
 private:
     MainWindow *_mainwnd;
     Ui::PrefsDialog *_ui;

@@ -84,9 +84,6 @@ int PrefsDialog::exec(){
     _ui->userwordsVarColorWidget->setColor( _prefs->getColor( "userwordsVarColor" ) );
     _ui->paramsColorWidget->setColor( _prefs->getColor( "paramsColor" ) );
 
-
-
-
     _ui->tabSizeWidget->setValue( _prefs->getInt( "tabSize" ) );
 
     _ui->monkeyPathWidget->setText( _prefs->getString( "monkeyPath" ) );
@@ -99,6 +96,8 @@ int PrefsDialog::exec(){
     _ui->checkBoxAutoBracket->setChecked(_prefs->getBool("AutoBracket"));
     _ui->checkBoxShowHelpInDock->setChecked(_prefs->getBool("showHelpInDock"));
     _ui->checkBoxReplaceDocsStyle->setChecked(_prefs->getBool("replaceDocsStyle"));
+
+    _ui->spinBoxTypedCharsForCompletion->setValue(_prefs->getInt("CharsForCompletion"));
 
     Prefs *p = Prefs::prefs();
     _ui->labelSettingsFile->setText( p->settings()->fileName() );
@@ -202,4 +201,16 @@ void PrefsDialog::onReplaceDocsStyleChanged() {
 void PrefsDialog::on_checkBoxAutoBracket_stateChanged(int arg1)
 {
      _prefs->setValue( "AutoBracket", _ui->checkBoxAutoBracket->isChecked() );
+}
+
+void PrefsDialog::on_pushButtonOpenSettingsFolder_clicked()
+{
+    QString path = extractDir(_ui->labelSettingsFile->text());
+    QUrl url("file:///"+path, QUrl::TolerantMode);
+    QDesktopServices::openUrl(url);
+}
+
+void PrefsDialog::on_spinBoxTypedCharsForCompletion_valueChanged(int arg1)
+{
+    _prefs->setValue( "CharsForCompletion", arg1 );
 }
