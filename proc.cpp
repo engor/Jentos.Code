@@ -8,13 +8,13 @@ See LICENSE.TXT for licensing terms.
 
 #include "proc.h"
 
-extern void cdebug( const QString &q );
-
 #ifdef Q_OS_WIN
 
 #define CLOSE CloseHandle
 
 #include <tlhelp32.h>
+
+#include <consolelog.h>
 
 //kill 'em all!
 //
@@ -270,10 +270,15 @@ Process::~Process(){
 
     _state=DELETING;
 
-    if( _procwaiter->wait( 10000 ) ) delete _procwaiter; else cdebug( "Timeout waiting for process to finish" );
+    ConsoleLog *log = dynamic_cast<ConsoleLog*>(QApplication::activeWindow());
 
-    if( _linereaders[0]->wait( 1000 ) ) delete _linereaders[0]; else cdebug( "Timeout waiting for stdout reader to finish" );
-    if( _linereaders[1]->wait( 1000 ) ) delete _linereaders[1]; else cdebug( "Timeout waiting for stderr reader to finish" );
+    if(log != 0) {
+
+        if( _procwaiter->wait( 10000 ) ) delete _procwaiter; else log->debug( "Timeout waiting for process to finish" );
+
+        if( _linereaders[0]->wait( 1000 ) ) delete _linereaders[0]; else log->debug( "Timeout waiting for stdout reader to finish" );
+        if( _linereaders[1]->wait( 1000 ) ) delete _linereaders[1]; else log->debug( "Timeout waiting for stderr reader to finish" );
+    }
 
     CLOSE( _in );
     CLOSE( _out );
@@ -383,7 +388,8 @@ bool LineReader::isLineAvailable(){
 
 bool LineReader::waitLineAvailable( int millis ){
     if( !_avail && !_eof ){
-        if( !wait( millis ) ) cdebug( "Timeout waiting for process output" );
+        ConsoleLog *log = dynamic_cast<ConsoleLog*>(QApplication::activeWindow());
+        if( !wait( millis ) && log != 0 ) log->debug( "Timeout waiting for process output" );
     }
     return _avail;
 }

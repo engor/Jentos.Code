@@ -82,6 +82,8 @@ public:
     void bookmarkPrev();
     void bookmarkFind( int dir, int start=-1 );
 
+    CodeScope codescopeForTextCursor(QTextCursor cursor, bool showStyle=false);
+
     void analyzeCode();
     void updateSourceNavigationByCurrentScope();
     void fillSourceListWidget(CodeItem *item, QStandardItem *si);
@@ -140,7 +142,18 @@ protected:
     void leaveEvent(QEvent *) {
         QGuiApplication::restoreOverrideCursor();
     }
+    void paintEvent(QPaintEvent *e);
 
+    void flushExtraSelections();
+    void addExtraSelections(const QTextEdit::ExtraSelection &sel);
+
+    void updateRowSelection();
+    void flushWordsExtraSelections();
+    void flushRowSelection();
+
+    void addExtraTextCursor(QTextCursor cursor);
+    void setExtraTextCursors(const QList<QTextCursor> &cursors);
+    void flushExtraTextCursors();
 private:
 
     void showToolTip(QPoint pos, QString s, bool nowrap=true);
@@ -167,6 +180,9 @@ private:
     bool _isHighlightLine, _isHighlightWord;
 
     friend class Highlighter;
+
+    QList<QTextEdit::ExtraSelection> _extraSelections;
+    QList<QTextCursor> _extraCursors;
 };
 
 //***** Highlighter *****

@@ -10,6 +10,7 @@ See LICENSE.TXT for licensing terms.
 #define MAINWINDOW_H
 
 #include "std.h"
+#include "consolelog.h"
 
 class CodeEditor;
 class ProjectTreeModel;
@@ -30,15 +31,14 @@ class QuickHelp;
 class TabWidgetDrop;
 
 
-class MainWindow : public QMainWindow{
+class MainWindow : public QMainWindow, public ConsoleLog {
     Q_OBJECT
 
 public:
-
     MainWindow( QWidget *parent=0 );
     ~MainWindow();
 
-    void cdebug( const QString &str );
+    void debug( const QString &str );
     static bool isValidMonkeyPath(const QString &path , QString &trans);
     void updateTheme();
 
@@ -74,7 +74,6 @@ private:
 
     bool confirmQuit();
     void closeEvent( QCloseEvent *event );
-
 
 protected:
 

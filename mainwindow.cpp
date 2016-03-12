@@ -24,7 +24,6 @@ See LICENSE.TXT for licensing terms.
 
 #include <QHostInfo>
 
-
 #define SETTINGS_VERSION 2
 
 #ifdef Q_OS_WIN
@@ -44,24 +43,12 @@ See LICENSE.TXT for licensing terms.
 #define APP_VERSION "1.3.1"
 #define APP_NAME "Jentos IDE"
 
-
 QString MainWindow::_monkeyPath;
 QString MainWindow::_transPath;
 
-
-static MainWindow *mainWindow;
-
-void cdebug( const QString &q ){
-    if( mainWindow ) mainWindow->cdebug( q );
-}
-
-
 //***** MainWindow *****
 //
-MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::MainWindow ){
-
-    mainWindow = this;
-
+MainWindow::MainWindow(QWidget* parent) : QMainWindow( parent ),ConsoleLog(),_ui( new Ui::MainWindow ){
     QTextCodec::setCodecForLocale( QTextCodec::codecForName( "UTF-8" ) );
 
 #ifdef Q_OS_MAC
@@ -1633,7 +1620,7 @@ void MainWindow::print(const QString &str, QString kind ){
     _ui->outputTextEdit->setTextCursor( cursor );
 }
 
-void MainWindow::cdebug( const QString &str ){
+void MainWindow::debug( const QString &str ){
     print( str, "debug" );
 }
 

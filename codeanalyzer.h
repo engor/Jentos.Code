@@ -279,6 +279,9 @@ public:
         isSelf = isSuper = false;
         ident = toolTip = "";
     }
+    bool isEmpty() {
+        return item == 0;
+    }
 
     CodeItem *item;
     bool isSelf, isSuper;

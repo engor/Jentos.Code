@@ -4,6 +4,8 @@ Ted,imple text editor/IDE.
 Copyright 2012, Blitz Research Ltd.
 
 See LICENSE.TXT for licensing terms.
+
+Modified by malublu
 */
 
 #include "codeeditor.h"
@@ -16,43 +18,9 @@ See LICENSE.TXT for licensing terms.
 #include "theme.h"
 #include "mainwindow.h"
 
-CodeEditor *extraSelsEditor;
-QList<QTextEdit::ExtraSelection> extraSels;
 QTextEdit::ExtraSelection rowSelection;
 QString _extraSelWord;
 int _extraSelScrollPos;
-
-//static QList<QTextEdit::ExtraSelection> extraSelsWords;
-
-void flushExtraSels() {
-    if( !extraSelsEditor ) return;
-    extraSels.clear();
-    extraSelsEditor->setExtraSelections( extraSels );
-    extraSelsEditor = 0;
-}
-void updateRowSelection(CodeEditor *editor) {
-    extraSelsEditor = editor;
-    if(!extraSels.isEmpty())
-        extraSels.removeAt(0);
-    extraSels.insert(0,rowSelection);
-    extraSelsEditor->setExtraSelections( extraSels );
-}
-void flushWordsExtraSels() {
-    if( !extraSelsEditor ) return;
-    extraSels.clear();
-    extraSels.append(rowSelection);
-    extraSelsEditor->setExtraSelections( extraSels );
-    //extraSelsEditor = 0;
-}
-void flushRowSelection() {
-    if(!extraSels.isEmpty())
-        extraSels.removeAt(0);
-}
-void appendExtraSels(const QTextEdit::ExtraSelection &sel, CodeEditor *editor) {
-    extraSelsEditor = editor;
-    extraSels.append(sel);
-    extraSelsEditor->setExtraSelections( extraSels );
-}
 
 
 //***** CodeEditor *****
@@ -80,7 +48,7 @@ CodeEditor::CodeEditor( QWidget *parent ):QPlainTextEdit( parent ),_modified( 0 
     //qDebug()<<"editor";
     onPrefsChanged( "" );
 
-    flushExtraSels();
+    flushExtraSelections();
 
     setViewportMargins(_lineNumberArea->maxwidth()-1, 0, 0, 0);
 
@@ -89,10 +57,55 @@ CodeEditor::CodeEditor( QWidget *parent ):QPlainTextEdit( parent ),_modified( 0 
 }
 
 CodeEditor::~CodeEditor(){
-    flushExtraSels();
+    flushExtraSelections();
     //delete _lcomp;
     //_lcomp = 0;
 
+}
+
+void CodeEditor::flushExtraSelections() {
+    _extraSelections.clear();
+    setExtraSelections( _extraSelections );
+}
+void CodeEditor::addExtraSelections(const QTextEdit::ExtraSelection &sel) {
+    _extraSelections.append(sel);
+    setExtraSelections(_extraSelections);
+}
+void CodeEditor::updateRowSelection() {
+    if(!_extraSelections.isEmpty())
+        _extraSelections.removeAt(0);
+    _extraSelections.insert(0,rowSelection);
+    setExtraSelections( _extraSelections );
+}
+void CodeEditor::flushWordsExtraSelections() {
+    _extraSelections.clear();
+    _extraSelections.append(rowSelection);
+    setExtraSelections( _extraSelections );
+}
+void CodeEditor::flushRowSelection() {
+    if(!_extraSelections.isEmpty())
+        _extraSelections.removeAt(0);
+}
+
+void CodeEditor::addExtraTextCursor(QTextCursor cursor) {
+    _extraCursors.append(cursor);
+}
+
+void CodeEditor::flushExtraTextCursors() {
+    _extraCursors.clear();
+}
+
+void CodeEditor::setExtraTextCursors(const QList<QTextCursor> &cursors) {
+    _extraCursors = cursors;
+}
+
+void CodeEditor::paintEvent(QPaintEvent* event) {
+    QPlainTextEdit::paintEvent(event);
+    QPainter p(viewport());
+    int extracursorlength = _extraCursors.count();
+    for( int i=0; i<extracursorlength; ++i ) {
+        p.fillRect(cursorRect(_extraCursors[i]), QBrush(Qt::black));
+    }
 }
 
 bool CodeEditor::aucompIsVisible() {
@@ -548,7 +561,7 @@ void CodeEditor::highlightLine( int line, Highlighting kind ){
             rowSelection.cursor = cursor;
             rowSelection.cursor.clearSelection();
         }
-        updateRowSelection(this);
+        updateRowSelection();
     }
 
 }
@@ -572,10 +585,10 @@ void CodeEditor::onThemeChanged() {
         }
         setExtraSelections(extraSels);
     }*/
-    flushExtraSels();
+    flushExtraSelections();
     if(_isHighlightLine) {
         rowSelection.format.setBackground( Prefs::prefs()->getColor("highlightColorCaretRow") );
-        updateRowSelection(this);
+        updateRowSelection();
     }
 }
 
@@ -593,9 +606,9 @@ void CodeEditor::onPrefsChanged( const QString &name ){
         _isHighlightWord = prefs->getBool("highlightWord");
 
         if(_isHighlightLine != hl || _isHighlightWord != hw) {
-            flushExtraSels();
+            flushExtraSelections();
             if(_isHighlightLine)
-                updateRowSelection(this);
+                updateRowSelection();
         }
 
         QColor bg = prefs->getColor( "backgroundColor" );
@@ -688,7 +701,7 @@ void CodeEditor::onCursorPositionChanged(){
         int areaHeight = rect().height();
         int n = (areaHeight/bheight)+2;
         int i = 0;
-        flushWordsExtraSels();
+        flushWordsExtraSelections();
         QColor bg = Theme::selWordColor();
         len = _extraSelWord.length();
         int count = 0;
@@ -705,7 +718,7 @@ void CodeEditor::onCursorPositionChanged(){
                     QTextEdit::ExtraSelection sel;
                     sel.format.setBackground(bg);
                     sel.cursor = cursor;
-                    appendExtraSels(sel, this);
+                    addExtraSelections(sel);
                     ++count;
                 }
                 p += len;
@@ -715,7 +728,7 @@ void CodeEditor::onCursorPositionChanged(){
             b = b.next();
         }
         //if(count < 2)
-        //    flushWordsExtraSels();
+        //    flushWordsExtraSelections();
     }
 
 }
@@ -1176,8 +1189,18 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event) {
 }
 
 void CodeEditor::mousePressEvent(QMouseEvent *e) {
-    if( ( (e->button() & Qt::LeftButton) && (e->modifiers() & Qt::ControlModifier) ) || (e->button() & Qt::MiddleButton) ) {
-        CodeItem *item = _scope.item;
+    bool ctrl = (e->modifiers() & Qt::ControlModifier);
+    bool alt = (e->modifiers() & Qt::AltModifier);
+    bool leftmouse = (e->button() & Qt::LeftButton);
+    bool middlemouse = (e->button() & Qt::MiddleButton);
+    if( !alt && ( ( ctrl && leftmouse) || middlemouse ) ) {
+        CodeScope cs;
+        if(middlemouse) {
+            cs = codescopeForTextCursor(cursorForPosition(e->pos()));
+        } else {
+            cs = _scope;
+        }
+        CodeItem *item = cs.item;
         if(item) {
             if(!item->isKeyword()) {
                 QTextCursor cursor = textCursor();
@@ -1218,58 +1241,56 @@ void CodeEditor::showToolTip(QPoint pos, QString s, bool nowrap) {
     QToolTip::showText(pos, s);
 }
 
-void CodeEditor::mouseMoveEvent(QMouseEvent *e) {
-    bool sel = textCursor().hasSelection();
-    if( !sel ) {
-        bool ctrl = (e->modifiers() & Qt::ControlModifier);
-        QTextCursor cursor = cursorForPosition(e->pos());
+CodeScope CodeEditor::codescopeForTextCursor(QTextCursor cursor, bool showStyle) {
+    if(showStyle) {
         cursor.select(QTextCursor::WordUnderCursor);
-        flushExtraSels();
+        flushExtraSelections();
         QTextBlock block = cursor.block();
-        if( ctrl && block.isValid() ){
+        if( block.isValid() ){
             QTextEdit::ExtraSelection selection;
             selection.format.setForeground( (Theme::isDark() ? QColor(250,250,250) : QColor(0,0,255)) );
             selection.format.setFontUnderline( true );
             selection.format.setFontWeight( QFont::Bold );
             selection.cursor = cursor;
-            extraSels.append( selection );
+            addExtraSelections(selection);
         }
-        setExtraSelections( extraSels );
-        extraSelsEditor = this;
-        QString word = cursor.selectedText();
+    }
+    QString word = cursor.selectedText();
 
-        if( !word.isEmpty() ) {
-            QString tip = "";
-            if(_scope.ident == word) {
-                tip = _scope.toolTip;
-                if(ctrl && !tip.isEmpty()) {
-                    showToolTip(e->globalPos(), tip);
-                } else {
-                    QToolTip::hideText();
-                }
-                return;
-            }
-
-            // cursor.setPosition(cursor.selectionEnd());
-            // setTextCursor(cursor);
-
+    if( !word.isEmpty() ) {
+        if(_scope.ident != word) {
             CodeItem *item = CodeAnalyzer::itemKeyword(word);
             if(!item) {
                 item = CodeAnalyzer::findInScope(cursor.block(), cursor.positionInBlock(), 0, true);
             }
-            if(item) tip = CodeAnalyzer::toolTip(item);
-            if(ctrl && !tip.isEmpty()) {
-                showToolTip(e->globalPos(), tip);
-            } else {
-                QToolTip::hideText();
-            }
+            if(item) _scope.toolTip = CodeAnalyzer::toolTip(item);
             _scope.ident = word;
-            _scope.toolTip = tip;
             _scope.item = item;
+        }
+        return _scope;
+    }
+    _scope.flush();
+    return _scope;
+}
+
+void CodeEditor::mouseMoveEvent(QMouseEvent *e) {
+    bool sel = textCursor().hasSelection();
+    bool ctrl = (e->modifiers() & Qt::ControlModifier);
+    bool alt = (e->modifiers() & Qt::AltModifier);
+
+    if( !sel && ctrl && !alt) {
+        QTextCursor cursor = cursorForPosition(e->pos());
+        CodeScope cur = codescopeForTextCursor(cursor, true);
+        if(!cur.isEmpty()) {
+            if(!QGuiApplication::overrideCursor()) QGuiApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
+            if(!cur.toolTip.isEmpty()) showToolTip(e->globalPos(), QString::number(cursor.blockNumber()+1) + ": " + cur.toolTip);
+        } else {
+
+            QGuiApplication::restoreOverrideCursor();
+            QToolTip::hideText();
         }
         return;
     }
-    //QToolTip::hideText();
     QPlainTextEdit::mouseMoveEvent(e);
 
 }
@@ -1284,10 +1305,11 @@ void CodeEditor::resizeEvent(QResizeEvent *e) {
 void CodeEditor::keyReleaseEvent( QKeyEvent *e ) {
     //highlightLine( textCursor().blockNumber(), HlCaretRow );
     if(e->key() == Qt::Key_Control) {
-        flushExtraSels();
+        flushExtraSelections();
+        QGuiApplication::restoreOverrideCursor();
         QToolTip::hideText();
     }
-    QGuiApplication::restoreOverrideCursor();
+
 }
 
 void CodeEditor::commentUncommentBlock() {
@@ -1506,6 +1528,7 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     int key = e->key();
     bool ctrl = (e->modifiers() & Qt::ControlModifier);
     bool shift = (e->modifiers() & Qt::ShiftModifier);
+    bool alt = (e->modifiers() & Qt::AltModifier);
 
     //escape
     if(key == Qt::Key_Escape && !aucompIsVisible()) {
@@ -1586,52 +1609,52 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     }
 
     //autocomplete for "",'',(),[]
-if(Prefs::prefs()->getBool("AutoBracket")==true){
-    QString evtxt = e->text();
-    bool k1 = (evtxt == "\"");
-    bool k2 = false;//(evtxt == "'");
-    bool k3 = (evtxt == "(");
-    bool k4 = (evtxt == "[");
+    if(Prefs::prefs()->getBool("AutoBracket")==true) {
+        QString evtxt = e->text();
+        bool k1 = (evtxt == "\"");
+        bool k2 = false;//(evtxt == "'");
+        bool k3 = (evtxt == "(");
+        bool k4 = (evtxt == "[");
 
-    if(k1 || k2 || k3 || k4 ) {
-        QString s = block.text();
-        int len = s.length();
-        int p = cursor.positionInBlock();
-        QChar c1, c2;
-        if(p > 0)
-            c1 = s.at(p-1);
-        if(p < len)
-            c2 = s.at(p);
-        bool skip = false;
-        if(!c1.isNull()) {
-            skip = (k1 && c1 == '\"') || (k2 && c1 == 39);
+        if(k1 || k2 || k3 || k4 ) {
+            QString s = block.text();
+            int len = s.length();
+            int p = cursor.positionInBlock();
+            QChar c1, c2;
+            if(p > 0)
+                c1 = s.at(p-1);
+            if(p < len)
+                c2 = s.at(p);
+            bool skip = false;
+            if(!c1.isNull()) {
+                skip = (k1 && c1 == '\"') || (k2 && c1 == 39);
+            }
+            if(k1) {//calc quotes count
+                int i = -1, cnt = 0;
+                while( (i = s.indexOf("\"", i+1)) >= 0)
+                    ++cnt;
+                skip |= (cnt % 2 == 1);
+            }
+            if(!skip && !c2.isNull()) {
+                skip = (k1 && c2 == '\"') || (k2 && c2 == 39) || (k3 && c2 == ')') || (k4 && c2 == ']');
+                skip |= isIdent(c2);
+            }
+            if(!skip) {
+                if(k1)
+                    insertPlainText("\"\"");
+                else if(k2)
+                    insertPlainText("''");
+                else if(k3)
+                    insertPlainText("()");
+                else if(k4)
+                    insertPlainText("[]");
+                cursor.setPosition(cursor.position()-1);
+                setTextCursor(cursor);
+                e->accept();
+                return;
+            }
         }
-        if(k1) {//calc quotes count
-            int i = -1, cnt = 0;
-            while( (i = s.indexOf("\"", i+1)) >= 0)
-                ++cnt;
-            skip |= (cnt % 2 == 1);
-        }
-        if(!skip && !c2.isNull()) {
-            skip = (k1 && c2 == '\"') || (k2 && c2 == 39) || (k3 && c2 == ')') || (k4 && c2 == ']');
-            skip |= isIdent(c2);
-        }
-        if(!skip) {
-            if(k1)
-                insertPlainText("\"\"");
-            else if(k2)
-                insertPlainText("''");
-            else if(k3)
-                insertPlainText("()");
-            else if(k4)
-                insertPlainText("[]");
-            cursor.setPosition(cursor.position()-1);
-            setTextCursor(cursor);
-            e->accept();
-            return;
-        }
-    }
-    //Disabled in options so do nothing
+        //Disabled in options so do nothing
     }
 
 
@@ -1647,11 +1670,14 @@ if(Prefs::prefs()->getBool("AutoBracket")==true){
         return;
     }
 
-    //
-    if( ctrl && this->underMouse() ) {
-        QGuiApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
-    }
-
+    // override mouse cursor
+    // if(ctrl) {
+    //     if( !alt && this->underMouse() ) {
+    //         QGuiApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
+    //     } else if( key == Qt::Key_Alt ) {
+    //         QGuiApplication::restoreOverrideCursor();
+    //     }
+    // }
 
     //select word in autocomplete list
     if( aucompIsVisible()) {
@@ -1674,7 +1700,7 @@ if(Prefs::prefs()->getBool("AutoBracket")==true){
 
     //highlightLine( textCursor().blockNumber(), HlCaretRow );
 
-   flushExtraSels();
+   flushExtraSelections();
 
     bool checkNew = false;
 
@@ -1763,7 +1789,7 @@ if(Prefs::prefs()->getBool("AutoBracket")==true){
     }
     else if( key==Qt::Key_Enter || key==Qt::Key_Return ){
         //auto indent
-        if( !hasSel ){
+        if( !hasSel ) {
             int i;
             QString text = block.text();
             for( i = 0 ; i < cursor.positionInBlock() && text[i] <= ' ' ; ++i ){}

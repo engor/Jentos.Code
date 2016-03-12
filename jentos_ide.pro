@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     codeanalyzer.cpp \
     tabwidgetdrop.cpp \
     proc.cpp \
-    theme.cpp
+    theme.cpp \
+    consolelog.cpp
 
 HEADERS  += mainwindow.h \
     codeeditor.h \
@@ -46,7 +47,8 @@ HEADERS  += mainwindow.h \
     codeanalyzer.h \
     tabwidgetdrop.h \
     proc.h \
-    theme.h
+    theme.h \
+    consolelog.h
 
 RESOURCES += \
     resources.qrc \
