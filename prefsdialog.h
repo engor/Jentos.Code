@@ -29,6 +29,7 @@ public:
     void readSettings();
     void writeSettings();
 
+    void openPathSection();
     int exec();
 
 public slots:

@@ -57,6 +57,7 @@ public:
     static void fillTree();
     static void fillListFromScope(QListWidget *l, const QString &ident, CodeScope scope );
     static void allClasses(QString ident, bool addSelf, bool addBase, QList<CodeItem *> &list, CodeItem *item=0);
+    static void allClasses(QList<CodeItem*> &targetList);
     static bool checkScopeForPrivate(CodeItem *item, CodeItem *scopeItem);
     static void tryToAddItemToList(CodeItem *item, CodeItem *scopeItem, QListWidget *list);
     //
@@ -104,6 +105,8 @@ public:
     static QStandardItemModel* listItemModel();
     static QStandardItem* itemInTree( const QModelIndex &index );
     static ItemWithData* itemInList( const QModelIndex &index );
+    static ItemWithData* itemInList(int row);
+
     static void linkCodeItemWithStandardItem(CodeItem *i, QStandardItem *si);
     static CodeItem* getCodeItemFromStandardItem(QStandardItem *si);
     static QString fullStandardItemPath(QStandardItem *si);
@@ -125,6 +128,7 @@ public:
     }
     static void begin();
     static void end();
+
 
 
 private:

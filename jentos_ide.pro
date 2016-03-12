@@ -12,7 +12,8 @@ FORMS    += mainwindow.ui \
     finddialog.ui \
     prefsdialog.ui \
     findinfilesdialog.ui \
-    previewhtml5.ui
+    previewhtml5.ui \
+    formaddproperty.ui
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -32,7 +33,8 @@ SOURCES += main.cpp\
     proc.cpp \
     theme.cpp \
     previewhtml5.cpp \
-    customcombobox.cpp
+    customcombobox.cpp \
+    formaddproperty.cpp
 
 HEADERS  += mainwindow.h \
     codeeditor.h \
@@ -51,16 +53,17 @@ HEADERS  += mainwindow.h \
     proc.h \
     theme.h \
     previewhtml5.h \
-    customcombobox.h
+    customcombobox.h \
+    formaddproperty.h
 
-RESOURCES += myresource.qrc \
+RESOURCES += \
     resources.qrc
 #    resources.qrc
 
-TARGET = JentosIDE
+TARGET = Jentos.Code
 #OK, this seems to prevent latest Windows QtCreator from being able to run Ted (builds fine).
 #Solved by using qtcreator-2.4.1
-DESTDIR = jentos_exec
+DESTDIR = exec
 
 win32{
         RC_FILE = appicon.rc

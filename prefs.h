@@ -16,6 +16,8 @@ class Prefs : public QObject{
 
 public:
 
+    bool isValidMonkeyPath;
+
     void setDefaults();
     void setValue( const QString &name,const QVariant &value );
     bool contains(const QString &name) {

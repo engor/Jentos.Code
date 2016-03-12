@@ -1494,6 +1494,23 @@ void CodeAnalyzer::allClasses(QString identType, bool addSelf, bool addBase, QLi
     }
 }
 
+void CodeAnalyzer::allClasses(QList<CodeItem*> &targetList) {
+    QList<CodeItem*> items;
+    items = mapUser()->values();
+    foreach (CodeItem *i, items){
+        if (i->isClassOrInterface()) {
+            targetList.append(i);
+        }
+    }
+    items = mapMonkey()->values();
+    foreach (CodeItem *i, items){
+        if (i->isClassOrInterface()) {
+            targetList.append(i);
+        }
+    }
+}
+
+
 void CodeAnalyzer::fillTree(/*QStandardItemModel *im*/) {
 
     _codeItemLinks.clear();
@@ -1598,6 +1615,10 @@ QStandardItem* CodeAnalyzer::itemInTree( const QModelIndex &index ) {
 
 ItemWithData* CodeAnalyzer::itemInList( const QModelIndex &index ) {
     return dynamic_cast<ItemWithData*>(CodeAnalyzer::listItemModel()->itemFromIndex( index ));
+}
+
+ItemWithData* CodeAnalyzer::itemInList( int row ) {
+    return dynamic_cast<ItemWithData*>(CodeAnalyzer::listItemModel()->item(row));
 }
 
 QString CodeAnalyzer::toolTip(CodeItem *item) {

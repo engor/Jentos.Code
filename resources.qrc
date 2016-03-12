@@ -22,16 +22,13 @@
         <file>code/global.png</file>
         <file>ui/tree_close.png</file>
         <file>ui/tree_open.png</file>
-        <file>icons/Clear.png</file>
         <file>code/class.png</file>
-        <file>icons/Sort.png</file>
         <file>ui/chb.png</file>
         <file>ui/chb_.png</file>
         <file>ui/splash.png</file>
         <file>ui/toolbar_handle.png</file>
         <file>ui/toolbar_separator.png</file>
         <file>txt/home.html</file>
-        <file>icons/Options.png</file>
         <file>txt/keywords.txt</file>
         <file>icons/light/Back.png</file>
         <file>icons/light/Build.png</file>
@@ -57,7 +54,6 @@
         <file>icons/light/CloseSearch.png</file>
         <file>icons/light/Fold.png</file>
         <file>icons/light/Project.png</file>
-        <file>icons/light/ShowVars.png</file>
         <file>icons/light/Unfold.png</file>
         <file>icons/dark/Back.png</file>
         <file>icons/dark/Bookmark.png</file>
@@ -79,7 +75,6 @@
         <file>icons/dark/Paste.png</file>
         <file>icons/dark/Project.png</file>
         <file>icons/dark/Save.png</file>
-        <file>icons/dark/ShowVars.png</file>
         <file>icons/dark/Sort.png</file>
         <file>icons/dark/Step.png</file>
         <file>icons/dark/Step-In.png</file>
@@ -89,5 +84,29 @@
         <file>txt/android.css</file>
         <file>icons/light/Options.png</file>
         <file>icons/light/lock.png</file>
+        <file>ui/app_icon.png</file>
+        <file>icons/dark/Analyze.png</file>
+        <file>icons/dark/Details.png</file>
+        <file>icons/dark/Inherit.png</file>
+        <file>icons/dark/lock.png</file>
+        <file>icons/dark/NewTemp.png</file>
+        <file>icons/dark/Vars.png</file>
+        <file>icons/light/Analyze.png</file>
+        <file>icons/light/Details.png</file>
+        <file>icons/light/Inherit.png</file>
+        <file>icons/light/NewTemp.png</file>
+        <file>icons/light/Vars.png</file>
+        <file>icons/project-tree/data.png</file>
+        <file>icons/project-tree/folder.png</file>
+        <file>icons/project-tree/font.png</file>
+        <file>icons/project-tree/image.png</file>
+        <file>icons/project-tree/monkey.png</file>
+        <file>icons/project-tree/music.png</file>
+        <file>icons/project-tree/others.png</file>
+        <file>icons/project-tree/text.png</file>
+        <file>icons/dark/Redo.png</file>
+        <file>icons/dark/Undo.png</file>
+        <file>icons/light/Redo.png</file>
+        <file>icons/light/Undo.png</file>
     </qresource>
 </RCC>

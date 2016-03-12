@@ -101,6 +101,8 @@ public:
     QString findUsages(QTreeWidget *tree);
     void replaceInRange(int from, int to, const QString &text);
 
+    void showDialogAddProperty();
+
 public slots:
 
     void undo();

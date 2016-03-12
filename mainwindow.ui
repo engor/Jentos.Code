@@ -6,12 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1015</width>
-    <height>695</height>
+    <width>1255</width>
+    <height>758</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Jentos IDE 1.3.1</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/ui/app_icon.png</normaloff>:/ui/app_icon.png</iconset>
   </property>
   <property name="documentMode">
    <bool>false</bool>
@@ -451,6 +455,9 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionGoBack"/>
+   <addaction name="actionGoForward"/>
+   <addaction name="separator"/>
    <addaction name="actionNew"/>
    <addaction name="actionOpen"/>
    <addaction name="actionClose"/>
@@ -470,10 +477,11 @@
    <addaction name="actionEditCut"/>
    <addaction name="actionEditCopy"/>
    <addaction name="actionEditPaste"/>
-   <addaction name="actionEditFind"/>
    <addaction name="separator"/>
-   <addaction name="actionGoBack"/>
-   <addaction name="actionGoForward"/>
+   <addaction name="actionEditUndo"/>
+   <addaction name="actionEditRedo"/>
+   <addaction name="separator"/>
+   <addaction name="actionEditFind"/>
   </widget>
   <widget class="QToolBar" name="buildToolBar">
    <property name="windowTitle">
@@ -509,13 +517,13 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1015</width>
+     <width>1255</width>
      <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>FILE</string>
     </property>
     <widget class="QMenu" name="menuRecent_Files">
      <property name="title">
@@ -543,7 +551,7 @@
    </widget>
    <widget class="QMenu" name="menuBuild">
     <property name="title">
-     <string>Build</string>
+     <string>BUILD</string>
     </property>
     <addaction name="actionBuildBuild"/>
     <addaction name="actionBuildRun"/>
@@ -562,7 +570,7 @@
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
-     <string>Edit</string>
+     <string>EDIT</string>
     </property>
     <addaction name="actionEditUndo"/>
     <addaction name="actionEditRedo"/>
@@ -576,7 +584,7 @@
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>View</string>
+     <string>VIEW</string>
     </property>
     <widget class="QMenu" name="menuToolbars">
      <property name="title">
@@ -605,6 +613,8 @@
     <addaction name="menuToolbars"/>
     <addaction name="menuDockedPanels"/>
     <addaction name="separator"/>
+    <addaction name="actionAddProperty"/>
+    <addaction name="separator"/>
     <addaction name="actionToggleBookmark"/>
     <addaction name="actionPreviousBookmark"/>
     <addaction name="actionNextBookmark"/>
@@ -619,7 +629,7 @@
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>Help</string>
+     <string>HELP</string>
     </property>
     <addaction name="actionHelpQuickHelp"/>
     <addaction name="actionHelpHome"/>
@@ -635,7 +645,7 @@
    </widget>
    <widget class="QMenu" name="menuWindow">
     <property name="title">
-     <string>Window</string>
+     <string>WINDOW</string>
     </property>
     <widget class="QMenu" name="menuThemes">
      <property name="enabled">
@@ -659,7 +669,7 @@
    </widget>
    <widget class="QMenu" name="menuFormat">
     <property name="title">
-     <string>Format</string>
+     <string>FORMAT</string>
     </property>
     <addaction name="actionFormatAutoformat_All"/>
     <addaction name="separator"/>
@@ -668,7 +678,7 @@
    </widget>
    <widget class="QMenu" name="menuFind_2">
     <property name="title">
-     <string>Find</string>
+     <string>FIND</string>
     </property>
     <addaction name="actionEditFind"/>
     <addaction name="actionEditFindPrevious"/>
@@ -838,6 +848,79 @@
         <property name="bottomMargin">
          <number>2</number>
         </property>
+        <item row="0" column="0">
+         <widget class="QPushButton" name="toolButtonShowVariables">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>28</width>
+            <height>24</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>Show Variables</string>
+          </property>
+          <property name="icon">
+           <iconset resource="resources.qrc">
+            <normaloff>:/icons/light/Vars.png</normaloff>:/icons/light/Vars.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>22</width>
+            <height>22</height>
+           </size>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="flat">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QPushButton" name="toolButtonSortByName">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>28</width>
+            <height>24</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>Sorting</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="resources.qrc">
+            <normaloff>:/icons/light/Sort.png</normaloff>:/icons/light/Sort.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>22</width>
+            <height>22</height>
+           </size>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="flat">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="4">
          <spacer name="horizontalSpacer">
           <property name="orientation">
@@ -851,56 +934,6 @@
           </property>
          </spacer>
         </item>
-        <item row="0" column="0">
-         <widget class="QPushButton" name="toolButtonShowVariables">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>30</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>Show Variables</string>
-          </property>
-          <property name="text">
-           <string>V</string>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-          <property name="flat">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QPushButton" name="toolButtonSortByName">
-          <property name="maximumSize">
-           <size>
-            <width>30</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>Sorting</string>
-          </property>
-          <property name="text">
-           <string>S</string>
-          </property>
-          <property name="checkable">
-           <bool>true</bool>
-          </property>
-          <property name="flat">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="1">
          <widget class="QPushButton" name="toolButtonShowInherited">
           <property name="sizePolicy">
@@ -911,15 +944,63 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>30</width>
-            <height>16777215</height>
+            <width>28</width>
+            <height>24</height>
            </size>
           </property>
           <property name="toolTip">
            <string>Show Inherited Members</string>
           </property>
           <property name="text">
-           <string>I</string>
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="resources.qrc">
+            <normaloff>:/icons/light/Inherit.png</normaloff>:/icons/light/Inherit.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>22</width>
+            <height>22</height>
+           </size>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="flat">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="QPushButton" name="pushButtonClassSummary">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>28</width>
+            <height>24</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>Show Class/Interface Summary</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="resources.qrc">
+            <normaloff>:/icons/light/Details.png</normaloff>:/icons/light/Details.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>22</width>
+            <height>22</height>
+           </size>
           </property>
           <property name="checkable">
            <bool>true</bool>
@@ -1274,8 +1355,8 @@ Don't change documents between find usages and rename</string>
   </widget>
   <action name="actionOpen">
    <property name="icon">
-    <iconset resource="myresource.qrc">
-     <normaloff>:/icons/circle/Open.png</normaloff>:/icons/circle/Open.png</iconset>
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/light/Open.png</normaloff>:/icons/light/Open.png</iconset>
    </property>
    <property name="text">
     <string>Open File...</string>
@@ -1325,8 +1406,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionBuildRun">
    <property name="icon">
-    <iconset resource="myresource.qrc">
-     <normaloff>:/icons/circle/Build-Run.png</normaloff>:/icons/circle/Build-Run.png</iconset>
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/light/Build-Run.png</normaloff>:/icons/light/Build-Run.png</iconset>
    </property>
    <property name="text">
     <string>Build and Run</string>
@@ -1340,8 +1421,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="myresource.qrc">
-     <normaloff>:/icons/circle/New.png</normaloff>:/icons/circle/New.png</iconset>
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/light/New.png</normaloff>:/icons/light/New.png</iconset>
    </property>
    <property name="text">
     <string>New (choose path)...</string>
@@ -1353,7 +1434,7 @@ Don't change documents between find usages and rename</string>
   <action name="actionPrefs">
    <property name="icon">
     <iconset resource="resources.qrc">
-     <normaloff>:/icons/Options.png</normaloff>:/icons/Options.png</iconset>
+     <normaloff>:/icons/light/Options.png</normaloff>:/icons/light/Options.png</iconset>
    </property>
    <property name="text">
     <string>Options...</string>
@@ -1375,11 +1456,14 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionKill">
    <property name="icon">
-    <iconset resource="myresource.qrc">
-     <normaloff>:/icons/circle/Stop.png</normaloff>:/icons/circle/Stop.png</iconset>
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/light/Stop.png</normaloff>:/icons/light/Stop.png</iconset>
    </property>
    <property name="text">
     <string>Kill</string>
+   </property>
+   <property name="toolTip">
+    <string>Kill Process</string>
    </property>
   </action>
   <action name="actionStep_In">
@@ -1413,6 +1497,10 @@ Don't change documents between find usages and rename</string>
    </property>
   </action>
   <action name="actionEditUndo">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/light/Undo.png</normaloff>:/icons/light/Undo.png</iconset>
+   </property>
    <property name="text">
     <string>Undo</string>
    </property>
@@ -1421,6 +1509,10 @@ Don't change documents between find usages and rename</string>
    </property>
   </action>
   <action name="actionEditRedo">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/light/Redo.png</normaloff>:/icons/light/Redo.png</iconset>
+   </property>
    <property name="text">
     <string>Redo</string>
    </property>
@@ -1496,8 +1588,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionHelpBack">
    <property name="icon">
-    <iconset>
-     <normaloff>:/icons/Back.png</normaloff>:/icons/Back.png</iconset>
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/light/Back.png</normaloff>:/icons/light/Back.png</iconset>
    </property>
    <property name="text">
     <string>Back</string>
@@ -1505,8 +1597,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionHelpForward">
    <property name="icon">
-    <iconset>
-     <normaloff>:/icons/Forward.png</normaloff>:/icons/Forward.png</iconset>
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/light/Forward.png</normaloff>:/icons/light/Forward.png</iconset>
    </property>
    <property name="text">
     <string>Forward</string>
@@ -1583,7 +1675,7 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionOpenProject">
    <property name="icon">
-    <iconset resource="myresource.qrc">
+    <iconset>
      <normaloff>:/icons/circle/Project.png</normaloff>:/icons/circle/Project.png</iconset>
    </property>
    <property name="text">
@@ -1626,11 +1718,6 @@ Don't change documents between find usages and rename</string>
     <string>Ctrl+Shift+L</string>
    </property>
   </action>
-  <action name="action_empty">
-   <property name="text">
-    <string>&lt;empty&gt;</string>
-   </property>
-  </action>
   <action name="actionFileNext">
    <property name="text">
     <string>Next Tab</string>
@@ -1651,8 +1738,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionBuildBuild">
    <property name="icon">
-    <iconset resource="myresource.qrc">
-     <normaloff>:/icons/circle/Build.png</normaloff>:/icons/circle/Build.png</iconset>
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/light/Build.png</normaloff>:/icons/light/Build.png</iconset>
    </property>
    <property name="text">
     <string>Build</string>
@@ -1772,8 +1859,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionGoBack">
    <property name="icon">
-    <iconset resource="myresource.qrc">
-     <normaloff>:/icons/circle/Back.png</normaloff>:/icons/circle/Back.png</iconset>
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/light/Back.png</normaloff>:/icons/light/Back.png</iconset>
    </property>
    <property name="text">
     <string>Go Back</string>
@@ -1784,8 +1871,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionGoForward">
    <property name="icon">
-    <iconset resource="myresource.qrc">
-     <normaloff>:/icons/circle/Forward.png</normaloff>:/icons/circle/Forward.png</iconset>
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/light/Forward.png</normaloff>:/icons/light/Forward.png</iconset>
    </property>
    <property name="text">
     <string>Go Forward</string>
@@ -1803,6 +1890,10 @@ Don't change documents between find usages and rename</string>
    </property>
   </action>
   <action name="actionCodeAnalyze">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/light/Analyze.png</normaloff>:/icons/light/Analyze.png</iconset>
+   </property>
    <property name="text">
     <string>Analyze</string>
    </property>
@@ -1933,8 +2024,8 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionNew_temp">
    <property name="icon">
-    <iconset resource="myresource.qrc">
-     <normaloff>:/icons/circle/NewTemp.png</normaloff>:/icons/circle/NewTemp.png</iconset>
+    <iconset resource="resources.qrc">
+     <normaloff>:/icons/light/NewTemp.png</normaloff>:/icons/light/NewTemp.png</iconset>
    </property>
    <property name="text">
     <string>New (temp)</string>
@@ -1979,9 +2070,19 @@ Don't change documents between find usages and rename</string>
     <string>Uncomment Block</string>
    </property>
   </action>
-  <action name="actionSsfsf">
+  <action name="actionAddProperty">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/code/property.png</normaloff>:/code/property.png</iconset>
+   </property>
    <property name="text">
-    <string>ssfsf</string>
+    <string>Add Property...</string>
+   </property>
+   <property name="toolTip">
+    <string>Add new Property at cursor position</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+I</string>
    </property>
   </action>
   <action name="actionUsagesSelectAll">
@@ -2044,7 +2145,7 @@ Don't change documents between find usages and rename</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Monokai Dark Soda(Sublime Text)</string>
+    <string>Monokai Dark Soda</string>
    </property>
    <property name="toolTip">
     <string>Monokai-Dark-Soda</string>
@@ -2116,7 +2217,6 @@ Don't change documents between find usages and rename</string>
  </tabstops>
  <resources>
   <include location="resources.qrc"/>
-  <include location="myresource.qrc"/>
  </resources>
  <connections>
   <connection>

@@ -41,6 +41,11 @@ void PrefsDialog::writeSettings(){
     set->endGroup();
 }
 
+void PrefsDialog::openPathSection()
+{
+    _ui->toolBox->setCurrentIndex(3);
+}
+
 int PrefsDialog::exec(){
 
     if( !_used ){
@@ -186,8 +191,12 @@ void PrefsDialog::onThemeChanged(int index) {
         _mainwnd->onThemeAndroidStudio();
     else if(index == 1)
         _mainwnd->onThemeNetBeans();
-    else
+    else if(index == 2)
         _mainwnd->onThemeQtCreator();
+    else if(index == 3)
+        _mainwnd->onThemeMonokaiDarkSoda();
+    else if(index == 4)
+        _mainwnd->onThemeLightTable();
 }
 
 void PrefsDialog::onShowHelpInDockChanged() {

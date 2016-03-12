@@ -24,7 +24,7 @@ See LICENSE.TXT for licensing terms.
 #include "theme.h"
 #include "customcombobox.h"
 #include <QHostInfo>
-
+#include "formaddproperty.h"
 
 #define SETTINGS_VERSION 2
 
@@ -247,13 +247,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
     _dirPopupMenu->addAction( _ui->actionRenameFile );
     _dirPopupMenu->addAction( _ui->actionDeleteFile );
 
-    _sourcePopupMenu = new QMenu;
-    _sourcePopupMenu->addAction( _ui->actionView_Class_Summary );
-
     _editorPopupMenu = new QMenu;
-    _editorPopupMenu->addAction( _ui->actionBuildRun );
-    _editorPopupMenu->addSeparator();
-    _editorPopupMenu->addAction( _ui->actionBuildBuild );
+    //_editorPopupMenu->addAction( _ui->actionBuildRun );
+    //_editorPopupMenu->addSeparator();
+    //_editorPopupMenu->addAction( _ui->actionBuildBuild );
+    _editorPopupMenu->addAction( _ui->actionAddProperty );
     _editorPopupMenu->addSeparator();
     _editorPopupMenu->addAction( _ui->actionFind_Usages );
     _editorPopupMenu->addSeparator();
@@ -278,10 +276,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
     _prefsDialog = new PrefsDialog( this, this );
     _prefsDialog->readSettings();
 
-    //_findDialog=new FindDialog( this );
-    //_findDialog->readSettings();
-    //connect( _findDialog,SIGNAL(findReplace(int)),SLOT(onFindReplace(int)) );
-
     _findInFilesDialog=new FindInFilesDialog( 0 );
     _findInFilesDialog->readSettings();
     connect( _findInFilesDialog,SIGNAL(showCode(QString,int,int)),SLOT(onShowCode(QString,int,int)) );
@@ -305,33 +299,44 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
 
     updateCodeViews(_ui->codeTreeView, _ui->sourceListView);
 
-    //_ui->sourceListView->
-    _ui->sourceListView->setContextMenuPolicy( Qt::CustomContextMenu );
-    connect( _ui->sourceListView,SIGNAL(customContextMenuRequested(const QPoint&)),SLOT(onSourceMenu(const QPoint&)) );
-
     _ui->usagesTabWidget->setContextMenuPolicy( Qt::CustomContextMenu );
     connect( _ui->usagesTabWidget,SIGNAL(customContextMenuRequested(const QPoint&)),SLOT(onUsagesMenu(const QPoint&)) );
     connect( _ui->usagesTabWidget,SIGNAL(tabCloseRequested(int)),SLOT(onCloseUsagesTab(int)) );
     _ui->frameUsagesRename->hide();
 
-    //_ui->menuStyles->hide();
-    /*Prefs *p = Prefs::prefs();
-    QString style = p->getString("style");
-    QAction *a = new QAction("Default", _ui->menuStyles);
-    _ui->menuStyles->addAction(a);
-    a->setCheckable(true);
-    a->setChecked( (style == "Default") );
-    a->setObjectName("Default");
-    connect(a,SIGNAL(toggled(bool)),SLOT(onStyleChanged(bool)));
-    foreach (QString s, QStyleFactory::keys()) {
-        a = new QAction(s, _ui->menuStyles);
-        _ui->menuStyles->addAction(a);
-        a->setCheckable(true);
-        a->setChecked( (style == s) );
-        a->setObjectName(s);
-        connect(a,SIGNAL(toggled(bool)),SLOT(onStyleChanged(bool)));
+    // some checkers here
+    QString trans;
+    bool isValid = isValidMonkeyPath(_monkeyPath, trans);
+
+    if (isValid) {
+        initKeywords();
     }
-    qApp->setStyle(QStyleFactory::create(style));*/
+
+    QSettings *set = Prefs::settings();
+    int n = set->beginReadArray( "openDocuments" );
+    QStringList list;
+    for (int i = 0; i < n; ++i ) {
+        set->setArrayIndex(i);
+        QString path = fixPath( set->value( "path" ).toString() );
+        list.append(path);
+    }
+    set->endArray();
+
+    foreach (QString s, list) {
+        if (isUrl(s)) {
+            openFile( s,false );
+        } else if (QFile::exists(s)) {
+            CodeAnalyzer::flushFileModified(s);
+            openFile( s,false );
+        }
+    }
+
+    Prefs *p = Prefs::prefs();
+    if (p->getBool("updates")) {
+        QTimer::singleShot(5000, this, SLOT(onCheckForUpdatesSilent()));
+    }
+    p->isValidMonkeyPath = isValid;
+
 }
 
 MainWindow::~MainWindow(){
@@ -343,7 +348,6 @@ MainWindow::~MainWindow(){
     delete _fileImagePopupMenu;
     delete _fileMonkeyPopupMenu;
     delete _dirPopupMenu;
-    delete _sourcePopupMenu;
     delete _editorPopupMenu;
     delete _usagesPopupMenu;
 
@@ -363,55 +367,8 @@ void MainWindow::onStyleChanged(bool b) {
     qApp->setStyle(QStyleFactory::create(style));*/
 }
 
-void MainWindow::showEvent(QShowEvent * event) {
-    QSplashScreen *splash = 0;
-    QTime t;
-    int msec = t.msec();
-    QPixmap pixmap(":ui/splash.png");
-    splash = new QSplashScreen(pixmap);
-    splash->show();
-
-    QString tr;
-    bool isValid = isValidMonkeyPath(_monkeyPath,tr);
-
-    if( isValid ) {
-        initKeywords();
-    }
-
-    QSettings *set = Prefs::settings();
-    int n = set->beginReadArray( "openDocuments" );
-    QStringList list;
-    for( int i=0;i<n;++i ) {
-        set->setArrayIndex( i );
-        QString path = fixPath( set->value( "path" ).toString() );
-        list.append(path);
-    }
-    set->endArray();
-
-    foreach (QString s, list) {
-        if( isUrl(s) ){
-            openFile( s,false );
-        }
-        else if(QFile::exists(s)) {
-                CodeAnalyzer::flushFileModified(s);
-                openFile( s,false );
-        }
-    }
-
-    int dt = t.msec()-(msec+2000);
-    if(dt > 0)
-        QThread::msleep(dt);
-    splash->finish(this);
-
-    if( !isValid ) {
-        QMessageBox::warning( this, APP_NAME, "Invalid Monkey path!\n\nPlease select correct path from the 'File -- Options' dialog." );
-        onFilePrefs();
-    }
-
-    Prefs *p = Prefs::prefs();
-    if(p->getBool("updates")) {
-        QTimer::singleShot(5000,this,SLOT(onCheckForUpdatesSilent()));
-    }
+void MainWindow::showEvent(QShowEvent *event) {
+    QMainWindow::showEvent(event);
 }
 
 //***** private methods *****
@@ -1173,8 +1130,8 @@ void MainWindow::updateActions(){
     _ui->actionEditUndo->setEnabled( wr && _codeEditor->document()->isUndoAvailable() );
     _ui->actionEditRedo->setEnabled( wr && _codeEditor->document()->isRedoAvailable() );
 
-    _ui->actionGoBack->setEnabled( wr && _codeEditor->document()->isUndoAvailable() );
-    _ui->actionGoForward->setEnabled( wr && _codeEditor->document()->isRedoAvailable() );
+    //_ui->actionGoBack->setEnabled( wr && _codeEditor->document()->isUndoAvailable() );
+    //_ui->actionGoForward->setEnabled( wr && _codeEditor->document()->isRedoAvailable() );
 
     _ui->actionEditCut->setEnabled( wr && sel );
     _ui->actionEditCopy->setEnabled( sel );
@@ -1498,27 +1455,6 @@ void MainWindow::onProjectMenu( const QPoint &pos ){
 void MainWindow::onFileClicked( const QModelIndex &index ){
 
     if( !_projectTreeModel->isDir( index ) ) openFile( _projectTreeModel->filePath( index ),true );
-}
-
-void MainWindow::onSourceMenu( const QPoint &pos ) {
-
-    QModelIndex index = _ui->sourceListView->indexAt( pos );
-    if( !index.isValid() || index.row() != 0 ) return;
-
-    QMenu *menu = _sourcePopupMenu;
-
-    QAction *action = menu->exec( _ui->sourceListView->mapToGlobal( pos ) );
-    if( !action ) return;
-
-    if( action == _ui->actionView_Class_Summary ){
-        ItemWithData *si = CodeAnalyzer::itemInList(index);
-        CodeItem *code = si->code();//CodeAnalyzer::getCodeItemFromStandardItem(si);
-        if(code) {
-            QMessageBox m;
-            m.setText(code->summary());
-            m.exec();
-        }
-    }
 }
 
 void MainWindow::onUsagesMenu( const QPoint &pos ) {
@@ -1970,11 +1906,14 @@ void MainWindow::onFilePrevious(){
     _mainTabWidget->setCurrentIndex( i );
 }
 
-void MainWindow::onFilePrefs(){
+void MainWindow::onFilePrefs(bool openPathSection){
 
     QString mpath = _monkeyPath;
 
     _prefsDialog->setModal( true );
+
+    if (openPathSection)
+        _prefsDialog->openPathSection();
 
     _prefsDialog->exec();
 
@@ -2392,7 +2331,7 @@ void MainWindow::onLinkClicked( const QUrl &url ){
     }
     if( lstr.startsWith( "prog://" ) ){
         if(lstr == "prog://settings")
-            onFilePrefs();
+            onFilePrefs(true);
         return;
     }
     QDesktopServices::openUrl( str );
@@ -2451,23 +2390,17 @@ void MainWindow::onUnfoldAll() {
 }
 
 void MainWindow::onGoBack() {
-    if( !_codeEditor ) return;
-
-    _codeEditor->undo();
-   /* if( _codeEditor )
+    if( _codeEditor )
         _codeEditor->goBack();
     else
-        onHelpBack();*/
+        onHelpBack();
 }
 
 void MainWindow::onGoForward() {
-    if( !_codeEditor ) return;
-
-    _codeEditor->redo();
-    /*if( _codeEditor )
+    if( _codeEditor )
         _codeEditor->goForward();
     else
-        onHelpForward();*/
+        onHelpForward();
 }
 
 void MainWindow::onThemeAndroidStudio() {
@@ -2643,29 +2576,40 @@ void MainWindow::onDocsZoomChanged(int) {
     _ui->webView->setZoomFactor(_ui->zoomSlider->value()/100.0f);
 }
 
-void MainWindow::on_webView_selectionChanged()
-{
-
-}
-
-void MainWindow::on_docsDockWidget_allowedAreasChanged(const Qt::DockWidgetAreas &allowedAreas)
-{
-
-}
-
-void MainWindow::on_actionClose_all_Tabs_triggered()
-{
-
-}
-
-void MainWindow::on_actionThemeMonokaiDarkSoda_triggered()
+void MainWindow::onThemeMonokaiDarkSoda()
 {
     Theme::set("Monokai-Dark-Soda");
     updateTheme();
 }
 
-void MainWindow::on_actionThemeLightTable_triggered()
+void MainWindow::onThemeLightTable()
 {
     Theme::set("lighttable");
     updateTheme();
+}
+
+void MainWindow::on_actionAddProperty_triggered()
+{
+    if (_codeEditor != 0)
+        _codeEditor->showDialogAddProperty();
+
+}
+
+void MainWindow::on_pushButtonClassSummary_clicked()
+{
+    ItemWithData *si = CodeAnalyzer::itemInList(0);
+    QString msg;
+    if (si != 0) {
+        CodeItem *code = si->code();
+        if (code && code->isClassOrInterface()) {
+            msg = code->summary();
+        }
+    }
+    if (msg.isEmpty()) {
+        msg = "Class/Interface isn't selected in Source List.";
+    }
+    QMessageBox m;
+    m.setWindowTitle("Summary Info");
+    m.setText(msg);
+    m.exec();
 }

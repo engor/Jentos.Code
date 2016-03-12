@@ -107,7 +107,7 @@ public slots:
     void onFileSaveAll();
     void onFileNext();
     void onFilePrevious();
-    void onFilePrefs();
+    void onFilePrefs(bool openPathSection=false);
     void onFileQuit();
 
     //Edit menu
@@ -183,6 +183,9 @@ public slots:
     void onThemeAndroidStudio();
     void onThemeNetBeans();
     void onThemeQtCreator();
+    void onThemeMonokaiDarkSoda();
+    void onThemeLightTable();
+
     void onFindUsages();
 
     void onLinkClicked( const QUrl &url );
@@ -203,7 +206,6 @@ private slots:
     void onTabsMenu( const QPoint &pos );
     void onProjectMenu( const QPoint &pos );
     void onFileClicked( const QModelIndex &index );
-    void onSourceMenu( const QPoint &pos );
     void onUsagesMenu( const QPoint &pos );
 
     void onTextChanged();
@@ -219,23 +221,15 @@ private slots:
     void onStatusBarChanged(const QString &text);
     void onAutoformatAll();
 
-
     void onUsagesRename();
     void onUsagesSelectAll();
     void onUsagesUnselectAll();
 
-    void on_webView_selectionChanged();
+    void on_actionAddProperty_triggered();
 
-    void on_docsDockWidget_allowedAreasChanged(const Qt::DockWidgetAreas &allowedAreas);
-
-    void on_actionClose_all_Tabs_triggered();
-
-    void on_actionThemeMonokaiDarkSoda_triggered();
-
-    void on_actionThemeLightTable_triggered();
+    void on_pushButtonClassSummary_clicked();
 
 private:
-
 
     QNetworkAccessManager *_networkManager;
     bool _showMsgbox;
@@ -275,7 +269,6 @@ private:
     QMenu *_filePopupMenu;
     QMenu *_fileImagePopupMenu;
     QMenu *_fileMonkeyPopupMenu;
-    QMenu *_sourcePopupMenu;
     QMenu *_editorPopupMenu;
     QMenu *_usagesPopupMenu;
 

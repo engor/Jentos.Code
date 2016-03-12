@@ -11,6 +11,7 @@ See LICENSE.TXT for licensing terms.
 
 Prefs::Prefs(){
     _blockEmitPrefsChanged = false;
+    isValidMonkeyPath = false;
 
 }
 

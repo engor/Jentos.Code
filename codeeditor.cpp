@@ -15,6 +15,7 @@ See LICENSE.TXT for licensing terms.
 #include "codeanalyzer.h"
 #include "theme.h"
 #include "mainwindow.h"
+#include "formaddproperty.h"
 
 CodeEditor *extraSelsEditor;
 QList<QTextEdit::ExtraSelection> extraSels;
@@ -408,6 +409,80 @@ void CodeEditor::replaceInRange(int from, int to, const QString &text) {
     c.setPosition(to, QTextCursor::KeepAnchor);
     setTextCursor(c);
     insertPlainText(text);
+}
+
+void CodeEditor::showDialogAddProperty()
+{
+    CodeItem *item = CodeAnalyzer::scopeAt(textCursor().block());
+    if (item == 0 || !item->isClass()) {
+        QMessageBox::information(0, "Add Property", "You can add property only inside a class.\n\nBut class isn't selected\n or \ncursor is inside of method.");
+        return;
+    }
+
+    // get all classes names
+    QList<CodeItem*> targetList;
+    CodeAnalyzer::allClasses(targetList);
+
+    QStringList types;
+    types << "Bool" << "Float" << "Int" << "String";
+
+    foreach (CodeItem *i, targetList) {
+        types.append(i->ident());
+    }
+
+    // show dialog
+    FormAddProperty *form = new FormAddProperty();
+    form->fillTypes(types);
+    form->exec();
+
+    if (!form->pressOk)
+        return;
+
+    // insert text to document
+    QTextCursor cursor = textCursor();
+    QTextBlock block = cursor.block();
+    QString indent = block.text(); //expecting only spaces or tabs here - it's line indent
+
+    QString propName = form->propName, propType = form->propType, wrapName = form->wrappedName;
+    bool addWrap = form->isNeedToAddWrapped;
+    int addVariant = form->addVariant;
+
+    QString tab = CodeAnalyzer::tab();
+
+    QString getter = indent+"Method "+propName+":"+propType+"()\n"
+            +indent+tab+"Return "+wrapName+"\n"
+            +indent+"End\n";
+    QString setter = indent+"Method "+propName+":Void(value:"+propType+")\n"
+            +indent+tab+wrapName+" = value\n"
+            +indent+"End\n";
+
+    QString text;
+    if (addVariant == FormAddProperty::ADD_GETTER_THEN_SETTER) {
+        text = getter+setter;
+    } else if (addVariant == FormAddProperty::ADD_SETTER_THEN_GETTER) {
+        text = setter+getter;
+    } else if (addVariant == FormAddProperty::ADD_SETTER_ONLY) {
+        text = setter;
+    } else if (addVariant == FormAddProperty::ADD_GETTER_ONLY) {
+        text = getter;
+    }
+
+    if (addWrap) {
+        text = indent+"Field "+wrapName+":"+propType+"\n" + text;
+    }
+
+    text += "\n"+indent;
+
+    // select line - to replace selection, because our text already contains indent
+    cursor.setPosition(block.position(), QTextCursor::KeepAnchor);
+    setTextCursor(cursor);
+
+    insertPlainText(text);
+
+    // clear resources
+    targetList.clear();
+    types.clear();
+    delete form;
 }
 
 bool CodeEditor::canFindUsages() {
@@ -1537,12 +1612,12 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
         return;
     }
     //ctrl + z
-    if (ctrl && key == Qt::Key_Z){// key == 90) {
+    if (ctrl && key == Qt::Key_Z){
         undo();
         return;
     }
     //ctrl + y
-    if (ctrl && key == Qt::Key_Y){// && key == 89) {
+    if (ctrl && key == Qt::Key_Y){
         redo();
         return;
     }
@@ -1570,6 +1645,24 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     QTextCursor cursor = textCursor();
     QTextBlock block = cursor.block();
     bool hasSel = cursor.hasSelection();
+
+
+    //ctrl + E - delete line under cursor
+    if (ctrl && key == Qt::Key_E){
+        int pos = cursor.positionInBlock();
+        cursor.setPosition(block.position());
+        cursor.setPosition(block.position()+block.length(), QTextCursor::KeepAnchor);
+        setTextCursor(cursor);
+        insertPlainText("");// replace selection to empty str
+        // new cursor, move it to the same indent that was on deleted line
+        cursor = textCursor();
+        block = cursor.block();
+        if (pos > block.length()-1)
+            pos = block.length()-1;
+        cursor.setPosition(block.position()+pos);
+        setTextCursor(cursor);
+        return;
+    }
 
 
     //insert code completion by template
