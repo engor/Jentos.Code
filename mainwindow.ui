@@ -3388,22 +3388,6 @@ Don't change documents between find usages and rename</string>
    </hints>
   </connection>
   <connection>
-   <sender>actionHelpCheck_for_Updates</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>onCheckForUpdates()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>456</x>
-     <y>345</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>actionHelpFingerDevStudioHomepage</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>

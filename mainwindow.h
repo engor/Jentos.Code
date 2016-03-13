@@ -90,8 +90,6 @@ public slots:
 
     void onLowerUpperCase();
     void onNetworkFinished(QNetworkReply *reply);
-    void onCheckForUpdates();
-    void onCheckForUpdatesSilent();
     void onOpenUrl();
     void onKeyEscapePressed();
 
@@ -229,10 +227,17 @@ private slots:
 
     void on_pushButtonClassSummary_clicked();
 
+    void on_actionHelpCheck_for_Updates_triggered();
+    void onCheckForUpdatesQuiet();
+
+
 private:
 
+    void onCheckForUpdates(bool isQuiet);
+
+
     QNetworkAccessManager *_networkManager;
-    bool _showMsgbox;
+    bool _isUpdaterQuiet;
     Ui::MainWindow *_ui;
 
     QString _defaultDir;

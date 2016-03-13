@@ -82,7 +82,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
     CodeAnalyzer::init();
     Theme::init();
 
-    _showMsgbox = true;
+    _isUpdaterQuiet = true;
     _networkManager = 0;
     _codeEditor = 0;
     _lockedEditor = 0;
@@ -333,7 +333,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
 
     Prefs *p = Prefs::prefs();
     if (p->getBool("updates")) {
-        QTimer::singleShot(5000, this, SLOT(onCheckForUpdatesSilent()));
+        QTimer::singleShot(5000, this, SLOT(onCheckForUpdatesQuiet()));
     }
     p->isValidMonkeyPath = isValid;
 
@@ -2431,32 +2431,25 @@ void MainWindow::onAutoformatAll() {
 }
 
 void MainWindow::onKeyEscapePressed() {
-    if(_ui->frameSearch->isVisible())
+    if (_ui->frameSearch->isVisible())
         _ui->frameSearch->hide();
 }
 
-void MainWindow::onCheckForUpdates() {
-    QUrl url("http://fingerdev.com/updater.php?id=jentos.code");
-    if(_networkManager)
+void MainWindow::onCheckForUpdates(bool isQuiet) {
+    QUrl url("http://fingerdev.com/updates/jentos.code.txt");
+    if (_networkManager)
         delete _networkManager;
     _networkManager = new QNetworkAccessManager(this);
     connect(_networkManager, SIGNAL(finished(QNetworkReply*)), SLOT(onNetworkFinished(QNetworkReply*)));
     QNetworkRequest request;
     request.setUrl(url);
-    _showMsgbox = true;
+    _isUpdaterQuiet = isQuiet;
     _networkManager->get(request);
 }
 
-void MainWindow::onCheckForUpdatesSilent() {
-    /*QUrl url("https://raw.githubusercontent.com/nerionx/Jentos_IDE/master/updates.txt");
-    if(_networkManager)
-        delete _networkManager;
-    _networkManager = new QNetworkAccessManager(this);
-    connect(_networkManager, SIGNAL(finished(QNetworkReply*)), SLOT(onNetworkFinished(QNetworkReply*)));
-    QNetworkRequest request;
-    request.setUrl(url);
-    _showMsgbox = false;
-    _networkManager->get(request);*/
+void MainWindow::onCheckForUpdatesQuiet()
+{
+    onCheckForUpdates(true);
 }
 
 void MainWindow::onNetworkFinished(QNetworkReply *reply) {
@@ -2464,22 +2457,26 @@ void MainWindow::onNetworkFinished(QNetworkReply *reply) {
     QByteArray bytes = reply->readAll();
     QString s(bytes);
     s = s.trimmed();
-    //qDebug()<<s;
-    QString title = "New version";
-    if(!s.startsWith("$$$") && _showMsgbox) {
+    int i = s.indexOf("$$$");
+    int hasInfo = (i >= 0);
+    QString title = "Updater";
+    if (!hasInfo && !_isUpdaterQuiet) {
         QMessageBox::information(this, title, "<html><head><style>a{color:#CC8030;}</style></head><body>Check new version error.<br><br>Visit <a href=\"http://fingerdev.com/jentos\">Jentos Homepage</a> to get information about latest version.</body></html>");
         return;
     }
-    int i = s.indexOf("\n");
-    QString ver = s.left(i).mid(3).trimmed();
-    QString v = APP_VERSION;
-    //qDebug()<<v<<ver;
-    if (ver > v) {
+    s = s.mid(3).trimmed();// skip $$$
+    i = s.indexOf("$$$");
+    s = s.left(i); //now s contains our clean update info
+    i = s.indexOf("\n");
+    QString newVersion = s.left(i).trimmed();
+    QString curVersion = APP_VERSION;
+    if (newVersion > curVersion) {
         s = s.mid(i+1);
+        s = s.replace("%CURRENT_VER%", curVersion);
+        s = s.replace("%NEW_VER%", newVersion);
         QMessageBox::information(this, title, s);
-    }
-    else if(_showMsgbox){
-        QMessageBox::information(this, title, "<html><head><style>a{color:#CC8030;}</style></head><body>No updates available.<br><b>You are using the latest version "+v+".</b><br><br>Visit <a href=\"http://fingerdev.com/jentos\">Jentos Homepage</a> to get information about latest version.</body></html>");
+    } else if (!_isUpdaterQuiet){
+        QMessageBox::information(this, title, "<html><head><style>a{color:#CC8030;}</style></head><body>No updates available.<br><b>You are using the latest version "+curVersion+".</b><br><br>Visit <a href=\"http://fingerdev.com/jentos\">Jentos Homepage</a> to get information about latest version.</body></html>");
     }
 }
 
@@ -2612,4 +2609,9 @@ void MainWindow::on_pushButtonClassSummary_clicked()
     m.setWindowTitle("Summary Info");
     m.setText(msg);
     m.exec();
+}
+
+void MainWindow::on_actionHelpCheck_for_Updates_triggered()
+{
+    onCheckForUpdates(false);
 }
