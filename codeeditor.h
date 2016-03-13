@@ -125,6 +125,8 @@ private slots:
     void onCompleteFocusOut();
     void onUpdateLineNumberArea(const QRect &, int);
 
+    void onShowAutocompleteList();
+
 signals:
     void keyEscapePressed();
     void showCode( const QString &file, int line);
@@ -155,7 +157,9 @@ private:
     QString _fileType, _fileName;
     bool _txt, _code, _monkey;
     int _modified;
+
     ListWidgetComplete *_lcomp;//autocomplete list
+    bool _lcompInheritance, _lcompProcess;
     CodeScope _scope;
     QTextBlock _storedBlock;
     bool _blockChangeCursorMethod;

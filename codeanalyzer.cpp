@@ -397,7 +397,10 @@ void CodeAnalyzer::fillListInheritance(const QTextBlock &block, QListWidget *l) 
 }
 
 CodeItem *CodeAnalyzer::findInScope(const QTextBlock &block, int pos, QListWidget *l, bool findLastIdent, const QString &blockText) {
-    //qDebug()<<"cur:"<<_curFilePath;
+
+    qDebug() << "findInScope. block:" << block.text() << ", list is null:" << (l==0);
+
+
     QStringList list;
     QString text = blockText;
     if(text == "")
@@ -410,7 +413,7 @@ CodeItem *CodeAnalyzer::findInScope(const QTextBlock &block, int pos, QListWidge
         return 0;
     }
     QString ident = list.first();
-    //qDebug()<<"ident:"<<ident;
+    qDebug()<<"ident:"<<ident;
     if(ident.isEmpty()) {//is empty if there is a number before a dot
         //qDebug()<<"dot before number, retirn";
         return 0;
@@ -472,7 +475,7 @@ CodeItem *CodeAnalyzer::findInScope(const QTextBlock &block, int pos, QListWidge
             fillListFromCommon(l, ident, block);
         return 0;
     }
-    //qDebug()<<"found2: "+item->descrAsItem();
+    qDebug()<<"found2: "+item->descrAsItem();
     //search sub-items if exists
     CodeScope sc;
     sc.item = item;
@@ -497,7 +500,7 @@ CodeItem *CodeAnalyzer::findInScope(const QTextBlock &block, int pos, QListWidge
         }
     }
     if(sc.item) {
-        //qDebug()<<"scope: "+sc.item->descrAsItem();
+        qDebug()<<"scope: "+sc.item->descrAsItem();
         if(l) {
             fillListFromScope(l,list.last(),sc);
         }

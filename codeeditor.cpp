@@ -147,89 +147,11 @@ void CodeEditor::aucompProcess( CodeItem *item, bool forInheritance ) {
     }
 }
 
-void CodeEditor::aucompShowList(bool process, bool inheritance ) {
-
-    if(_lcomp != 0) {
-        _lcomp->disconnect();
-        //this->layout()->removeWidget(_lcomp);
-        //delete _lcomp;
-        _lcomp->hide();
-        _lcomp->clear();
-    }
-    else {
-        _lcomp = new ListWidgetComplete(this);
-    }
-
-    _lcomp->setIsForInheritance(inheritance);
-
-    QTextCursor cursor = textCursor();
-
-    if(inheritance)
-        CodeAnalyzer::fillListInheritance(cursor.block(), _lcomp);
-    else
-        CodeAnalyzer::findInScope(cursor.block(), cursor.positionInBlock(), _lcomp);
-
-    int count = _lcomp->count();
-    if( count > 0 ) {
-        if( process && _lcomp->count() == 1 ) { //select value if one
-            ListWidgetCompleteItem *item = dynamic_cast<ListWidgetCompleteItem*>(_lcomp->item(0));
-            aucompProcess(item->codeItem());
-        }
-        else {
-
-            /*for (int k = 0; k < count; ++k) {
-                _lcomp->addWidgetForItem( _lcomp->item(k) );
-            }*/
-
-            int xx=0, yy=0, ww=0, hh=0;
-            hh = _lcomp->sizeHintForRow(0)*_lcomp->count()+10;
-            if(hh < 60)
-                hh = 60;
-            ww = _lcomp->sizeHintForColumn(0)+10;
-            if(ww > 444) {
-                ww = 444;
-                hh += 30;
-            }
-            else if(ww < 200) {
-                ww = 200;
-            }
-
-            QRect r = cursorRect();
-            QRect r2 = this->rect();
-
-            if(hh > 444)
-                hh = 444;
-            if(hh > r2.height()-20)
-                hh = r2.height()-20;
-
-            xx = r.right()+20+60;//60 for left margin
-            yy = r.top();
-            if( xx+ww > r2.right()-15 ) {
-                xx = r2.right()-ww-15;
-                yy += 30;
-            }
-            if( yy < r2.top() )
-                yy = r2.top();
-            if( yy+hh > r2.bottom()-15 ) {
-                yy = r2.bottom()-hh-15;
-            }
-
-            _lcomp->setGeometry(xx, yy, ww, hh);
-            _lcomp->setCurrentRow(0);
-            _lcomp->setVisible(true);
-        }
-        ListWidgetCompleteItem *lwi = dynamic_cast<ListWidgetCompleteItem*>(_lcomp->item(0));
-        emit statusBarChanged( lwi->codeItem()->toString() );
-
-        connect( _lcomp,SIGNAL(itemActivated(QListWidgetItem*)),SLOT(onCompleteProcess(QListWidgetItem*)) );
-        connect( _lcomp,SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),SLOT(onCompleteChangeItem(QListWidgetItem*,QListWidgetItem*)) );
-        connect( _lcomp,SIGNAL(focusOut()),SLOT(onCompleteFocusOut()) );
-
-    }
-    else {
-        onCompleteFocusOut();
-    }
-
+void CodeEditor::aucompShowList(bool process, bool inheritance )
+{
+    _lcompInheritance = inheritance;
+    _lcompProcess = process;
+    QTimer::singleShot(50, this, SLOT(onShowAutocompleteList()));
 }
 
 void CodeEditor::onCompleteProcess(QListWidgetItem *item) {
@@ -905,6 +827,90 @@ void CodeEditor::onUpdateLineNumberArea(const QRect &rect, int dy) {
         _lineNumberArea->setGeometry(rect.x()+1,rect.y()+1, _lineNumberArea->maxwidth(),rect.height()-1+20);
     }
 
+}
+
+void CodeEditor::onShowAutocompleteList()
+{
+    if(_lcomp != 0) {
+        _lcomp->disconnect();
+        //this->layout()->removeWidget(_lcomp);
+        //delete _lcomp;
+        _lcomp->hide();
+        _lcomp->clear();
+    }
+    else {
+        _lcomp = new ListWidgetComplete(this);
+    }
+
+    _lcomp->setIsForInheritance(_lcompInheritance);
+
+    QTextCursor cursor = textCursor();
+
+    if (_lcompInheritance)
+        CodeAnalyzer::fillListInheritance(cursor.block(), _lcomp);
+    else
+        CodeAnalyzer::findInScope(cursor.block(), cursor.positionInBlock(), _lcomp);
+
+    int count = _lcomp->count();
+    if( count > 0 ) {
+        if( _lcompProcess && count == 1 ) { //select value if one
+            ListWidgetCompleteItem *item = dynamic_cast<ListWidgetCompleteItem*>(_lcomp->item(0));
+            aucompProcess(item->codeItem());
+        }
+        else {
+
+            /*for (int k = 0; k < count; ++k) {
+                _lcomp->addWidgetForItem( _lcomp->item(k) );
+            }*/
+
+            int xx=0, yy=0, ww=0, hh=0;
+            hh = _lcomp->sizeHintForRow(0)*_lcomp->count()+10;
+            if(hh < 60)
+                hh = 60;
+            ww = _lcomp->sizeHintForColumn(0)+10;
+            if(ww > 444) {
+                ww = 444;
+                hh += 30;
+            }
+            else if(ww < 200) {
+                ww = 200;
+            }
+
+            QRect r = cursorRect();
+            QRect r2 = this->rect();
+
+            if(hh > 444)
+                hh = 444;
+            if(hh > r2.height()-20)
+                hh = r2.height()-20;
+
+            xx = r.right()+20+60;//60 for left margin
+            yy = r.top();
+            if( xx+ww > r2.right()-15 ) {
+                xx = r2.right()-ww-15;
+                yy += 30;
+            }
+            if( yy < r2.top() )
+                yy = r2.top();
+            if( yy+hh > r2.bottom()-15 ) {
+                yy = r2.bottom()-hh-15;
+            }
+
+            _lcomp->setGeometry(xx, yy, ww, hh);
+            _lcomp->setCurrentRow(0);
+            _lcomp->setVisible(true);
+        }
+        ListWidgetCompleteItem *lwi = dynamic_cast<ListWidgetCompleteItem*>(_lcomp->item(0));
+        emit statusBarChanged( lwi->codeItem()->toString() );
+
+        connect( _lcomp,SIGNAL(itemActivated(QListWidgetItem*)),SLOT(onCompleteProcess(QListWidgetItem*)) );
+        connect( _lcomp,SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),SLOT(onCompleteChangeItem(QListWidgetItem*,QListWidgetItem*)) );
+        connect( _lcomp,SIGNAL(focusOut()),SLOT(onCompleteFocusOut()) );
+
+    }
+    else {
+        onCompleteFocusOut();
+    }
 }
 
 void CodeEditor::editPosInsert(int pos) {
@@ -1716,7 +1722,7 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     //autocomplete for "",'',(),[]
     if (_useAutoBrackets) {
         bool k1 = (evtxt == "\"");
-        bool k2 = false;//(evtxt == "'");
+        bool k2 = (evtxt == "'");
         bool k3 = (evtxt == "(");
         bool k4 = (evtxt == "[");
 
@@ -1798,10 +1804,6 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
             return;
         }
     }
-
-    //highlightLine( textCursor().blockNumber(), HlCaretRow );
-
-   // flushExtraSels();
 
     bool checkNew = false;
 
@@ -2011,7 +2013,7 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     }
 
     //HOME, smart move at begin pos
-    if( !ctrl && key == Qt::Key_Home && block.length() > 1 ) {// && cursor.position() == block.position() ) {
+    if( !ctrl && key == Qt::Key_Home && block.length() > 1 ) {
         QString s = block.text();
         int i = 0, len = s.length();
         while( i < len && s.at(i) <= ' ' ) {
@@ -2064,7 +2066,7 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
         }*/
 
         //exit if we typed 'method ' and shown inherited methods
-        if(!listShown && aucompIsVisible()) {
+        if (!listShown && aucompIsVisible()) {
             e->accept();
             return;
         }
@@ -2090,7 +2092,7 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     }
 
 
-    if( _monkey ){
+    if ( _monkey ){
         if ( key >= 32 && key <= 255 ) {
             if (!ctrl && !aucompIsVisible() && !block.text().trimmed().startsWith("'")) {
                 QString ident = identAtCursor(false);
@@ -2381,7 +2383,7 @@ void Highlighter::highlightBlock( const QString &ctext ){
                 }
             }
             else {
-                CodeItem *item = CodeAnalyzer::findInScope(block, i);
+                /*CodeItem *item = CodeAnalyzer::findInScope(block, i);
                 if(item) {
                     if(item->isParam()) {
                         format = FormatParam;
@@ -2402,7 +2404,7 @@ void Highlighter::highlightBlock( const QString &ctext ){
                         format = FormatMonkeyClass;
                     }
                     italic = (item->decl()=="const"||item->decl()=="global"||(item->parent()!=0 && item->decl()=="function"));
-                }
+                }*/
             }
         }
         else if( c == '0' && !monkeyFile ) {
