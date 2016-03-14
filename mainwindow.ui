@@ -1959,7 +1959,7 @@ Don't change documents between find usages and rename</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>AndroidStudio</string>
+    <string>Android Studio</string>
    </property>
   </action>
   <action name="actionThemeNetBeans">
@@ -2156,7 +2156,7 @@ Don't change documents between find usages and rename</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>LightTable</string>
+    <string>Light Table</string>
    </property>
   </action>
   <action name="actionView_Image">
@@ -3271,54 +3271,6 @@ Don't change documents between find usages and rename</string>
     </hint>
     <hint type="destinationlabel">
      <x>406</x>
-     <y>345</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionThemeAndroidStudio</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>onThemeAndroidStudio()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>406</x>
-     <y>345</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionThemeNetBeans</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>onThemeNetBeans()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>406</x>
-     <y>345</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionThemeQt</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>onThemeQtCreator()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>456</x>
      <y>345</y>
     </hint>
    </hints>

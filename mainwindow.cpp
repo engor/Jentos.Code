@@ -372,7 +372,11 @@ void MainWindow::showEvent(QShowEvent *event) {
 }
 
 //***** private methods *****
-void MainWindow::updateTheme() {
+void MainWindow::updateTheme(const QString &name) {
+
+    if (!name.isEmpty()) {
+        Theme::set(name);
+    }
 
     QString css = "";
     if(Theme::isDark()) {
@@ -382,30 +386,18 @@ void MainWindow::updateTheme() {
         }
         f.close();
     }
-    if(Theme::isDark2()) {
-        QFile f(":/txt/android.css");
-        if(f.open(QFile::ReadOnly)) {
-            css = f.readAll();
-        }
-        f.close();
-    }
-    if(Theme::isDark3()) {
-        QFile f(":/txt/android.css");
-        if(f.open(QFile::ReadOnly)) {
-            css = f.readAll();
-        }
-        f.close();
-    }
+
     css += "QDockWidget::title{text-align:center;}";
     qApp->setStyleSheet(css);
     QApplication::processEvents();
     //
-    _ui->actionThemeAndroidStudio->setChecked( Theme::isCurrent("android") );
-    _ui->actionThemeNetBeans->setChecked( Theme::isCurrent("netbeans") );
-    _ui->actionThemeMonokaiDarkSoda->setChecked( Theme::isCurrent("Monokai-Dark-Soda") );
-    _ui->actionThemeLightTable->setChecked( Theme::isCurrent("lighttable") );
+    _ui->actionThemeAndroidStudio->setChecked( Theme::isCurrent(Theme::ANDROID_STUDIO) );
+    _ui->actionThemeNetBeans->setChecked( Theme::isCurrent(Theme::NETBEANS) );
+    _ui->actionThemeQt->setChecked( Theme::isCurrent(Theme::QT_CREATOR) );
+    _ui->actionThemeMonokaiDarkSoda->setChecked( Theme::isCurrent(Theme::DARK_SODA) );
+    _ui->actionThemeLightTable->setChecked( Theme::isCurrent(Theme::LIGHT_TABLE) );
 
-    _ui->actionThemeQt->setChecked( Theme::isCurrent("qt") );
+
     //update all icons
     //
     _ui->actionNew->setIcon(Theme::icon("New.png"));
@@ -971,18 +963,6 @@ void MainWindow::readSettings(){
 
     QSettings *set = Prefs::settings();
     Prefs *prefs = Prefs::prefs();
-
-    //some default values
-    if(!prefs->contains("updates")) {
-        prefs->setValue("updates",true);
-        prefs->setValue("tabSize",4);
-        prefs->setValue("fontSize",12);
-        prefs->setValue("highlightLine",true);
-        prefs->setValue("highlightWord",true);
-        prefs->setValue("style","Default");
-        prefs->setValue("showHelpInDock",false);
-        prefs->setValue("replaceDocsStyle",true);
-    }
 
     _isShowHelpInDock = prefs->getBool("showHelpInDock");
 
@@ -2405,21 +2385,6 @@ void MainWindow::onGoForward() {
         onHelpForward();
 }
 
-void MainWindow::onThemeAndroidStudio() {
-    Theme::set("android");
-    updateTheme();
-}
-
-void MainWindow::onThemeNetBeans() {
-
-    Theme::set("netbeans");
-    updateTheme();
-}
-void MainWindow::onThemeQtCreator() {
-    Theme::set("qt");
-    updateTheme();
-}
-
 void MainWindow::onAutoformatAll() {
     if( _codeEditor ) {
         QMessageBox m;
@@ -2576,18 +2541,6 @@ void MainWindow::onDocsZoomChanged(int) {
     _ui->webView->setZoomFactor(_ui->zoomSlider->value()/100.0f);
 }
 
-void MainWindow::onThemeMonokaiDarkSoda()
-{
-    Theme::set("Monokai-Dark-Soda");
-    updateTheme();
-}
-
-void MainWindow::onThemeLightTable()
-{
-    Theme::set("lighttable");
-    updateTheme();
-}
-
 void MainWindow::on_actionAddProperty_triggered()
 {
     if (_codeEditor != 0)
@@ -2617,4 +2570,29 @@ void MainWindow::on_pushButtonClassSummary_clicked()
 void MainWindow::on_actionHelpCheck_for_Updates_triggered()
 {
     onCheckForUpdates(false);
+}
+
+void MainWindow::on_actionThemeAndroidStudio_triggered()
+{
+    updateTheme(Theme::ANDROID_STUDIO);
+}
+
+void MainWindow::on_actionThemeNetBeans_triggered()
+{
+    updateTheme(Theme::NETBEANS);
+}
+
+void MainWindow::on_actionThemeQt_triggered()
+{
+    updateTheme(Theme::QT_CREATOR);
+}
+
+void MainWindow::on_actionThemeMonokaiDarkSoda_triggered()
+{
+    updateTheme(Theme::DARK_SODA);
+}
+
+void MainWindow::on_actionThemeLightTable_triggered()
+{
+    updateTheme(Theme::LIGHT_TABLE);
 }

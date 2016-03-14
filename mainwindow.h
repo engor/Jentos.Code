@@ -41,10 +41,11 @@ public:
 
     void cdebug( const QString &str );
     static bool isValidMonkeyPath(const QString &path , QString &trans);
-    void updateTheme();
+    void updateTheme(const QString &name = "");
 
 private:
 
+    void onCheckForUpdates(bool isQuiet);
     void updateCodeViews(QTreeView *tree, QListView* list);
 
     void parseAppArgs();
@@ -178,12 +179,6 @@ public slots:
     void onTabsCloseOtherTabs();
     void onTabsCloseAllTabs();
 
-    void onThemeAndroidStudio();
-    void onThemeNetBeans();
-    void onThemeQtCreator();
-    void onThemeMonokaiDarkSoda();
-    void onThemeLightTable();
-
     void onFindUsages();
 
     void onLinkClicked( const QUrl &url );
@@ -231,10 +226,17 @@ private slots:
     void onCheckForUpdatesQuiet();
 
 
+    void on_actionThemeAndroidStudio_triggered();
+
+    void on_actionThemeNetBeans_triggered();
+
+    void on_actionThemeQt_triggered();
+
+    void on_actionThemeMonokaiDarkSoda_triggered();
+
+    void on_actionThemeLightTable_triggered();
+
 private:
-
-    void onCheckForUpdates(bool isQuiet);
-
 
     QNetworkAccessManager *_networkManager;
     bool _isUpdaterQuiet;

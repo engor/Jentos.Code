@@ -16,7 +16,7 @@ See LICENSE.TXT for licensing terms.
 PrefsDialog::PrefsDialog(MainWindow *mainwnd, QWidget *parent ):QDialog( parent ),_ui( new Ui::PrefsDialog ),_prefs( Prefs::prefs() ),_used( false ){
     _ui->setupUi( this );
     _mainwnd = mainwnd;
-    connect(_ui->comboBoxTheme,SIGNAL(currentIndexChanged(int)), SLOT(onThemeChanged(int)));
+    _isEnableThemeSignal = false;
 }
 
 PrefsDialog::~PrefsDialog(){
@@ -103,18 +103,25 @@ int PrefsDialog::exec(){
     _ui->checkBoxReplaceDocsStyle->setChecked(_prefs->getBool("replaceDocsStyle"));
 
     _ui->spinBoxTypedCharsForCompletion->setValue(_prefs->getInt("CharsForCompletion"));
+    _ui->checkBoxAddVoidForMethods->setChecked(_prefs->getBool("addVoidForMethods"));
 
     Prefs *p = Prefs::prefs();
     _ui->labelSettingsFile->setText( p->settings()->fileName() );
-    QString theme = p->getString("theme");
-    int index = 0;
-    if(theme == "netbeans")
-        index = 1;
-    else if(theme == "qt")
-        index = 2;
-    _ui->comboBoxTheme->setCurrentIndex(index);
 
-    //_ui->groupBox->setVisible(false);
+    // themes
+    _isEnableThemeSignal = false;
+    QStringList lst;
+    lst << Theme::ANDROID_STUDIO << Theme::NETBEANS << Theme::QT_CREATOR
+        << Theme::DARK_SODA << Theme::LIGHT_TABLE;
+    if (_ui->comboBoxTheme->count() == 0) {
+        _ui->comboBoxTheme->addItems(lst);
+    }
+    QString theme = p->getString("theme");
+    int index = lst.indexOf(theme);
+    if (index < 0)
+        index = 1; // netbeans by default
+    _ui->comboBoxTheme->setCurrentIndex(index);
+    _isEnableThemeSignal = true;
 
     QDialog::show();
     return QDialog::exec();
@@ -186,19 +193,6 @@ void PrefsDialog::onBrowseForPath() {
     }
 }
 
-void PrefsDialog::onThemeChanged(int index) {
-    if(index == 0)
-        _mainwnd->onThemeAndroidStudio();
-    else if(index == 1)
-        _mainwnd->onThemeNetBeans();
-    else if(index == 2)
-        _mainwnd->onThemeQtCreator();
-    else if(index == 3)
-        _mainwnd->onThemeMonokaiDarkSoda();
-    else if(index == 4)
-        _mainwnd->onThemeLightTable();
-}
-
 void PrefsDialog::onShowHelpInDockChanged() {
     _prefs->setValue("showHelpInDock", _ui->checkBoxShowHelpInDock->isChecked());
 }
@@ -209,7 +203,7 @@ void PrefsDialog::onReplaceDocsStyleChanged() {
 
 void PrefsDialog::on_checkBoxAutoBracket_stateChanged(int arg1)
 {
-     _prefs->setValue( "AutoBracket", _ui->checkBoxAutoBracket->isChecked() );
+    _prefs->setValue( "AutoBracket", _ui->checkBoxAutoBracket->isChecked() );
 }
 
 void PrefsDialog::on_pushButtonOpenSettingsFolder_clicked()
@@ -222,4 +216,16 @@ void PrefsDialog::on_pushButtonOpenSettingsFolder_clicked()
 void PrefsDialog::on_spinBoxTypedCharsForCompletion_valueChanged(int arg1)
 {
     _prefs->setValue( "CharsForCompletion", arg1 );
+}
+
+void PrefsDialog::on_checkBoxAddVoidForMethods_clicked()
+{
+    _prefs->setValue( "addVoidForMethods", _ui->checkBoxAddVoidForMethods->isChecked() );
+}
+
+void PrefsDialog::on_comboBoxTheme_currentIndexChanged(const QString &arg1)
+{
+    if (!_isEnableThemeSignal)
+        return;
+    _mainwnd->updateTheme(arg1);
 }

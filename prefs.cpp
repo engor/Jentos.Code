@@ -55,6 +55,21 @@ void Prefs::setDefaults() {
     Prefs *p = prefs();
     if (!p->contains("CharsForCompletion"))
         p->setValue("CharsForCompletion", 3);
+    if (!p->contains("addVoidForMethods"))
+        p->setValue("addVoidForMethods", true);
+    if (!p->contains("AutoBracket"))
+        p->setValue("AutoBracket", true);
+
+    if (!p->contains("updates")) {
+        p->setValue("updates",true);
+        p->setValue("tabSize",4);
+        p->setValue("fontSize",12);
+        p->setValue("highlightLine",true);
+        p->setValue("highlightWord",true);
+        p->setValue("style","Default");
+        p->setValue("showHelpInDock",false);
+        p->setValue("replaceDocsStyle",true);
+    }
 }
 
 Prefs *Prefs::prefs() {

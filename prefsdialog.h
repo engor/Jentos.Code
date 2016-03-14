@@ -43,7 +43,6 @@ public slots:
     void onBrowseForPath();
     void onAnalyzerChanged();
     void onCheckUpdatesChanged();
-    void onThemeChanged(int index);
     void onShowHelpInDockChanged();
     void onReplaceDocsStyleChanged();
 
@@ -55,11 +54,18 @@ private slots:
 
     void on_spinBoxTypedCharsForCompletion_valueChanged(int arg1);
 
+    void on_checkBoxAddVoidForMethods_clicked();
+
+    void on_comboBoxTheme_currentIndexChanged(const QString &arg1);
+
 private:
+
     MainWindow *_mainwnd;
     Ui::PrefsDialog *_ui;
     Prefs *_prefs;
     bool _used;
+    bool _isEnableThemeSignal;
+
 };
 
 #endif // PREFSDIALOG_H

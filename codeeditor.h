@@ -172,10 +172,12 @@ private:
 
     bool _isHighlightLine, _isHighlightWord;
     bool _useAutoBrackets;
+    bool _addVoidForMethods;
     int _charsCountForCompletion;
 
     friend class Highlighter;
 };
+
 
 //***** Highlighter *****
 

@@ -64,6 +64,7 @@ CodeEditor::CodeEditor( QWidget *parent ):QPlainTextEdit( parent ),_modified( 0 
     _editPosIndex = -1;
     _useAutoBrackets = Prefs::prefs()->getBool("AutoBracket");
     _charsCountForCompletion = Prefs::prefs()->getInt("CharsForCompletion");
+    _addVoidForMethods = Prefs::prefs()->getBool("addVoidForMethods");
 
     _lineNumberArea = new LineNumberArea(this, 60);
 
@@ -587,12 +588,15 @@ void CodeEditor::onThemeChanged() {
 
 void CodeEditor::onPrefsChanged( const QString &name ){
 
+    //qDebug() << "editor.prefs:"<<name;
+
     QString t( name );
 
     Prefs *prefs = Prefs::prefs();
 
     _useAutoBrackets = prefs->getBool("AutoBracket");
     _charsCountForCompletion = prefs->getInt("CharsForCompletion");
+    _addVoidForMethods = prefs->getBool("addVoidForMethods");
 
     if( t=="" || t=="backgroundColor" || t=="fontFamily" || t=="fontSize" || t=="tabSize" || t=="smoothFonts" || t=="highlightLine" || t=="highlightWord" ){
 
@@ -1162,22 +1166,13 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event) {
     static QColor clrGray1 = QColor(0x313334);
     static QColor clrGray2 = QColor(0xE9E8E2);
     bool d = Theme::isDark();
-    if(Theme::isDark()){
-        d = Theme::isDark();
-    }
-    if(Theme::isDark2()){
-        d = Theme::isDark2();
-    }
-    if(Theme::isDark3()){
-        d = Theme::isDark3();
-    }
     QColor clrGray = (d ? clrGray1 : clrGray2);
-    static QImage imgBookmark1 = Theme::image("Bookmark.png",1);
-    static QImage imgBookmark2 = Theme::image("Bookmark.png",2);
-    static QImage imgPlus1 = Theme::image("Unfold.png",1);
-    static QImage imgPlus2 = Theme::image("Unfold.png",2);
-    static QImage imgMinus1 = Theme::image("Fold.png",1);
-    static QImage imgMinus2 = Theme::image("Fold.png",2);
+    static QImage imgBookmark1 = Theme::imageDark("Bookmark.png");
+    static QImage imgBookmark2 = Theme::imageLight("Bookmark.png");
+    static QImage imgPlus1 = Theme::imageDark("Unfold.png");
+    static QImage imgPlus2 = Theme::imageLight("Unfold.png");
+    static QImage imgMinus1 = Theme::imageDark("Fold.png");
+    static QImage imgMinus2 = Theme::imageLight("Fold.png");
     QImage imgBookmark = (d ? imgBookmark1 : imgBookmark2);
     QImage imgPlus = (d ? imgPlus1 : imgPlus2);
     QImage imgMinus = (d ? imgMinus1 : imgMinus2);
@@ -1605,8 +1600,15 @@ void CodeEditor::fillSourceListWidget(CodeItem *item, QStandardItem *si) {
 void CodeEditor::keyPressEvent( QKeyEvent *e ) {
 
     int key = e->key();
+    //qDebug() << "key: "+QString::number(key);
+
     bool ctrl = (e->modifiers() & Qt::ControlModifier);
     bool shift = (e->modifiers() & Qt::ShiftModifier);
+
+    QTextCursor cursor = textCursor();
+    QTextBlock block = cursor.block();
+    bool hasSel = cursor.hasSelection();
+
 
     //escape
     if (key == Qt::Key_Escape && !aucompIsVisible()) {
@@ -1631,27 +1633,18 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     //ctrl + x || shift + del
     bool ctrl_x = (ctrl && key == Qt::Key_X);
     bool shift_del = (shift && key == Qt::Key_Delete);
-    if( key == Qt::Key_Delete || key == Qt::Key_Backspace || ctrl_x || shift_del ){
+    if ( hasSel && (key == Qt::Key_Delete || key == Qt::Key_Backspace || ctrl_x || shift_del) ){
         //qDebug() << "cut";
-        QString s = textCursor().selectedText();
-        if( ctrl_x || shift_del ) {
+        QString s = cursor.selectedText();
+        if (ctrl_x || shift_del) {
             QApplication::clipboard()->setText(s);
             //qDebug() << "clipboard";
         }
-        if(s.length() > 0) {
-            insertPlainText("");
-            ensureCursorVisible();
-            e->accept();
-            return;
-        }
+        insertPlainText("");
+        ensureCursorVisible();
+        e->accept();
+        return;
     }
-
-    //qDebug() << "key: "+QString::number(key);
-
-    QTextCursor cursor = textCursor();
-    QTextBlock block = cursor.block();
-    bool hasSel = cursor.hasSelection();
-
 
     //ctrl + E - delete line under cursor
     if (ctrl && key == Qt::Key_E){
@@ -1895,16 +1888,14 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
         if( !hasSel ){
             int i;
             QString text = block.text();
-            for( i = 0 ; i < cursor.positionInBlock() && text[i] <= ' ' ; ++i ){}
+            int len = text.length();
+            int pos = cursor.positionInBlock();
+            for( i = 0 ; i < pos && text[i] <= ' ' ; ++i ){}
             QString spaces = text.left(i), s = "";
-            //if haven't text before cursor
-            if(i == cursor.positionInBlock()) {
-                int d = i+1;
-                cursor.setPosition(cursor.position()-d);
-                setTextCursor(cursor);
+
+            //if cursor isn't at the end of line
+            if (pos != len) {
                 insertPlainText("\n"+spaces);
-                cursor.setPosition(cursor.position()+d);
-                setTextCursor(cursor);
                 ensureCursorVisible();
                 e->accept();
                 return;
@@ -1913,9 +1904,11 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
             text = text.trimmed().toLower();
             int deltaPos = 0;
             QString closed = "";
-            //don't check if the cursor is before text
-            if(cursor.positionInBlock() > i) {
-                if( text.startsWith("class ") || text.startsWith("interface ") || text.startsWith("function ") || text.startsWith("method ") || text.startsWith("select ") || text.startsWith("catch ") ) {
+
+            if (!text.isEmpty()) {
+                bool isMethod = text.startsWith("method ");
+                bool isFunc = text.startsWith("function ");
+                if( isMethod || isFunc || text.startsWith("class ") || text.startsWith("interface ") || text.startsWith("select ") || text.startsWith("catch ") ) {
                     closed = "End";
                 }
                 else if(text.startsWith("if") || text.startsWith("else")) {
@@ -1936,27 +1929,43 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
                 else if(text.startsWith("try")) {
                     closed = "Catch ";
                 }
-            }
-            if(closed != "") {
-                s = '\n'+spaces;
-                bool add = true;
-                if( text.startsWith("if") && (text.contains("then ") || text.contains("return")) )
-                    add = false;
 
-                if(text.startsWith("method")) {
-                    if(text.contains("abstract")) {
+                // check return type of method
+                // and add :Void if it's empty
+                if (_addVoidForMethods && (isMethod || isFunc)) {
+                    QString origText = block.text();
+                    int i1 = origText.indexOf(":");
+                    int i2 = origText.indexOf("(");
+                    if ((i1 == -1 && i2 > 0) // has no :
+                            || i2 < i1) { // has : but after (
+                        int pp = cursor.position();
+                        cursor.setPosition(block.position()+i2);
+                        setTextCursor(cursor);
+                        insertPlainText(":Void");
+                        cursor.setPosition(pp+5);
+                        setTextCursor(cursor);
+                    }
+                }
+            }
+            if (!closed.isEmpty()) {
+                s = '\n'+spaces;
+                bool add;
+                add = !( text.startsWith("if") && (text.contains("then ") || text.contains("return")) );
+
+                if (add && text.startsWith("method")) {
+                    if (text.contains("abstract")) {
                         add = false;
                     }
                     else {
                         CodeItem *i = CodeAnalyzer::scopeAt(block, true);
-                        if(i && i->decl() == "interface")
+                        if (i && i->isInterface())
                             add = false;
                     }
                 }
-                if(add)
+                if (add)
                     s += tab;
                 int len = closed.length();
-                if(ctrl && len > 1) {
+                if (ctrl && len > 1) {
                     s += '\n'+spaces+closed;
                     deltaPos = -(i+len+1);
                 }
@@ -1965,12 +1974,12 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
                 s = '\n'+spaces;
             }
             cursor.insertText(s);
-            if(deltaPos != 0) {
+            if (deltaPos != 0) {
                 cursor.setPosition( cursor.position()+deltaPos );
                 setTextCursor(cursor);
             }
             ensureCursorVisible();
-            i = cursor.blockNumber();
+            //i = cursor.blockNumber();
             e->accept();
             return;
         }
@@ -2221,30 +2230,25 @@ void CodeEditor::onPaste(const QString &text) {
     while( i < n && s[i] <= ' ' ) ++i;
     QString indent = "";
     if(i) {
-        indent = s.mid(0,i);
+        indent = s.left(i);
     }
     clip = clip.replace("\r\n","\n");
     QStringList list = clip.split("\n");
     clip = "";
     //calc minimum indent of clipboard text
     int min = 1024;
-    for(int k = 1, size = list.size(); k < size; ++k) {
+    for (int k = 1, size = list.size(); k < size; ++k) {
         s = list.at(k);
         i = 0;
         n = s.length();
         while( i < n && s[i] <= ' ' ) ++i;
-        if(i < min)
+        if (i < min)
             min = i;
     }
     //delete indent for first line
-    s = list.at(0);
-    i = 0;
-    n = s.length();
-    while( i < n && s[i] <= ' ' ) ++i;
-    if(i)
-        s = s.right(n-i);
+    s = list.at(0).trimmed();
     clip = s;
-    for(int k = 1, size = list.size(); k < size; ++k) {
+    for (int k = 1, size = list.size(); k < size; ++k) {
         s = list.at(k);
         n = s.length()-min;
         clip += "\n"+indent+s.right(n);

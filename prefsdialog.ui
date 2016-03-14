@@ -485,6 +485,13 @@
             </widget>
            </item>
            <item>
+            <widget class="QCheckBox" name="checkBoxAddVoidForMethods">
+             <property name="text">
+              <string>Add ':Void' for methods/functions if they have not return type</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QFrame" name="frame_2">
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
@@ -646,31 +653,6 @@
                   <height>0</height>
                  </size>
                 </property>
-                <item>
-                 <property name="text">
-                  <string>Android Studio</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>NetBeans</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Qt Creator</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Monokai Dark Soda</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>LightTable</string>
-                 </property>
-                </item>
                </widget>
               </item>
               <item>

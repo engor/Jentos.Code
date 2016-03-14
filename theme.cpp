@@ -1,11 +1,17 @@
 #include "theme.h"
 #include "prefs.h"
 
+QString Theme::ANDROID_STUDIO = "Android Studio";
+QString Theme::NETBEANS = "NetBeans";
+QString Theme::QT_CREATOR = "Qt Creator";
+QString Theme::DARK_SODA = "Monokai Dark Soda";
+QString Theme::LIGHT_TABLE = "Light Table";
+
 QString Theme::_theme;
 QString Theme::_prevTheme;
 bool Theme::_isDark;
-bool Theme::_isDark2;
-bool Theme::_isDark3;
+
+
 Theme::Theme(QObject *parent) : QObject(parent) {
 
 }
@@ -23,7 +29,7 @@ void Theme::init() {
         p->setValue( "smoothFonts",true );
 
     _prevTheme = "";
-    QString s = p->getString("theme","netbeans");
+    QString s = p->getString("theme", NETBEANS);
     set(s);
 }
 
@@ -40,13 +46,11 @@ void Theme::setLocal(QString kind) {
 }
 
 void Theme::save() {
-    _isDark = (_theme=="android");
-    _isDark2 = (_theme=="Monokai-Dark-Soda");
-    _isDark3 = (_theme=="lighttable");
+    _isDark = (_theme==ANDROID_STUDIO || _theme==DARK_SODA || _theme==LIGHT_TABLE);
     Prefs *prefs = Prefs::prefs();
     prefs->blockEmitPrefsChanged(true);
     prefs->setValue("theme", _theme);
-    if(_theme == "android") {
+    if (_theme == ANDROID_STUDIO) {
         prefs->setValue( "backgroundColor",QColor( 0x2b2b2b ) );
         prefs->setValue( "defaultColor",QColor( 0xAbB9C8 ) );
         prefs->setValue( "numbersColor",QColor( 0x6897BB ) );
@@ -65,7 +69,7 @@ void Theme::save() {
         prefs->setValue( "userwordsVarColor",QColor( 0xAE8ABE ) );
         prefs->setValue( "paramsColor",QColor( 0xcfefefe ) );
     }
-    else if(_theme == "netbeans") {
+    else if (_theme == NETBEANS) {
         prefs->setValue( "backgroundColor",QColor( 0xf5f5f5 ) );
         prefs->setValue( "defaultColor",QColor( 0x000001 ) );
         prefs->setValue( "numbersColor",QColor( 0x000001 ) );
@@ -84,7 +88,7 @@ void Theme::save() {
         prefs->setValue( "userwordsVarColor",QColor( 0x009900 ) );
         prefs->setValue( "paramsColor",QColor( 0xc80808 ) );
     }
-    else if(_theme == "qt") {
+    else if (_theme == QT_CREATOR) {
         prefs->setValue( "backgroundColor",QColor( 0xfefefe ) );
         prefs->setValue( "defaultColor",QColor( 0x000001 ) );
         prefs->setValue( "numbersColor",QColor( 0x000080 ) );
@@ -105,7 +109,7 @@ void Theme::save() {
         //cur line #c2e1ff
     }
 
-    else if(_theme == "Monokai-Dark-Soda") {
+    else if (_theme == DARK_SODA) {
         prefs->setValue( "backgroundColor",QColor( 0x242424 ) );
         prefs->setValue( "defaultColor",QColor( 0xDDDDDD ) );
         prefs->setValue( "numbersColor",QColor( 0xAE81FF ) );
@@ -125,7 +129,7 @@ void Theme::save() {
         prefs->setValue( "paramsColor",QColor( 0x66D9EF ) );
     }
 
-    else if(_theme == "lighttable") {
+    else if (_theme == LIGHT_TABLE) {
         prefs->setValue( "backgroundColor",QColor( 0x202020 ) );
         prefs->setValue( "defaultColor",QColor( 0xc6c6c6 ) );
         prefs->setValue( "numbersColor",QColor( 0xFEFEFE ) );
@@ -156,31 +160,20 @@ void Theme::load() {
 }
 
 QIcon Theme::icon(QString name) {
-    QString s = (_theme=="android" ? "dark" : "light");
+    QString s = (_isDark ? "dark" : "light");
     return QIcon(":/icons/"+s+"/"+name);
 }
 
-QImage Theme::image(QString name, int theme) {
-    QString t = _theme;
-    if(theme == 1)
-        t = "android";
-    else if(theme == 2)
-        t = "netbeans";
-    QString s = (t=="android" ? "dark" : "light");
-    return QImage(":/icons/"+s+"/"+name);
+QImage Theme::imageLight(QString name) {
+    return QImage(":/icons/light/"+name);
+}
+QImage Theme::imageDark(QString name) {
+    return QImage(":/icons/dark/"+name);
 }
 
 bool Theme::isDark() {
     return _isDark;
 }
-bool Theme::isDark2() {
-    return _isDark2;
-}
-
-bool Theme::isDark3() {
-    return _isDark3;
-}
-
 
 QString Theme::hexColor(const QColor &color) {
     QString r = QString::number(color.red(),16);
@@ -199,14 +192,10 @@ QColor Theme::selWordColor() {
     static QColor c1(166,166,166);
     static QColor c2(236,235,163);//(225,225,225);
     static QColor c3(225,225,225);
-    if(_theme == "android")
+    if(_isDark)
         return c1;
-    else if(_theme == "netbeans")
+    else if(_theme == NETBEANS)
         return c2;
-    else if(_theme == "Monokai-Dark-Soda")
-        return c1;
-    else if(_theme == "lighttable")
-        return c1;
     else
         return c3;
 }
