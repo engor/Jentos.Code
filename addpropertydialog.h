@@ -1,21 +1,21 @@
-#ifndef FORMADDPROPERTY_H
-#define FORMADDPROPERTY_H
+#ifndef ADDPROPERTYDIALOG_H
+#define ADDPROPERTYDIALOG_H
 
 #include <QDialog>
 #include <QMessageBox>
 
 
 namespace Ui {
-class FormAddProperty;
+class AddPropertyDialog;
 }
 
-class FormAddProperty : public QDialog
+class AddPropertyDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit FormAddProperty(QWidget *parent = 0, Qt::WindowFlags f = 0);
-    ~FormAddProperty();
+    explicit AddPropertyDialog(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    ~AddPropertyDialog();
 
     static const int ADD_GETTER_THEN_SETTER = 0;
     static const int ADD_SETTER_THEN_GETTER = 1;
@@ -37,7 +37,7 @@ private slots:
     void on_lineEditPropName_textChanged(const QString &arg1);
 
 private:
-    Ui::FormAddProperty *ui;
+    Ui::AddPropertyDialog *ui;
 };
 
 #endif // FORMADDPROPERTY_H

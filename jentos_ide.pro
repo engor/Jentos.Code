@@ -13,7 +13,8 @@ FORMS    += mainwindow.ui \
     prefsdialog.ui \
     findinfilesdialog.ui \
     previewhtml5.ui \
-    formaddproperty.ui
+    saveonclosedialog.ui \
+    addpropertydialog.ui
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -34,7 +35,8 @@ SOURCES += main.cpp\
     theme.cpp \
     previewhtml5.cpp \
     customcombobox.cpp \
-    formaddproperty.cpp
+    saveonclosedialog.cpp \
+    addpropertydialog.cpp
 
 HEADERS  += mainwindow.h \
     codeeditor.h \
@@ -54,7 +56,8 @@ HEADERS  += mainwindow.h \
     theme.h \
     previewhtml5.h \
     customcombobox.h \
-    formaddproperty.h
+    saveonclosedialog.h \
+    addpropertydialog.h
 
 RESOURCES += \
     resources.qrc

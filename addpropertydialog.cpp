@@ -1,31 +1,31 @@
-#include "formaddproperty.h"
-#include "ui_formaddproperty.h"
+#include "addpropertydialog.h"
+#include "ui_addpropertydialog.h"
 
-FormAddProperty::FormAddProperty(QWidget *parent, Qt::WindowFlags f) :
+AddPropertyDialog::AddPropertyDialog(QWidget *parent, Qt::WindowFlags f) :
     QDialog(parent),
-    ui(new Ui::FormAddProperty)
+    ui(new Ui::AddPropertyDialog)
 {
     ui->setupUi(this);
     pressOk = false;
 }
 
-FormAddProperty::~FormAddProperty()
+AddPropertyDialog::~AddPropertyDialog()
 {
     delete ui;
 }
 
-void FormAddProperty::fillTypes(QStringList &list)
+void AddPropertyDialog::fillTypes(QStringList &list)
 {
     ui->comboBoxPropType->clear();
     ui->comboBoxPropType->addItems(list);
 }
 
-void FormAddProperty::on_pushButtonCancel_clicked()
+void AddPropertyDialog::on_pushButtonCancel_clicked()
 {
     hide();
 }
 
-void FormAddProperty::on_pushButtonAdd_clicked()
+void AddPropertyDialog::on_pushButtonAdd_clicked()
 {
     propName = ui->lineEditPropName->text().trimmed();
     if (propName.isEmpty()) {
@@ -56,7 +56,7 @@ void FormAddProperty::on_pushButtonAdd_clicked()
     hide();
 }
 
-void FormAddProperty::on_lineEditPropName_textChanged(const QString &arg1)
+void AddPropertyDialog::on_lineEditPropName_textChanged(const QString &arg1)
 {
     if (!ui->checkBoxAutoNameWrapped->isChecked())
         return;

@@ -15,7 +15,7 @@ See LICENSE.TXT for licensing terms.
 #include "codeanalyzer.h"
 #include "theme.h"
 #include "mainwindow.h"
-#include "formaddproperty.h"
+#include "addpropertydialog.h"
 
 CodeEditor *extraSelsEditor;
 QList<QTextEdit::ExtraSelection> extraSels;
@@ -354,7 +354,7 @@ void CodeEditor::showDialogAddProperty()
     }
 
     // show dialog
-    FormAddProperty *form = new FormAddProperty();
+    AddPropertyDialog *form = new AddPropertyDialog();
     form->fillTypes(types);
     form->exec();
 
@@ -380,13 +380,13 @@ void CodeEditor::showDialogAddProperty()
             +indent+"End\n";
 
     QString text;
-    if (addVariant == FormAddProperty::ADD_GETTER_THEN_SETTER) {
+    if (addVariant == AddPropertyDialog::ADD_GETTER_THEN_SETTER) {
         text = getter+setter;
-    } else if (addVariant == FormAddProperty::ADD_SETTER_THEN_GETTER) {
+    } else if (addVariant == AddPropertyDialog::ADD_SETTER_THEN_GETTER) {
         text = setter+getter;
-    } else if (addVariant == FormAddProperty::ADD_SETTER_ONLY) {
+    } else if (addVariant == AddPropertyDialog::ADD_SETTER_ONLY) {
         text = setter;
-    } else if (addVariant == FormAddProperty::ADD_GETTER_ONLY) {
+    } else if (addVariant == AddPropertyDialog::ADD_GETTER_ONLY) {
         text = getter;
     }
 
@@ -401,6 +401,7 @@ void CodeEditor::showDialogAddProperty()
     setTextCursor(cursor);
 
     insertPlainText(text);
+    ensureCursorVisible();
 
     // clear resources
     targetList.clear();

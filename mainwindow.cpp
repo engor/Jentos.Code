@@ -24,7 +24,7 @@ See LICENSE.TXT for licensing terms.
 #include "theme.h"
 #include "customcombobox.h"
 #include <QHostInfo>
-#include "formaddproperty.h"
+#include "addpropertydialog.h"
 
 #define SETTINGS_VERSION 2
 
@@ -796,7 +796,7 @@ bool MainWindow::closeFile( QWidget *widget,bool really ){
     //qDebug()<<"close file";
     if( !widget ) return true;
 
-    CodeEditor *editor=qobject_cast<CodeEditor*>( widget );
+    CodeEditor *editor = qobject_cast<CodeEditor*>( widget );
 
     if( editor && editor->modified() ){
 
@@ -842,10 +842,10 @@ bool MainWindow::closeFile( QWidget *widget,bool really ){
         CodeAnalyzer::removeUserFile(path);
         CodeAnalyzer::treeItemModel()->clear();
         CodeAnalyzer::listItemModel()->clear();
-        if(_codeEditor) {
+        /*if(_codeEditor) {
             //qDebug()<<"fill tree here:"<<_codeEditor->fileName();
             _codeEditor->fillCodeTree();
-        }
+        }*/
     }
 
     return true;
