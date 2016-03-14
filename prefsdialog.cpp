@@ -110,16 +110,12 @@ int PrefsDialog::exec(){
 
     // themes
     _isEnableThemeSignal = false;
-    QStringList lst;
-    lst << Theme::ANDROID_STUDIO << Theme::NETBEANS << Theme::QT_CREATOR
-        << Theme::DARK_SODA << Theme::LIGHT_TABLE;
+    QStringList lst = Theme::allThemes();
     if (_ui->comboBoxTheme->count() == 0) {
         _ui->comboBoxTheme->addItems(lst);
     }
     QString theme = p->getString("theme");
     int index = lst.indexOf(theme);
-    if (index < 0)
-        index = 1; // netbeans by default
     _ui->comboBoxTheme->setCurrentIndex(index);
     _isEnableThemeSignal = true;
 

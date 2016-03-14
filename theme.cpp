@@ -10,7 +10,7 @@ QString Theme::LIGHT_TABLE = "Light Table";
 QString Theme::_theme;
 QString Theme::_prevTheme;
 bool Theme::_isDark;
-
+QStringList Theme::_themes;
 
 Theme::Theme(QObject *parent) : QObject(parent) {
 
@@ -28,6 +28,9 @@ void Theme::init() {
     if(!p->contains("smoothFonts"))
         p->setValue( "smoothFonts",true );
 
+    _themes.clear();
+    _themes <<ANDROID_STUDIO<<NETBEANS<<QT_CREATOR<<DARK_SODA<<LIGHT_TABLE;
+
     _prevTheme = "";
     QString s = p->getString("theme", NETBEANS);
     set(s);
@@ -40,7 +43,7 @@ void Theme::set(QString kind) {
 void Theme::setLocal(QString kind) {
     emit beginChange();
     _prevTheme = _theme;
-    _theme = kind;
+    _theme = _themes.contains(kind) ? kind : NETBEANS;
     save();
     emit endChange();
 }

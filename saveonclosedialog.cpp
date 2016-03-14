@@ -28,15 +28,24 @@ void SaveOnCloseDialog::fillList(QStringList lst)
 
 void SaveOnCloseDialog::on_pushButtonSave_clicked()
 {
+    int count = ui->listWidget->count();
+    for (int k = 0; k < count; ++k) {
+        QListWidgetItem *item = ui->listWidget->item(k);
+        if (item->checkState() != Qt::Checked)
+            list.removeAt(k);
+    }
     setResult(1);
+    hide();
 }
 
 void SaveOnCloseDialog::on_pushButtonDiscard_clicked()
 {
     setResult(-1);
+    hide();
 }
 
 void SaveOnCloseDialog::on_pushButtonCancel_clicked()
 {
     setResult(0);
+    hide();
 }

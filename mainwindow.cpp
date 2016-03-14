@@ -25,6 +25,8 @@ See LICENSE.TXT for licensing terms.
 #include "customcombobox.h"
 #include <QHostInfo>
 #include "addpropertydialog.h"
+#include "saveonclosedialog.h"
+
 
 #define SETTINGS_VERSION 2
 
@@ -379,7 +381,7 @@ void MainWindow::updateTheme(const QString &name) {
     }
 
     QString css = "";
-    if(Theme::isDark()) {
+    if (Theme::isDark()) {
         QFile f(":/txt/android.css");
         if(f.open(QFile::ReadOnly)) {
             css = f.readAll();
@@ -857,20 +859,39 @@ bool MainWindow::confirmQuit(){
 
     _prefsDialog->writeSettings();
 
-    //_findDialog->writeSettings();
-
     _findInFilesDialog->writeSettings();
 
     CodeAnalyzer::disable();//skip analyzer while saving files on exit
 
-    for( int i=0;i<_mainTabWidget->count();++i ){
-
-        CodeEditor *editor=qobject_cast<CodeEditor*>( _mainTabWidget->widget( i ) );
-
-        if( editor && !closeFile( editor,false ) ) return false;
+    QStringList files;
+    QList<CodeEditor*> editors;
+    for (int i = 0; i < _mainTabWidget->count(); ++i ){
+        CodeEditor *editor = qobject_cast<CodeEditor*>( _mainTabWidget->widget( i ) );
+        if (editor && editor->modified()) {
+            files.append(editor->path());
+            editors.append(editor);
+        }
     }
+
+    bool ok = true;
+    if (!files.isEmpty()) {
+        SaveOnCloseDialog *dialog = new SaveOnCloseDialog(this);
+        dialog->fillList(files);
+        int retval = dialog->exec();
+        if (retval == -1) {// discard
+
+        } else if (retval == 0) {// cancel
+            ok = false;
+        } else { // save
+            foreach (CodeEditor *editor, editors) {
+                saveFile( editor,editor->path() );
+            }
+        }
+        delete dialog;
+    }
+
     CodeAnalyzer::enable();//if user select 'cancel' option
-    return true;
+    return ok;
 }
 
 void MainWindow::closeEvent( QCloseEvent *event ){
@@ -890,7 +911,7 @@ void MainWindow::closeEvent( QCloseEvent *event ){
             }
         }
 
-    }else{
+    } else{
         event->ignore();
     }
 }

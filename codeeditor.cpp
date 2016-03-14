@@ -1618,16 +1618,19 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
 
     //ctrl + s
     if (ctrl && key == 83){
+        e->accept();
         return;
     }
     //ctrl + z
     if (ctrl && key == Qt::Key_Z){
         undo();
+        e->accept();
         return;
     }
     //ctrl + y
     if (ctrl && key == Qt::Key_Y){
         redo();
+        e->accept();
         return;
     }
 
@@ -1661,6 +1664,7 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
             pos = block.length()-1;
         cursor.setPosition(block.position()+pos);
         setTextCursor(cursor);
+        e->accept();
         return;
     }
 
@@ -1709,6 +1713,7 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
         if (ch == typedChar) {
             cursor.setPosition(cursor.position()+1);
             setTextCursor(cursor);
+            e->accept();
             return;
         }
     }
@@ -1933,18 +1938,24 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
 
                 // check return type of method
                 // and add :Void if it's empty
+                // exclude New()
                 if (_addVoidForMethods && (isMethod || isFunc)) {
                     QString origText = block.text();
                     int i1 = origText.indexOf(":");
                     int i2 = origText.indexOf("(");
                     if ((i1 == -1 && i2 > 0) // has no :
                             || i2 < i1) { // has : but after (
-                        int pp = cursor.position();
-                        cursor.setPosition(block.position()+i2);
-                        setTextCursor(cursor);
-                        insertPlainText(":Void");
-                        cursor.setPosition(pp+5);
-                        setTextCursor(cursor);
+                        int i = i2;
+                        while (i > 0 && origText[i] != ' ') --i;
+                        QString name = origText.mid(i+1, i2-i-1);
+                        if (name != "New") {
+                            int pp = cursor.position();
+                            cursor.setPosition(block.position()+i2);
+                            setTextCursor(cursor);
+                            insertPlainText(":Void");
+                            cursor.setPosition(pp+5);
+                            setTextCursor(cursor);
+                        }
                     }
                 }
             }
@@ -2374,7 +2385,7 @@ void Highlighter::highlightBlock( const QString &ctext ){
             else if ( CodeAnalyzer::containsKeyword(ident) ) {
                 format = FormatKeyword;
                 //try to capitalize
-                bool allow = (i < n && ctext[i] == ' ');
+                bool allow = (i < n && !isIdent(ctext[i]));
                 if (allow && ident[0].isLower()) {
                     QTextCursor c = _editor->textCursor();
                     int p0 = c.position();

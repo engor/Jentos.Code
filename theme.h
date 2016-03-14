@@ -13,7 +13,7 @@ public:
     static QString ANDROID_STUDIO, QT_CREATOR, NETBEANS, LIGHT_TABLE, DARK_SODA;
 
     Theme(QObject *parent=0);
-    static QString theme(){ return _theme; }
+    static QString current(){ return _theme; }
     static QString prevTheme(){ return _prevTheme; }
     static bool isCurrent(QString kind) {
         return _theme == kind;
@@ -35,6 +35,7 @@ public:
         return t;
     }
     void setLocal(QString kind);
+    static QStringList allThemes() { return _themes; }
 
 signals:
     void beginChange();
@@ -42,6 +43,7 @@ signals:
 
 private:
 
+    static QStringList _themes;
     static QString _theme, _prevTheme;
     static bool _isDark;
 
