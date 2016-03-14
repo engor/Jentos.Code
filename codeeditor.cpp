@@ -366,7 +366,7 @@ void CodeEditor::showDialogAddProperty()
     QTextBlock block = cursor.block();
     QString indent = block.text(); //expecting only spaces or tabs here - it's line indent
 
-    QString propName = form->propName, propType = form->propType, wrapName = form->wrappedName;
+    QString propName = form->propName, propType = form->propType, wrapName = form->wrappedName, defValue = form->defaultValue;
     bool addWrap = form->isNeedToAddWrapped;
     int addVariant = form->addVariant;
 
@@ -391,7 +391,12 @@ void CodeEditor::showDialogAddProperty()
     }
 
     if (addWrap) {
-        text = indent+"Field "+wrapName+":"+propType+"\n" + text;
+        if (propType == "String") {
+            defValue = defValue.replace("\"", "~q");
+            defValue = "\""+defValue+"\"";
+        }
+        QString def = defValue.isEmpty() ? "" : " = "+defValue;
+        text = indent+"Field "+wrapName+":"+propType+def+"\n" + text;
     }
 
     text += "\n"+indent;
@@ -1707,14 +1712,16 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     //qDebug()<<"typedChar:"<<typedChar;
 
     // skip spec chars if they were already added in this place
-    if (typedChar == '"' || typedChar == '\'' || typedChar == ')' || typedChar == ']') {
-        int i = cursor.positionInBlock();
-        QChar ch = block.text().at(i);
-        if (ch == typedChar) {
-            cursor.setPosition(cursor.position()+1);
-            setTextCursor(cursor);
-            e->accept();
-            return;
+    int i = cursor.positionInBlock();
+    if (i < block.text().length()) {
+        if (typedChar == '"' || typedChar == '\'' || typedChar == ')' || typedChar == ']') {
+            QChar ch = block.text().at(i);
+            if (ch == typedChar) {
+                cursor.setPosition(cursor.position()+1);
+                setTextCursor(cursor);
+                e->accept();
+                return;
+            }
         }
     }
 

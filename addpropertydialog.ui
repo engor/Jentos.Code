@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>453</width>
-    <height>237</height>
+    <height>265</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,19 +46,6 @@
        </item>
       </layout>
      </item>
-     <item row="1" column="1">
-      <widget class="QComboBox" name="comboBoxPropType">
-       <property name="editable">
-        <bool>true</bool>
-       </property>
-       <property name="maxVisibleItems">
-        <number>20</number>
-       </property>
-       <property name="insertPolicy">
-        <enum>QComboBox::NoInsert</enum>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
@@ -82,6 +69,19 @@
         </widget>
        </item>
       </layout>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="comboBoxPropType">
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+       <property name="maxVisibleItems">
+        <number>20</number>
+       </property>
+       <property name="insertPolicy">
+        <enum>QComboBox::NoInsert</enum>
+       </property>
+      </widget>
      </item>
      <item row="2" column="1">
       <widget class="QFrame" name="frame_2">
@@ -130,6 +130,30 @@ Convert it to 'private' style with _.</string>
        </layout>
       </widget>
      </item>
+     <item row="4" column="1">
+      <widget class="QComboBox" name="comboBoxAddVariant">
+       <item>
+        <property name="text">
+         <string>Getter then Setter</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Setter then Getter</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Getter only</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Setter only</string>
+        </property>
+       </item>
+      </widget>
+     </item>
      <item row="2" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <property name="sizeConstraint">
@@ -166,28 +190,14 @@ Convert it to 'private' style with _.</string>
        </item>
       </layout>
      </item>
-     <item row="4" column="1">
-      <widget class="QComboBox" name="comboBoxAddVariant">
-       <item>
-        <property name="text">
-         <string>Getter then Setter</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Setter then Getter</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Getter only</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Setter only</string>
-        </property>
-       </item>
+     <item row="5" column="0">
+      <widget class="QCheckBox" name="checkBoxAddWrapped">
+       <property name="text">
+        <string>Also add wrapped field into class</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item row="4" column="0">
@@ -214,15 +224,32 @@ Convert it to 'private' style with _.</string>
        </item>
       </layout>
      </item>
-     <item row="5" column="0">
-      <widget class="QCheckBox" name="checkBoxAddWrapped">
-       <property name="text">
-        <string>Also add wrapped field into class</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
+     <item row="3" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_8">
+       <item>
+        <spacer name="horizontalSpacer_6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Default value</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="lineEditDefaultValue"/>
      </item>
     </layout>
    </item>
@@ -310,6 +337,9 @@ Convert it to 'private' style with _.</string>
  <tabstops>
   <tabstop>lineEditPropName</tabstop>
   <tabstop>comboBoxPropType</tabstop>
+  <tabstop>lineEditWrappedName</tabstop>
+  <tabstop>checkBoxAutoNameWrapped</tabstop>
+  <tabstop>lineEditDefaultValue</tabstop>
   <tabstop>comboBoxAddVariant</tabstop>
   <tabstop>checkBoxAddWrapped</tabstop>
   <tabstop>pushButtonAdd</tabstop>

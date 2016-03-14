@@ -50,6 +50,7 @@ void AddPropertyDialog::on_pushButtonAdd_clicked()
         ui->lineEditPropName->setFocus();
         return;
     }
+    defaultValue = ui->lineEditDefaultValue->text();
     addVariant = ui->comboBoxAddVariant->currentIndex();
     isNeedToAddWrapped = ui->checkBoxAddWrapped->isChecked();
     pressOk = true;

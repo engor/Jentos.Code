@@ -24,7 +24,7 @@ public:
 
     void fillTypes(QStringList &list);
 
-    QString propName, propType, wrappedName;
+    QString propName, propType, wrappedName, defaultValue;
     bool isNeedToAddWrapped;
     bool pressOk;
     int addVariant;
