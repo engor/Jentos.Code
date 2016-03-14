@@ -2310,27 +2310,30 @@ void Highlighter::onPrefsChanged( const QString &name ){
 }
 
 void Highlighter::highlightBlock( const QString &ctext ){
+
     //_enabled = false;
-    if(!_enabled)
+    if (!_enabled)
         return;
 
-    if(ctext.trimmed().isEmpty())
-        return;
-    //qDebug() << "highlight: "+ctext;
-
-    int i = 0, n = ctext.length();
-
-    if( !_editor->isCode() ){
-        setTextFormat( 0, n, FormatDefault );
+    if (!_editor->isCode()){
+        setTextFormat( 0, ctext.length(), FormatDefault );
         return;
     }
 
+    int i = 0, n = ctext.length();
+
     while( i < n && ctext[i] <= ' ' ) ++i;
+
+    // is it empty line
+    if (i == n)
+        return;
+
+    //qDebug() << "highlight:" << ctext;
+
     QTextBlock block = currentBlock();
     CodeItem *rem = CodeAnalyzer::remAt( block );
     if( rem ) {
         //qDebug()<<"rem: "+ctext;
-        //setFormat( 0,text.length(),_commentsColor );
         setTextFormat( 0, n, FormatComment );
         return;
     }
@@ -2338,7 +2341,7 @@ void Highlighter::highlightBlock( const QString &ctext ){
     bool monkeyFile = _editor->isMonkey();
 
     Formats format = FormatDefault;
-    //Formats formatPrev = format;
+
     int prev = i;
 
     while( i < n ) {
@@ -2360,17 +2363,14 @@ void Highlighter::highlightBlock( const QString &ctext ){
             format = FormatDefault;
             QString ident = ctext.mid(prev,i-prev);
             //qDebug()<<"my_ident: "+ident;
-            //bool containsDot
-            if(c0 == '.') {
+            if (c0 == '.') {
                 //format = FormatDefault;
             }
-            else if( CodeAnalyzer::containsKeyword(ident) ) {
+            else if ( CodeAnalyzer::containsKeyword(ident) ) {
                 format = FormatKeyword;
-                //capitalize
-                //QString s1 = ctext.left(prev);
-                //QString s2 = ctext.mid(i);
-                if(ident[0].isLower()) {
-                    //qDebug()<<"capitalize: "+ident;
+                //try to capitalize
+                bool allow = (i < n && ctext[i] == ' ');
+                if (allow && ident[0].isLower()) {
                     QTextCursor c = _editor->textCursor();
                     int p0 = c.position();
                     int p1 = block.position()+prev;
@@ -2383,28 +2383,28 @@ void Highlighter::highlightBlock( const QString &ctext ){
                 }
             }
             else {
-                /*CodeItem *item = CodeAnalyzer::findInScope(block, i);
-                if(item) {
-                    if(item->isParam()) {
+                CodeItem *item = CodeAnalyzer::findInScope(block, i);
+                if (item) {
+                    if (item->isParam()) {
                         format = FormatParam;
                     }
-                    else if(item->isUser()) {
-                        if(item->isField()) {
+                    else if (item->isUser()) {
+                        if (item->isField()) {
                             format = FormatUserClassVar;
                         }
-                        else if(item->block() == block) {
-                            if(item->isClassOrInterface() || item->isFunc())//for local color is default
+                        else if (item->block() == block) {
+                            if (item->isClassOrInterface() || item->isFunc())//for local color is default
                                 format = FormatUserDecl;
                         }
-                        else if(item->isClassOrInterface()) {
+                        else if (item->isClassOrInterface()) {
                             format = FormatUserClass;
                         }
                     }
-                    else if(item->isMonkey() && item->isClassOrInterface()) {
+                    else if (item->isMonkey() && item->isClassOrInterface()) {
                         format = FormatMonkeyClass;
                     }
                     italic = (item->decl()=="const"||item->decl()=="global"||(item->parent()!=0 && item->decl()=="function"));
-                }*/
+                }
             }
         }
         else if( c == '0' && !monkeyFile ) {

@@ -719,7 +719,7 @@ QWidget *MainWindow::openFile( const QString &cpath,bool addToRecent ){
     QString filemonkeytype = ( filemonkeyname.right(3) ).toLower();
 
     bool fileinvalidbool = false;
-    int fileinvalidsnum = 4;
+    /*int fileinvalidsnum = 4;
     QString fileinvalids[fileinvalidsnum] = {"png","ico","jpg","gif"};
     for(int a=0; a<fileinvalidsnum;a++){
 
@@ -728,7 +728,7 @@ QWidget *MainWindow::openFile( const QString &cpath,bool addToRecent ){
              //qDebug() << "archivo no valido";
               a=fileinvalidsnum;
         }
-    }
+    }*/
     if(!fileinvalidbool){
         _mainTabWidget->addTab( editor,stripDir( path ) );
         _mainTabWidget->setCurrentWidget( editor );
@@ -1307,16 +1307,18 @@ void MainWindow::onProjectMenu( const QPoint &pos ){
 
 
     bool typeimagefile = false;
-    int fileinvalidimgsnum = 4;
-    QString fileinvalidimg[fileinvalidimgsnum] = {"png","jpg","gif","ico"};
+    QStringList fileinvalidimg;
+    fileinvalidimg << "png"<<"jpg"<<"gif"<<"ico";
 
-        for(int a=0; a<fileinvalidimgsnum;a++){
+    /*
 
-            if( typefile.endsWith(fileinvalidimg[a])){
-                  typeimagefile = true;
-                  a=fileinvalidimgsnum;
-            }
+    foreach (QString ext, fileinvalidimg) {
+        if ( typefile.endsWith(fileinvalidimg[a])){
+              typeimagefile = true;
+              a=fileinvalidimgsnum;
         }
+    }
+    */
 
     if( _projectTreeModel->isProject( index ) ){
         menu=_projectPopupMenu;
@@ -2436,6 +2438,7 @@ void MainWindow::onKeyEscapePressed() {
 }
 
 void MainWindow::onCheckForUpdates(bool isQuiet) {
+    //QUrl url("https://raw.githubusercontent.com/engor/Jentos_IDE/dev/.gitignore");
     QUrl url("http://fingerdev.com/updates/jentos.code.txt");
     if (_networkManager)
         delete _networkManager;
