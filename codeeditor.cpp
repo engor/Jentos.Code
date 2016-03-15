@@ -1243,8 +1243,8 @@ void CodeEditor::showToolTip(QPoint pos, QString s, bool nowrap) {
 
 CodeScope CodeEditor::codescopeForTextCursor(QTextCursor cursor, bool showStyle) {
     if(showStyle) {
-        cursor.select(QTextCursor::WordUnderCursor);
         flushExtraSelections();
+        cursor.select(QTextCursor::WordUnderCursor);
         QTextBlock block = cursor.block();
         if( block.isValid() ){
             QTextEdit::ExtraSelection selection;
@@ -1285,7 +1285,6 @@ void CodeEditor::mouseMoveEvent(QMouseEvent *e) {
             if(!QGuiApplication::overrideCursor()) QGuiApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
             if(!cur.toolTip.isEmpty()) showToolTip(e->globalPos(), QString::number(cursor.blockNumber()+1) + ": " + cur.toolTip);
         } else {
-
             QGuiApplication::restoreOverrideCursor();
             QToolTip::hideText();
         }

@@ -63,5 +63,5 @@ win32{
 mac{
 #        WTF..enabling this appears to *break* 10.6 compatibility!!!!!
 #        QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.6
-        ICON = ted.icns
+        ICON = jentos.icns
 }

@@ -1,4 +1,4 @@
-### Jentos_IDE (Donation comming soon)
+### Jentos_IDE [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BRYKFMQT3DWDU)
 ### ![Alt text](https://api.travis-ci.org/malublu/Jentos_IDE.svg "Build Status") [![GitHub issues](https://img.shields.io/github/issues/malublu/Jentos_IDE.svg)](https://github.com/malublu/Jentos_IDE/issues) [![GitHub license](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://raw.githubusercontent.com/malublu/Jentos_IDE/master/LICENSE.TXT) [![Github All Releases](https://img.shields.io/github/downloads/malublu/Jentos_IDE/total.svg)]()
 ==========
 ### About
