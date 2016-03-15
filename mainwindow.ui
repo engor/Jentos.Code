@@ -511,7 +511,7 @@
      <x>0</x>
      <y>0</y>
      <width>1015</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1314,6 +1314,9 @@ Don't change documents between find usages and rename</string>
    </property>
    <property name="text">
     <string>Close</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
    </property>
   </action>
   <action name="actionClose_All">
