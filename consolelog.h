@@ -1,5 +1,5 @@
-#ifndef DEBUGWINDOW_H
-#define DEBUGWINDOW_H
+#ifndef CONSOLELOG_H
+#define CONSOLELOG_H
 
 #include <qstring.h>
 #include <qwidget.h>
@@ -15,4 +15,4 @@ protected:
     virtual void build( QString mode,QString pathmonkey) = 0;
 };
 
-#endif // DEBUGWINDOW_H
+#endif // CONSOLELOG_H

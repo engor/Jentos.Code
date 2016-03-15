@@ -19,7 +19,6 @@ class FindDialog;
 class Process;
 class FindInFilesDialog;
 class QuickHelp;
-class ConsoleLog;
 
 
 namespace Ui {

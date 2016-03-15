@@ -27,7 +27,6 @@ typedef int fd_t;
 
 class ProcWaiter;
 class LineReader;
-class ConsoleLog;
 
 class Process : public QObject{
     Q_OBJECT
