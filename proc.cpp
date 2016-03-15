@@ -270,7 +270,7 @@ Process::~Process(){
 
     _state=DELETING;
 
-    ConsoleLog *log = dynamic_cast<ConsoleLog*>(QApplication::activeWindow());
+    ConsoleLog *log = (ConsoleLog*)(QApplication::activeWindow());
 
     if(log != 0) {
 
@@ -388,7 +388,7 @@ bool LineReader::isLineAvailable(){
 
 bool LineReader::waitLineAvailable( int millis ){
     if( !_avail && !_eof ){
-        ConsoleLog *log = dynamic_cast<ConsoleLog*>(QApplication::activeWindow());
+        ConsoleLog *log = (ConsoleLog*)(QApplication::activeWindow());
         if( !wait( millis ) && log != 0 ) log->debug( "Timeout waiting for process output" );
     }
     return _avail;
