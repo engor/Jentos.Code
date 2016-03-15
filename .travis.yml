@@ -22,17 +22,20 @@ install:
 script:
   - mkdir release
   - cd release
-  - qmake -makefile -o Makefile ../jentos_ide.pro -r
-  - make
-  - make clean
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-         wget https://raw.githubusercontent.com/malublu/linuxdeployqt/master/linuxdeployqt -O linuxdeployqt
+         qmake -makefile -o Makefile ../jentos_ide.pro -r -spec linux-g++
+      && make
+      && make clean
+      && wget https://raw.githubusercontent.com/malublu/linuxdeployqt/master/linuxdeployqt -O linuxdeployqt
       && chmod 0774 linuxdeployqt
       && ./linuxdeployqt JentosIDE
       && rm -rf linuxdeployqt
       ;
     else
-         macdeployqt JentosIDE.app
+         qmake -makefile -o Makefile ../jentos_ide.pro -r -spec macx-g++
+      && make
+      && make clean
+      && macdeployqt JentosIDE.app
       ;
     fi
   - cd $TRAVIS_BUILD_DIR
