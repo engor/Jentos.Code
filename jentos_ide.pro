@@ -57,7 +57,7 @@ RESOURCES += \
 TARGET = JentosIDE
 
 win32{
-        RC_FILE = appicon.rc
+        RC_FILE = jentos.rc
 }
 
 mac{
