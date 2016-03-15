@@ -56,6 +56,7 @@ int PrefsDialog::exec(){
         _used = true;
     }
 
+
     _ui->fontComboBox->setCurrentFont( QFont( _prefs->getString( "fontFamily" ),_prefs->getInt("fontSize") ) );
     _ui->fontSizeWidget->setValue( _prefs->getInt("fontSize") );
     _ui->tabSizeWidget->setValue( _prefs->getInt( "tabSize" ) );
@@ -63,31 +64,7 @@ int PrefsDialog::exec(){
     _ui->chbHighlightLine->setChecked( _prefs->getBool( "highlightLine" ) );
     _ui->chbHighlightWord->setChecked( _prefs->getBool( "highlightWord" ) );
 
-    _ui->backgroundColorWidget->setColor( _prefs->getColor( "backgroundColor" ) );
-    _ui->defaultColorWidget->setColor( _prefs->getColor( "defaultColor" ) );
-    _ui->numbersColorWidget->setColor( _prefs->getColor( "numbersColor" ) );
-    _ui->stringsColorWidget->setColor( _prefs->getColor( "stringsColor" ) );
-    _ui->identifiersColorWidget->setColor( _prefs->getColor( "identifiersColor" ) );
-    _ui->keywordsColorWidget->setColor( _prefs->getColor( "keywordsColor" ) );
-
-
-    _ui->constantsColorWidget->setColor( _prefs->getColor( "constantsColor" ) );
-    _ui->funcDeclsColorWidget->setColor( _prefs->getColor( "funcDeclsColor" ) );
-
-
-    _ui->commentsColorWidget->setColor( _prefs->getColor( "commentsColor" ) );
-    _ui->highlightColorWidget->setColor( _prefs->getColor( "highlightColor" ) );
-
-
-    _ui->highlightColorErrorWidget->setColor( _prefs->getColor( "highlightColorError" ) );
-    _ui->highlightColorCaretRowWidget->setColor( _prefs->getColor( "highlightColorCaretRow" ) );
-    _ui->monkeywordsColorWidget->setColor( _prefs->getColor( "monkeywordsColor" ) );
-    _ui->userwordsColorWidget->setColor( _prefs->getColor( "userwordsColor" ) );
-
-
-    _ui->userwordsDeclColorWidget->setColor( _prefs->getColor( "userwordsDeclColor" ) );
-    _ui->userwordsVarColorWidget->setColor( _prefs->getColor( "userwordsVarColor" ) );
-    _ui->paramsColorWidget->setColor( _prefs->getColor( "paramsColor" ) );
+    setColors();
 
     _ui->tabSizeWidget->setValue( _prefs->getInt( "tabSize" ) );
 
@@ -123,6 +100,21 @@ int PrefsDialog::exec(){
     return QDialog::exec();
 }
 
+void PrefsDialog::setColors() {
+    QStringList list;
+    list << "background"<<"default"<<"numbers"<<"strings"<<"identifiers"
+         <<"keywords"<<"comments"<<"highlight"<<"highlightError"<<"highlightCaretRow"
+           <<"monkeywords"<<"userwords"<<"userwordsDecl"<<"userwordsVar"<<"params";
+
+    foreach (QString param, list) {
+        QString name = param+"Color";
+        ColorSwatch *w = _ui->groupBox->findChild<ColorSwatch*>(name+"Widget");
+        if (w) {
+            w->setColor(_prefs->getColor(name));
+        }
+    }
+}
+
 void PrefsDialog::onCheckUpdatesChanged(){
     _prefs->setValue( "updates", _ui->checkBoxCheckUpdates->isChecked() );
 }
@@ -153,15 +145,17 @@ void PrefsDialog::onHighlightWordChanged(bool value) {
 
 void PrefsDialog::onColorChanged(){
 
-    ColorSwatch *swatch=qobject_cast<ColorSwatch*>( sender() );
+    ColorSwatch *swatch = qobject_cast<ColorSwatch*>( sender() );
     if( !swatch ) return;
 
-    QString name=swatch->objectName();
-    int i=name.indexOf( "Widget" );
-    if( i==-1 ) return;
-    name=name.left( i );
+    QString name = swatch->objectName();
+    int i = name.indexOf( "Widget" );
+    if( i == -1 ) return;
+    name = name.left( i );
 
-    _prefs->setValue( name.toStdString().c_str(),swatch->color() );
+    QColor color = swatch->color();
+    _prefs->setValue( name.toStdString().c_str(),color );
+
 }
 
 void PrefsDialog::onAnalyzerChanged() {
@@ -224,4 +218,10 @@ void PrefsDialog::on_comboBoxTheme_currentIndexChanged(const QString &arg1)
     if (!_isEnableThemeSignal)
         return;
     _mainwnd->updateTheme(arg1);
+}
+
+void PrefsDialog::on_pushButtonResetColors_clicked()
+{
+    Theme::adjustDefaultColors(true);//set and notify everyone about new colors
+    setColors();
 }

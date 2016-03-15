@@ -280,7 +280,7 @@ QString CodeEditor::cursorRowCol() {
 }
 
 void CodeEditor::cursorLineChanged() {
-    highlightLine( textCursor().blockNumber(), HlCaretRow );
+    highlightCurrentLine();
     onCompleteFocusOut();
     if( _blockChangeCursorMethod ) {
         _blockChangeCursorMethod = false;
@@ -529,6 +529,10 @@ void CodeEditor::undo() {
 void CodeEditor::redo() {
     _blockChangeCursorMethod = true;
     QPlainTextEdit::redo();
+}
+
+void CodeEditor::highlightCurrentLine(){
+    highlightLine( textCursor().blockNumber(), HlCaretRow );
 }
 
 void CodeEditor::highlightLine( int line, Highlighting kind ){
@@ -2329,6 +2333,7 @@ void Highlighter::onPrefsChanged( const QString &name ){
         _commentsColor = prefs->getColor("commentsColor");
         _highlightColor = prefs->getColor("highlightColor");
         rehighlight();
+        _editor->highlightCurrentLine();
     }
 }
 

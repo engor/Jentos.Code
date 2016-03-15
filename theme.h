@@ -19,9 +19,9 @@ public:
         return _theme == kind;
     }
     static void init();
-    static void set(QString kind);
-    static void save();
-    static void load();
+    static void set(QString kind, bool setColors=false);
+
+    static void adjustDefaultColors(bool emitSignals);
     static QIcon icon(QString name);
     static QImage imageLight(QString name);
     static QImage imageDark(QString name);
@@ -34,7 +34,7 @@ public:
             t = new Theme;
         return t;
     }
-    void setLocal(QString kind);
+    void setLocal(QString kind, bool setColors);
     static QStringList allThemes() { return _themes; }
 
 signals:
@@ -42,6 +42,8 @@ signals:
     void endChange();
 
 private:
+
+    static void save(bool setColors);
 
     static QStringList _themes;
     static QString _theme, _prevTheme;

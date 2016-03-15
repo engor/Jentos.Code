@@ -32,27 +32,46 @@ void Theme::init() {
     _themes <<ANDROID_STUDIO<<NETBEANS<<QT_CREATOR<<DARK_SODA<<LIGHT_TABLE;
 
     _prevTheme = "";
-    QString s = p->getString("theme", NETBEANS);
-    set(s);
+    QString s = p->getString("theme", "err");
+    bool err = (s == "err");
+    if (err) {
+        s = NETBEANS;
+    }
+    set(s, err);
 }
 
-void Theme::set(QString kind) {
-    instance()->setLocal(kind);
+void Theme::set(QString kind, bool setColors) {
+    instance()->setLocal(kind, setColors);
 }
 
-void Theme::setLocal(QString kind) {
+void Theme::setLocal(QString kind, bool setColors) {
     emit beginChange();
     _prevTheme = _theme;
     _theme = _themes.contains(kind) ? kind : NETBEANS;
-    save();
+    _isDark = (_theme==ANDROID_STUDIO || _theme==DARK_SODA || _theme==LIGHT_TABLE);
+    save(setColors);
     emit endChange();
 }
 
-void Theme::save() {
-    _isDark = (_theme==ANDROID_STUDIO || _theme==DARK_SODA || _theme==LIGHT_TABLE);
+void Theme::save(bool setColors) {
+
+    Prefs::prefs()->setValue("theme", _theme);
+
+    qDebug() << "save theme:"<<_theme<<", setcolors: "<<setColors;
+
+    if (!setColors)
+        return;
+
+    adjustDefaultColors(false);
+}
+
+void Theme::adjustDefaultColors(bool emitSignals)
+{
     Prefs *prefs = Prefs::prefs();
-    prefs->blockEmitPrefsChanged(true);
-    prefs->setValue("theme", _theme);
+
+    if (!emitSignals)
+        prefs->blockEmitPrefsChanged(true);
+
     if (_theme == ANDROID_STUDIO) {
         prefs->setValue( "backgroundColor",QColor( 0x2b2b2b ) );
         prefs->setValue( "defaultColor",QColor( 0xAbB9C8 ) );
@@ -64,8 +83,8 @@ void Theme::save() {
         prefs->setValue( "funcDeclsColor",QColor( 0xFFC66D ) );
         prefs->setValue( "commentsColor",QColor( 0x808080 ) );
         prefs->setValue( "highlightColor",QColor( 0x323232 ) );
-        prefs->setValue( "highlightColorError",QColor( 0x323232 ) );
-        prefs->setValue( "highlightColorCaretRow",QColor( 0x323232 ) );
+        prefs->setValue( "highlightErrorColor",QColor( 0x323232 ) );
+        prefs->setValue( "highlightCaretRowColor",QColor( 0x323232 ) );
         prefs->setValue( "monkeywordsColor",QColor( 0xc8c8c8 ) );
         prefs->setValue( "userwordsColor",QColor( 0xc8c8c8 ) );
         prefs->setValue( "userwordsDeclColor",QColor( 0xFFC66D ) );
@@ -83,8 +102,8 @@ void Theme::save() {
         prefs->setValue( "funcDeclsColor",QColor( 0x000001 ) );
         prefs->setValue( "commentsColor",QColor( 0x606060 ) );
         prefs->setValue( "highlightColor",QColor( 0xE9EFF8 ) );
-        prefs->setValue( "highlightColorError",QColor( 0xE9EFF8 ) );
-        prefs->setValue( "highlightColorCaretRow",QColor( 0xE9EFF8 ) );
+        prefs->setValue( "highlightErrorColor",QColor( 0xE9EFF8 ) );
+        prefs->setValue( "highlightCaretRowColor",QColor( 0xE9EFF8 ) );
         prefs->setValue( "monkeywordsColor",QColor( 0xc000001 ) );
         prefs->setValue( "userwordsColor",QColor( 0x000001 ) );
         prefs->setValue( "userwordsDeclColor",QColor( 0x000001 ) );
@@ -102,8 +121,8 @@ void Theme::save() {
         prefs->setValue( "funcDeclsColor",QColor( 0x800080 ) );
         prefs->setValue( "commentsColor",QColor( 0x606060 ) );
         prefs->setValue( "highlightColor",QColor( 0xE9EFF8 ) );
-        prefs->setValue( "highlightColorError",QColor( 0xE9EFF8 ) );
-        prefs->setValue( "highlightColorCaretRow",QColor( 0xF7F7F7 ) );
+        prefs->setValue( "highlightErrorColor",QColor( 0xE9EFF8 ) );
+        prefs->setValue( "highlightCaretRowColor",QColor( 0xF7F7F7 ) );
         prefs->setValue( "monkeywordsColor",QColor( 0xc800080 ) );
         prefs->setValue( "userwordsColor",QColor( 0x800080 ) );
         prefs->setValue( "userwordsDeclColor",QColor( 0x000001 ) );
@@ -123,8 +142,8 @@ void Theme::save() {
         prefs->setValue( "funcDeclsColor",QColor( 0xFD971F ) );
         prefs->setValue( "commentsColor",QColor( 0x8c8c8c ) );
         prefs->setValue( "highlightColor",QColor( 0xB5B5B5 ) );
-        prefs->setValue( "highlightColorError",QColor( 0xe40000 ) );
-        prefs->setValue( "highlightColorCaretRow",QColor( 0x3A2A21 ) );
+        prefs->setValue( "highlightErrorColor",QColor( 0xe40000 ) );
+        prefs->setValue( "highlightCaretRowColor",QColor( 0x3A2A21 ) );
         prefs->setValue( "monkeywordsColor",QColor( 0x2BBF1C ) );
         prefs->setValue( "userwordsColor",QColor( 0xfd971f ) );
         prefs->setValue( "userwordsDeclColor",QColor( 0xa6e22e ) );
@@ -143,23 +162,17 @@ void Theme::save() {
         prefs->setValue( "funcDeclsColor",QColor( 0xAACCFF ) );
         prefs->setValue( "commentsColor",QColor( 0x6688CD ) );
         prefs->setValue( "highlightColor",QColor( 0xea1717 ) );
-        prefs->setValue( "highlightColorError",QColor( 0x40000 ) );
-        prefs->setValue( "highlightColorCaretRow",QColor( 0x423434 ) );
+        prefs->setValue( "highlightErrorColor",QColor( 0x40000 ) );
+        prefs->setValue( "highlightCaretRowColor",QColor( 0x423434 ) );
         prefs->setValue( "monkeywordsColor",QColor( 0xAFCDFB ) );
         prefs->setValue( "userwordsColor",QColor( 0x2886AC ) );
         prefs->setValue( "userwordsDeclColor",QColor( 0xCCAAFF ) );
         prefs->setValue( "userwordsVarColor",QColor( 0x2CA2A2 ) );
         prefs->setValue( "paramsColor",QColor( 0x66D9EF ) );
     }
-    prefs->blockEmitPrefsChanged(false, true);
-}
 
-void Theme::load() {
-    /*_theme = "android";
-    Prefs *prefs = Prefs::prefs();
-    QString s = prefs->getString("theme");
-    if(s != "")
-        _theme = s;*/
+    if (!emitSignals)
+        prefs->blockEmitPrefsChanged(false, true);
 }
 
 QIcon Theme::icon(QString name) {

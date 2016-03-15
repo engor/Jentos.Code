@@ -55,7 +55,7 @@ public:
 
     void gotoLine( int line );
     void highlightLine(int line , Highlighting kind=HlCommon);
-
+    void highlightCurrentLine();
 
     bool findNext( const QString &findText,bool cased,bool wrap,bool backward=false );
     bool replace( const QString &findText,const QString &replaceText,bool cased );

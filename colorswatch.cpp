@@ -12,7 +12,7 @@ ColorSwatch::ColorSwatch( QWidget *parent ):QLabel( parent ),_color( 0,0,0 ){
 
     setAutoFillBackground( true );
 
-    setPalette( QPalette( _color ) );
+    setStyleSheet("background: "+_color.name()+";");
 }
 
 QColor ColorSwatch::color(){
@@ -20,10 +20,8 @@ QColor ColorSwatch::color(){
 }
 
 void ColorSwatch::setColor( const QColor &color ){
-    _color=color;
-
-    setPalette( QPalette( _color ) );
-
+    _color = color;
+    setStyleSheet("background: "+_color.name()+";");
     emit colorChanged();
 }
 

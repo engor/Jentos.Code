@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>491</width>
-    <height>470</height>
+    <height>559</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>3</number>
      </property>
      <property name="tabSpacing">
       <number>6</number>
@@ -37,7 +37,7 @@
         <x>0</x>
         <y>0</y>
         <width>473</width>
-        <height>248</height>
+        <height>364</height>
        </rect>
       </property>
       <attribute name="label">
@@ -73,13 +73,108 @@
             <x>0</x>
             <y>0</y>
             <width>454</width>
-            <height>525</height>
+            <height>618</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <property name="spacing">
             <number>12</number>
            </property>
+           <item>
+            <widget class="QGroupBox" name="groupBox_2">
+             <property name="title">
+              <string>Theme</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_13">
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_12">
+                <property name="spacing">
+                 <number>12</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QWidget" name="widget" native="true">
+                  <layout class="QHBoxLayout" name="horizontalLayout_4">
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="label_4">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="text">
+                      <string>Current theme:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QComboBox" name="comboBoxTheme">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>120</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer_3">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="checkBoxReplaceDocsStyle">
+                  <property name="autoFillBackground">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>Replace docs style for dark theme</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
            <item>
             <layout class="QFormLayout" name="formLayout_3">
              <property name="fieldGrowthPolicy">
@@ -202,7 +297,7 @@
               <property name="rightMargin">
                <number>9</number>
               </property>
-              <item row="0" column="0">
+              <item row="1" column="0">
                <layout class="QFormLayout" name="formLayout">
                 <property name="fieldGrowthPolicy">
                  <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
@@ -213,6 +308,9 @@
                    <string>Background</string>
                   </property>
                  </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="ColorSwatch" name="backgroundColorWidget" native="true"/>
                 </item>
                 <item row="1" column="0">
                  <widget class="QLabel" name="defaultColorLabel">
@@ -274,110 +372,94 @@
                 <item row="6" column="1">
                  <widget class="ColorSwatch" name="keywordsColorWidget" native="true"/>
                 </item>
-                <item row="7" column="0">
-                 <widget class="QLabel" name="constantsColorLabel">
-                  <property name="text">
-                   <string>constants</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="7" column="1">
-                 <widget class="ColorSwatch" name="constantsColorWidget" native="true"/>
-                </item>
                 <item row="8" column="0">
-                 <widget class="QLabel" name="funcDeclsColorLabel">
+                 <widget class="QLabel" name="highlightColorErrorLabel">
                   <property name="text">
-                   <string>funcDecls</string>
+                   <string>ErrorLine</string>
                   </property>
                  </widget>
                 </item>
                 <item row="8" column="1">
-                 <widget class="ColorSwatch" name="funcDeclsColorWidget" native="true"/>
+                 <widget class="ColorSwatch" name="highlightErrorColorWidget" native="true"/>
                 </item>
                 <item row="9" column="0">
-                 <widget class="QLabel" name="highlightColorErrorLabel">
+                 <widget class="QLabel" name="highlightColorCaretRowLabel">
                   <property name="text">
-                   <string>highlightError</string>
+                   <string>Caret Row</string>
                   </property>
                  </widget>
                 </item>
                 <item row="9" column="1">
-                 <widget class="ColorSwatch" name="highlightColorErrorWidget" native="true"/>
+                 <widget class="ColorSwatch" name="highlightCaretRowColorWidget" native="true"/>
                 </item>
                 <item row="10" column="0">
-                 <widget class="QLabel" name="highlightColorCaretRowLabel">
+                 <widget class="QLabel" name="monkeywordsColorLabel">
                   <property name="text">
-                   <string>highlightCaretRow</string>
+                   <string>Monkey Words</string>
                   </property>
                  </widget>
                 </item>
                 <item row="10" column="1">
-                 <widget class="ColorSwatch" name="highlightColorCaretRowWidget" native="true"/>
+                 <widget class="ColorSwatch" name="monkeywordsColorWidget" native="true"/>
                 </item>
                 <item row="11" column="0">
-                 <widget class="QLabel" name="monkeywordsColorLabel">
+                 <widget class="QLabel" name="userwordsColorLabel">
                   <property name="text">
-                   <string>monkeywords</string>
+                   <string>User Words</string>
                   </property>
                  </widget>
                 </item>
                 <item row="11" column="1">
-                 <widget class="ColorSwatch" name="monkeywordsColorWidget" native="true"/>
+                 <widget class="ColorSwatch" name="userwordsColorWidget" native="true"/>
                 </item>
                 <item row="12" column="0">
-                 <widget class="QLabel" name="userwordsColorLabel">
+                 <widget class="QLabel" name="userwordsDeclColorLabel">
                   <property name="text">
-                   <string>userwords</string>
+                   <string>User Words Decls</string>
                   </property>
                  </widget>
                 </item>
                 <item row="12" column="1">
-                 <widget class="ColorSwatch" name="userwordsColorWidget" native="true"/>
+                 <widget class="ColorSwatch" name="userwordsDeclColorWidget" native="true"/>
                 </item>
                 <item row="13" column="0">
-                 <widget class="QLabel" name="userwordsDeclColorLabel">
+                 <widget class="QLabel" name="userwordsVarColorLabel">
                   <property name="text">
-                   <string>userwordsDecl</string>
+                   <string>User Vars</string>
                   </property>
                  </widget>
                 </item>
                 <item row="13" column="1">
-                 <widget class="ColorSwatch" name="userwordsDeclColorWidget" native="true"/>
-                </item>
-                <item row="14" column="0">
-                 <widget class="QLabel" name="userwordsVarColorLabel">
-                  <property name="text">
-                   <string>userwordsVar</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="14" column="1">
                  <widget class="ColorSwatch" name="userwordsVarColorWidget" native="true"/>
                 </item>
-                <item row="15" column="0">
+                <item row="14" column="0">
                  <widget class="QLabel" name="paramsColorLabel">
                   <property name="text">
                    <string>Params</string>
                   </property>
                  </widget>
                 </item>
-                <item row="15" column="1">
+                <item row="14" column="1">
                  <widget class="ColorSwatch" name="paramsColorWidget" native="true"/>
                 </item>
-                <item row="16" column="0">
+                <item row="15" column="0">
                  <widget class="QLabel" name="commentsColorLabel">
                   <property name="text">
                    <string>Comments</string>
                   </property>
                  </widget>
                 </item>
-                <item row="16" column="1">
+                <item row="15" column="1">
                  <widget class="ColorSwatch" name="commentsColorWidget" native="true"/>
                 </item>
-                <item row="0" column="1">
-                 <widget class="ColorSwatch" name="backgroundColorWidget" native="true"/>
-                </item>
                </layout>
+              </item>
+              <item row="0" column="0">
+               <widget class="QPushButton" name="pushButtonResetColors">
+                <property name="text">
+                 <string>Reset to default theme colors</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>
@@ -401,13 +483,13 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="pageThemes">
+     <widget class="QWidget" name="pageAnalyzer">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
         <width>473</width>
-        <height>248</height>
+        <height>364</height>
        </rect>
       </property>
       <attribute name="label">
@@ -440,7 +522,7 @@
             <x>0</x>
             <y>0</y>
             <width>471</width>
-            <height>246</height>
+            <height>362</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -580,136 +662,13 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="pageAnalyzer">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>473</width>
-        <height>248</height>
-       </rect>
-      </property>
-      <attribute name="label">
-       <string>T H E M E S</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_8">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QScrollArea" name="scrollArea_2">
-         <property name="widgetResizable">
-          <bool>true</bool>
-         </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents_2">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>471</width>
-            <height>246</height>
-           </rect>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_7">
-           <item>
-            <widget class="QWidget" name="widget" native="true">
-             <layout class="QHBoxLayout" name="horizontalLayout_4">
-              <item>
-               <widget class="QLabel" name="label_4">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>Current theme:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QComboBox" name="comboBoxTheme">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_3">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBoxReplaceDocsStyle">
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string>Replace docs style for dark theme</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-      </layout>
-     </widget>
      <widget class="QWidget" name="pageMonkey">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
         <width>473</width>
-        <height>248</height>
+        <height>364</height>
        </rect>
       </property>
       <attribute name="label">
@@ -742,7 +701,7 @@
             <x>0</x>
             <y>0</y>
             <width>471</width>
-            <height>246</height>
+            <height>362</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -854,7 +813,7 @@
         <x>0</x>
         <y>0</y>
         <width>473</width>
-        <height>248</height>
+        <height>364</height>
        </rect>
       </property>
       <attribute name="label">
@@ -887,7 +846,7 @@
             <x>0</x>
             <y>0</y>
             <width>471</width>
-            <height>246</height>
+            <height>362</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -1087,6 +1046,310 @@
  <resources/>
  <connections>
   <connection>
+   <sender>okayButton</sender>
+   <signal>clicked()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>383</x>
+     <y>450</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>182</x>
+     <y>283</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>monkeyPathButton</sender>
+   <signal>clicked()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onBrowseForPath()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>429</x>
+     <y>163</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>196</x>
+     <y>227</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxAutoformat</sender>
+   <signal>clicked()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onAnalyzerChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>196</x>
+     <y>141</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>196</x>
+     <y>230</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>chbHighlightLine</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onHighlightLineChanged(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>425</x>
+     <y>32</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>196</x>
+     <y>224</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxFillAucompInherit</sender>
+   <signal>clicked()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onAnalyzerChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>203</x>
+     <y>170</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>196</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>backgroundColorWidget</sender>
+   <signal>colorChanged()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onColorChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>110</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxCheckUpdates</sender>
+   <signal>clicked()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onCheckUpdatesChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>203</x>
+     <y>221</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>196</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>chbHighlightWord</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onHighlightWordChanged(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>425</x>
+     <y>57</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>196</x>
+     <y>224</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>defaultColorWidget</sender>
+   <signal>colorChanged()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onColorChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>130</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>keywordsColorWidget</sender>
+   <signal>colorChanged()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onColorChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>230</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxShowHelpInDock</sender>
+   <signal>clicked()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onShowHelpInDockChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>206</x>
+     <y>196</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>259</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxReplaceDocsStyle</sender>
+   <signal>clicked()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onReplaceDocsStyleChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>206</x>
+     <y>136</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>268</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>stringsColorWidget</sender>
+   <signal>colorChanged()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onColorChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>190</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>identifiersColorWidget</sender>
+   <signal>colorChanged()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onColorChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>210</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>numbersColorWidget</sender>
+   <signal>colorChanged()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onColorChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>170</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxUseSpaces</sender>
+   <signal>clicked()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onAnalyzerChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>203</x>
+     <y>120</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>196</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>commentsColorWidget</sender>
+   <signal>colorChanged()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onColorChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>250</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>highlightColorWidget</sender>
+   <signal>colorChanged()</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onColorChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>416</x>
+     <y>150</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>143</x>
+     <y>213</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>chbSmoothFonts</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>PrefsDialog</receiver>
+   <slot>onSmoothFontsChanged(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>425</x>
+     <y>7</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>176</x>
+     <y>270</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
    <sender>fontComboBox</sender>
    <signal>currentFontChanged(QFont)</signal>
    <receiver>PrefsDialog</receiver>
@@ -1131,310 +1394,6 @@
     <hint type="destinationlabel">
      <x>4</x>
      <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>chbSmoothFonts</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onSmoothFontsChanged(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>425</x>
-     <y>7</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>176</x>
-     <y>270</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>monkeyPathButton</sender>
-   <signal>clicked()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onBrowseForPath()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>429</x>
-     <y>163</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>196</x>
-     <y>227</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBoxAutoformat</sender>
-   <signal>clicked()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onAnalyzerChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>196</x>
-     <y>141</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>196</x>
-     <y>230</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBoxUseSpaces</sender>
-   <signal>clicked()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onAnalyzerChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>203</x>
-     <y>120</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>196</x>
-     <y>314</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBoxFillAucompInherit</sender>
-   <signal>clicked()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onAnalyzerChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>203</x>
-     <y>170</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>196</x>
-     <y>314</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBoxCheckUpdates</sender>
-   <signal>clicked()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onCheckUpdatesChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>203</x>
-     <y>221</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>196</x>
-     <y>198</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>chbHighlightLine</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onHighlightLineChanged(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>425</x>
-     <y>32</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>196</x>
-     <y>224</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>chbHighlightWord</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onHighlightWordChanged(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>425</x>
-     <y>57</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>196</x>
-     <y>224</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBoxShowHelpInDock</sender>
-   <signal>clicked()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onShowHelpInDockChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>206</x>
-     <y>196</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>259</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>checkBoxReplaceDocsStyle</sender>
-   <signal>clicked()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onReplaceDocsStyleChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>206</x>
-     <y>136</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>268</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>okayButton</sender>
-   <signal>clicked()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>383</x>
-     <y>450</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>182</x>
-     <y>283</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>stringsColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>190</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>highlightColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>150</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>143</x>
-     <y>213</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>identifiersColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>210</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>defaultColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>130</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>backgroundColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>110</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>keywordsColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>230</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>commentsColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>250</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>numbersColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>170</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
     </hint>
    </hints>
   </connection>

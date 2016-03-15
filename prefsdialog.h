@@ -17,6 +17,8 @@ class PrefsDialog;
 
 class Prefs;
 class MainWindow;
+class ColorSwatch;
+
 
 class PrefsDialog : public QDialog
 {
@@ -58,6 +60,8 @@ private slots:
 
     void on_comboBoxTheme_currentIndexChanged(const QString &arg1);
 
+    void on_pushButtonResetColors_clicked();
+
 private:
 
     MainWindow *_mainwnd;
@@ -66,6 +70,7 @@ private:
     bool _used;
     bool _isEnableThemeSignal;
 
+    void setColors();
 };
 
 #endif // PREFSDIALOG_H
