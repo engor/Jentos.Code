@@ -16,7 +16,6 @@ class ColorSwatch : public QLabel{
 
 public:
     ColorSwatch( QWidget *parent );
-
     QColor color();
 
 public slots:
@@ -26,6 +25,7 @@ public slots:
 signals:
 
     void colorChanged();
+    void mousePressed(ColorSwatch *sender);
 
 protected:
 

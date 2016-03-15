@@ -14,6 +14,7 @@ public:
 
     Theme(QObject *parent=0);
     static QString current(){ return _theme; }
+    static QString getDefault();
     static QString prevTheme(){ return _prevTheme; }
     static bool isCurrent(QString kind) {
         return _theme == kind;

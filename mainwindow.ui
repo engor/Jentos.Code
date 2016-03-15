@@ -1391,7 +1391,7 @@ Don't change documents between find usages and rename</string>
      <normaloff>:/icons/light/Close.png</normaloff>:/icons/light/Close.png</iconset>
    </property>
    <property name="text">
-    <string>Close</string>
+    <string>Close Document</string>
    </property>
   </action>
   <action name="actionClose_All">
@@ -1679,7 +1679,7 @@ Don't change documents between find usages and rename</string>
      <normaloff>:/icons/circle/Project.png</normaloff>:/icons/circle/Project.png</iconset>
    </property>
    <property name="text">
-    <string>Open project...</string>
+    <string>Open Project...</string>
    </property>
   </action>
   <action name="actionDeleteFile">

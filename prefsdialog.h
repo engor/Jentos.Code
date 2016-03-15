@@ -18,7 +18,7 @@ class PrefsDialog;
 class Prefs;
 class MainWindow;
 class ColorSwatch;
-
+class QColorDialog;
 
 class PrefsDialog : public QDialog
 {
@@ -42,6 +42,7 @@ public slots:
     void onTabSizeChanged( int size );
     void onSmoothFontsChanged( bool state );
     void onColorChanged();
+    void onChooseColor(ColorSwatch *sender);
     void onBrowseForPath();
     void onAnalyzerChanged();
     void onCheckUpdatesChanged();
@@ -60,10 +61,12 @@ private slots:
 
     void on_comboBoxTheme_currentIndexChanged(const QString &arg1);
 
-    void on_pushButtonResetColors_clicked();
+    void on_labelResetColors_linkActivated(const QString &link);
 
 private:
 
+    QColorDialog *_chooser;
+    QList<ColorSwatch*> _colorWidgets;
     MainWindow *_mainwnd;
     Ui::PrefsDialog *_ui;
     Prefs *_prefs;

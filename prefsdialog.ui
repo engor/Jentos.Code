@@ -26,7 +26,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <property name="tabSpacing">
       <number>6</number>
@@ -71,9 +71,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-275</y>
             <width>454</width>
-            <height>618</height>
+            <height>687</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -135,7 +135,7 @@
                      </property>
                      <property name="minimumSize">
                       <size>
-                       <width>120</width>
+                       <width>150</width>
                        <height>0</height>
                       </size>
                      </property>
@@ -176,105 +176,190 @@
             </widget>
            </item>
            <item>
-            <layout class="QFormLayout" name="formLayout_3">
-             <property name="fieldGrowthPolicy">
-              <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+            <widget class="QGroupBox" name="groupBox_3">
+             <property name="title">
+              <string>Editor</string>
              </property>
-             <item row="0" column="0">
-              <widget class="QLabel" name="familyLabel">
-               <property name="text">
-                <string>Font Family</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QFontComboBox" name="fontComboBox">
-               <property name="fontFilters">
-                <set>QFontComboBox::MonospacedFonts</set>
-               </property>
-               <property name="currentFont">
-                <font>
-                 <family>Consolas</family>
-                </font>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="pointSizeLabel">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Font Size</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QSpinBox" name="fontSizeWidget">
-               <property name="value">
-                <number>12</number>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="tabSizeLabel_2">
-               <property name="text">
-                <string>Tab size</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QSpinBox" name="tabSizeWidget"/>
-             </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="smoothFontsLabel">
-               <property name="text">
-                <string>Smooth fonts</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <widget class="QCheckBox" name="chbSmoothFonts">
-               <property name="layoutDirection">
-                <enum>Qt::LeftToRight</enum>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="0">
-              <widget class="QLabel" name="label">
-               <property name="text">
-                <string>Highlight current line</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="1">
-              <widget class="QCheckBox" name="chbHighlightLine">
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="0">
-              <widget class="QLabel" name="label_2">
-               <property name="text">
-                <string>Highlight word under cursor</string>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="1">
-              <widget class="QCheckBox" name="chbHighlightWord">
-               <property name="text">
-                <string/>
-               </property>
-              </widget>
-             </item>
-            </layout>
+             <layout class="QVBoxLayout" name="verticalLayout_8">
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_7">
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_6">
+                  <property name="spacing">
+                   <number>6</number>
+                  </property>
+                  <item>
+                   <widget class="QLabel" name="familyLabel">
+                    <property name="text">
+                     <string>Font</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QFontComboBox" name="fontComboBox">
+                    <property name="minimumSize">
+                     <size>
+                      <width>150</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="fontFilters">
+                     <set>QFontComboBox::MonospacedFonts</set>
+                    </property>
+                    <property name="currentFont">
+                     <font>
+                      <family>Consolas</family>
+                     </font>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_7">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>8</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="fontSizeWidget">
+                    <property name="value">
+                     <number>12</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_8">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="chbSmoothFonts">
+                    <property name="layoutDirection">
+                     <enum>Qt::LeftToRight</enum>
+                    </property>
+                    <property name="text">
+                     <string>Smooth</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_5">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_7">
+                <property name="spacing">
+                 <number>6</number>
+                </property>
+                <property name="topMargin">
+                 <number>8</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>8</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="tabSizeLabel_2">
+                  <property name="text">
+                   <string>Tab size</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSpinBox" name="tabSizeWidget"/>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_9">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="checkBoxUseSpaces">
+                  <property name="toolTip">
+                   <string>Spaces count equals 'tab size' value</string>
+                  </property>
+                  <property name="text">
+                   <string>Replace tabs with spaces</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_6">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="chbHighlightLine">
+                <property name="text">
+                 <string>Highlight current line</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="chbHighlightWord">
+                <property name="text">
+                 <string>Highlight word under cursor</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
            <item>
             <widget class="QGroupBox" name="groupBox">
@@ -294,172 +379,518 @@
               <property name="leftMargin">
                <number>9</number>
               </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
               <property name="rightMargin">
                <number>9</number>
               </property>
-              <item row="1" column="0">
-               <layout class="QFormLayout" name="formLayout">
-                <property name="fieldGrowthPolicy">
-                 <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+              <property name="verticalSpacing">
+               <number>0</number>
+              </property>
+              <item row="2" column="0">
+               <layout class="QHBoxLayout" name="horizontalLayout_8">
+                <property name="topMargin">
+                 <number>0</number>
                 </property>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="backgroundColorLabel">
-                  <property name="text">
-                   <string>Background</string>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_14">
+                  <property name="rightMargin">
+                   <number>0</number>
                   </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="ColorSwatch" name="backgroundColorWidget" native="true"/>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="defaultColorLabel">
-                  <property name="text">
-                   <string>Default</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="ColorSwatch" name="defaultColorWidget" native="true"/>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="highlightColorLabel">
-                  <property name="text">
-                   <string>Highlight</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="ColorSwatch" name="highlightColorWidget" native="true"/>
-                </item>
-                <item row="3" column="0">
-                 <widget class="QLabel" name="numbersColorLabel">
-                  <property name="text">
-                   <string>Numbers</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="1">
-                 <widget class="ColorSwatch" name="numbersColorWidget" native="true"/>
-                </item>
-                <item row="4" column="0">
-                 <widget class="QLabel" name="stringsColorLabel">
-                  <property name="text">
-                   <string>Strings</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="1">
-                 <widget class="ColorSwatch" name="stringsColorWidget" native="true"/>
-                </item>
-                <item row="5" column="0">
-                 <widget class="QLabel" name="identifiersColorLabel">
-                  <property name="text">
-                   <string>Identifiers</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="5" column="1">
-                 <widget class="ColorSwatch" name="identifiersColorWidget" native="true"/>
-                </item>
-                <item row="6" column="0">
-                 <widget class="QLabel" name="keywordsColorLabel">
-                  <property name="text">
-                   <string>Keywords</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="6" column="1">
-                 <widget class="ColorSwatch" name="keywordsColorWidget" native="true"/>
-                </item>
-                <item row="8" column="0">
-                 <widget class="QLabel" name="highlightColorErrorLabel">
-                  <property name="text">
-                   <string>ErrorLine</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="8" column="1">
-                 <widget class="ColorSwatch" name="highlightErrorColorWidget" native="true"/>
-                </item>
-                <item row="9" column="0">
-                 <widget class="QLabel" name="highlightColorCaretRowLabel">
-                  <property name="text">
-                   <string>Caret Row</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="9" column="1">
-                 <widget class="ColorSwatch" name="highlightCaretRowColorWidget" native="true"/>
-                </item>
-                <item row="10" column="0">
-                 <widget class="QLabel" name="monkeywordsColorLabel">
-                  <property name="text">
-                   <string>Monkey Words</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="10" column="1">
-                 <widget class="ColorSwatch" name="monkeywordsColorWidget" native="true"/>
-                </item>
-                <item row="11" column="0">
-                 <widget class="QLabel" name="userwordsColorLabel">
-                  <property name="text">
-                   <string>User Words</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="11" column="1">
-                 <widget class="ColorSwatch" name="userwordsColorWidget" native="true"/>
-                </item>
-                <item row="12" column="0">
-                 <widget class="QLabel" name="userwordsDeclColorLabel">
-                  <property name="text">
-                   <string>User Words Decls</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="12" column="1">
-                 <widget class="ColorSwatch" name="userwordsDeclColorWidget" native="true"/>
-                </item>
-                <item row="13" column="0">
-                 <widget class="QLabel" name="userwordsVarColorLabel">
-                  <property name="text">
-                   <string>User Vars</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="13" column="1">
-                 <widget class="ColorSwatch" name="userwordsVarColorWidget" native="true"/>
-                </item>
-                <item row="14" column="0">
-                 <widget class="QLabel" name="paramsColorLabel">
-                  <property name="text">
-                   <string>Params</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="14" column="1">
-                 <widget class="ColorSwatch" name="paramsColorWidget" native="true"/>
-                </item>
-                <item row="15" column="0">
-                 <widget class="QLabel" name="commentsColorLabel">
-                  <property name="text">
-                   <string>Comments</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="15" column="1">
-                 <widget class="ColorSwatch" name="commentsColorWidget" native="true"/>
+                  <item>
+                   <layout class="QFormLayout" name="formLayout">
+                    <property name="labelAlignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                    <property name="horizontalSpacing">
+                     <number>8</number>
+                    </property>
+                    <property name="verticalSpacing">
+                     <number>8</number>
+                    </property>
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="backgroundColorLabel">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>Background</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="ColorSwatch" name="backgroundColorWidget" native="true">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>16</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QLabel" name="defaultColorLabel">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>Default</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="1">
+                     <widget class="ColorSwatch" name="defaultColorWidget" native="true">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>16</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="0">
+                     <widget class="QLabel" name="highlightColorLabel">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>Highlight</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="1">
+                     <widget class="ColorSwatch" name="highlightColorWidget" native="true">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>16</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="3" column="0">
+                     <widget class="QLabel" name="numbersColorLabel">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>Numbers</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="3" column="1">
+                     <widget class="ColorSwatch" name="numbersColorWidget" native="true">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>16</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="4" column="0">
+                     <widget class="QLabel" name="stringsColorLabel">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>Strings</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="4" column="1">
+                     <widget class="ColorSwatch" name="stringsColorWidget" native="true">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>16</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="5" column="0">
+                     <widget class="QLabel" name="identifiersColorLabel">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>Identifiers</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="5" column="1">
+                     <widget class="ColorSwatch" name="identifiersColorWidget" native="true">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>16</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="6" column="0">
+                     <widget class="QLabel" name="keywordsColorLabel">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>Keywords</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="6" column="1">
+                     <widget class="ColorSwatch" name="keywordsColorWidget" native="true">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>16</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="7" column="0">
+                     <widget class="QLabel" name="monkeywordsColorLabel">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>Monkey Words</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="7" column="1">
+                     <widget class="ColorSwatch" name="monkeywordsColorWidget" native="true">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>16</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="8" column="0">
+                     <widget class="QLabel" name="userwordsColorLabel">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>User Words</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="8" column="1">
+                     <widget class="ColorSwatch" name="userwordsColorWidget" native="true">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>16</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="9" column="0">
+                     <widget class="QLabel" name="userwordsDeclColorLabel">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>User Words Decls</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="9" column="1">
+                     <widget class="ColorSwatch" name="userwordsDeclColorWidget" native="true">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>16</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="10" column="0">
+                     <widget class="QLabel" name="userwordsVarColorLabel">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>User Vars</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="10" column="1">
+                     <widget class="ColorSwatch" name="userwordsVarColorWidget" native="true">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>16</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="11" column="0">
+                     <widget class="QLabel" name="paramsColorLabel">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>Params</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="11" column="1">
+                     <widget class="ColorSwatch" name="paramsColorWidget" native="true">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>16</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="12" column="0">
+                     <widget class="QLabel" name="commentsColorLabel">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>Comments</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="12" column="1">
+                     <widget class="ColorSwatch" name="commentsColorWidget" native="true">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>16</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="13" column="0">
+                     <widget class="QLabel" name="caretRowLabel">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>Caret Row</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="13" column="1">
+                     <widget class="ColorSwatch" name="highlightCaretRowColorWidget" native="true">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>16</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="14" column="0">
+                     <widget class="QLabel" name="lineWithErrorLabel">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="text">
+                       <string>Line with Error</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="14" column="1">
+                     <widget class="ColorSwatch" name="highlightErrorColorWidget" native="true">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>16</height>
+                       </size>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </item>
-              <item row="0" column="0">
-               <widget class="QPushButton" name="pushButtonResetColors">
-                <property name="text">
-                 <string>Reset to default theme colors</string>
+              <item row="1" column="0">
+               <layout class="QHBoxLayout" name="horizontalLayout_9">
+                <property name="topMargin">
+                 <number>0</number>
                 </property>
-               </widget>
+                <item>
+                 <spacer name="horizontalSpacer_11">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QLabel" name="labelResetColors">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>&lt;a href=&quot;reset&quot;&gt;Reset to default theme colors&lt;/a&gt;</string>
+                  </property>
+                  <property name="textFormat">
+                   <enum>Qt::AutoText</enum>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
               </item>
              </layout>
             </widget>
@@ -526,16 +957,6 @@
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
-           <item>
-            <widget class="QCheckBox" name="checkBoxUseSpaces">
-             <property name="toolTip">
-              <string>Spaces count equals 'tab size' value</string>
-             </property>
-             <property name="text">
-              <string>Replace tabs with spaces</string>
-             </property>
-            </widget>
-           </item>
            <item>
             <widget class="QCheckBox" name="checkBoxAutoformat">
              <property name="toolTip">
@@ -1037,12 +1458,6 @@
    </slots>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>fontComboBox</tabstop>
-  <tabstop>fontSizeWidget</tabstop>
-  <tabstop>tabSizeWidget</tabstop>
-  <tabstop>chbSmoothFonts</tabstop>
- </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -1126,22 +1541,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>backgroundColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>110</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>checkBoxCheckUpdates</sender>
    <signal>clicked()</signal>
    <receiver>PrefsDialog</receiver>
@@ -1170,38 +1569,6 @@
     <hint type="destinationlabel">
      <x>196</x>
      <y>224</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>defaultColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>130</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>keywordsColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>230</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
     </hint>
    </hints>
   </connection>
@@ -1238,54 +1605,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>stringsColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>190</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>identifiersColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>210</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>numbersColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>170</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>checkBoxUseSpaces</sender>
    <signal>clicked()</signal>
    <receiver>PrefsDialog</receiver>
@@ -1298,38 +1617,6 @@
     <hint type="destinationlabel">
      <x>196</x>
      <y>314</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>commentsColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>250</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>199</x>
-     <y>149</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>highlightColorWidget</sender>
-   <signal>colorChanged()</signal>
-   <receiver>PrefsDialog</receiver>
-   <slot>onColorChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>416</x>
-     <y>150</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>143</x>
-     <y>213</y>
     </hint>
    </hints>
   </connection>

@@ -13,13 +13,32 @@ See LICENSE.TXT for licensing terms.
 #include "mainwindow.h"
 #include "theme.h"
 
-PrefsDialog::PrefsDialog(MainWindow *mainwnd, QWidget *parent ):QDialog( parent ),_ui( new Ui::PrefsDialog ),_prefs( Prefs::prefs() ),_used( false ){
+PrefsDialog::PrefsDialog(MainWindow *mainwnd, QWidget *parent ):QDialog( parent ),_ui( new Ui::PrefsDialog ),_prefs( Prefs::prefs() ),_used( false )
+{
     _ui->setupUi( this );
     _mainwnd = mainwnd;
     _isEnableThemeSignal = false;
+
+    QStringList list;
+    list << "background"<<"default"<<"numbers"<<"strings"<<"identifiers"
+         <<"keywords"<<"comments"<<"highlight"<<"highlightError"<<"highlightCaretRow"
+           <<"monkeywords"<<"userwords"<<"userwordsDecl"<<"userwordsVar"<<"params";
+
+    foreach (QString param, list) {
+        QString name = param+"Color";
+        ColorSwatch *w = _ui->groupBox->findChild<ColorSwatch*>(name+"Widget");
+        if (w) {
+            _colorWidgets.append(w);
+            connect(w, SIGNAL(colorChanged()), this, SLOT(onColorChanged()));
+            connect(w, SIGNAL(mousePressed(ColorSwatch*)), this, SLOT(onChooseColor(ColorSwatch*)));
+        }
+    }
+
+    _chooser = new QColorDialog(this);
 }
 
 PrefsDialog::~PrefsDialog(){
+    _colorWidgets.clear();
     delete _ui;
 }
 
@@ -101,17 +120,9 @@ int PrefsDialog::exec(){
 }
 
 void PrefsDialog::setColors() {
-    QStringList list;
-    list << "background"<<"default"<<"numbers"<<"strings"<<"identifiers"
-         <<"keywords"<<"comments"<<"highlight"<<"highlightError"<<"highlightCaretRow"
-           <<"monkeywords"<<"userwords"<<"userwordsDecl"<<"userwordsVar"<<"params";
-
-    foreach (QString param, list) {
-        QString name = param+"Color";
-        ColorSwatch *w = _ui->groupBox->findChild<ColorSwatch*>(name+"Widget");
-        if (w) {
-            w->setColor(_prefs->getColor(name));
-        }
+    foreach (ColorSwatch *w, _colorWidgets) {
+        QString name = w->objectName().replace("Widget", "");
+        w->setColor(_prefs->getColor(name));
     }
 }
 
@@ -156,6 +167,18 @@ void PrefsDialog::onColorChanged(){
     QColor color = swatch->color();
     _prefs->setValue( name.toStdString().c_str(),color );
 
+}
+
+void PrefsDialog::onChooseColor(ColorSwatch *sender)
+{
+    QColor color = sender->color();
+    _chooser->setCurrentColor(color);
+    // immediate adjust color when changing
+    connect(_chooser, SIGNAL(currentColorChanged(QColor)), sender, SLOT(setColor(QColor)));
+    int result = _chooser->exec();
+    if (result == 0) // reset to previous if user press cancel
+        sender->setColor(color);
+    _chooser->disconnect();
 }
 
 void PrefsDialog::onAnalyzerChanged() {
@@ -220,7 +243,7 @@ void PrefsDialog::on_comboBoxTheme_currentIndexChanged(const QString &arg1)
     _mainwnd->updateTheme(arg1);
 }
 
-void PrefsDialog::on_pushButtonResetColors_clicked()
+void PrefsDialog::on_labelResetColors_linkActivated(const QString &link)
 {
     Theme::adjustDefaultColors(true);//set and notify everyone about new colors
     setColors();

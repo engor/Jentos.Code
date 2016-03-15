@@ -545,10 +545,10 @@ void CodeEditor::highlightLine( int line, Highlighting kind ){
             lineColor = Prefs::prefs()->getColor( "highlightColor" );
         }
         else if( kind == HlCaretRow || kind == HlCaretRowCentered ) {
-            lineColor = Prefs::prefs()->getColor( "highlightColorCaretRow" );
+            lineColor = Prefs::prefs()->getColor( "highlightCaretRowColor" );
         }
         else if( kind == HlError ) {
-            lineColor = Prefs::prefs()->getColor( "highlightColorError" );
+            lineColor = Prefs::prefs()->getColor( "highlightErrorColor" );
         }
 
         QTextCursor cursor = QTextCursor( block );

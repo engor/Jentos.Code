@@ -16,6 +16,11 @@ Theme::Theme(QObject *parent) : QObject(parent) {
 
 }
 
+QString Theme::getDefault()
+{
+    return QT_CREATOR;
+}
+
 void Theme::init() {
     Prefs *p = Prefs::prefs();
 
@@ -32,10 +37,10 @@ void Theme::init() {
     _themes <<ANDROID_STUDIO<<NETBEANS<<QT_CREATOR<<DARK_SODA<<LIGHT_TABLE;
 
     _prevTheme = "";
-    QString s = p->getString("theme", "err");
+    QString s = p->getString("theme1", "err");
     bool err = (s == "err");
     if (err) {
-        s = NETBEANS;
+        s = getDefault();
     }
     set(s, err);
 }
@@ -47,7 +52,7 @@ void Theme::set(QString kind, bool setColors) {
 void Theme::setLocal(QString kind, bool setColors) {
     emit beginChange();
     _prevTheme = _theme;
-    _theme = _themes.contains(kind) ? kind : NETBEANS;
+    _theme = _themes.contains(kind) ? kind : getDefault();
     _isDark = (_theme==ANDROID_STUDIO || _theme==DARK_SODA || _theme==LIGHT_TABLE);
     save(setColors);
     emit endChange();
@@ -56,8 +61,6 @@ void Theme::setLocal(QString kind, bool setColors) {
 void Theme::save(bool setColors) {
 
     Prefs::prefs()->setValue("theme", _theme);
-
-    qDebug() << "save theme:"<<_theme<<", setcolors: "<<setColors;
 
     if (!setColors)
         return;
