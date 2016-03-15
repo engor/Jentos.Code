@@ -39,9 +39,17 @@ public:
     MainWindow( QWidget *parent=0 );
     ~MainWindow();
 
-    void debug( const QString &str );
     static bool isValidMonkeyPath(const QString &path , QString &trans);
     void updateTheme();
+
+    virtual void debug( const QString &str );
+
+protected:
+    void showEvent(QShowEvent * event);
+
+    virtual void print(const QString &str , QString kind);
+    virtual void runCommand( QString cmd ,QWidget *fileWidget);
+    virtual void build( QString mode,QString pathmonkey);
 
 private:
 
@@ -69,17 +77,8 @@ private:
     void updateTabLabel( QWidget *widget );
     void updateActions();
 
-    void print(const QString &str , QString kind);
-    void runCommand( QString cmd,QWidget *fileWidget );
-    void build( QString mode,QString pathmonkey);
-
     bool confirmQuit();
     void closeEvent( QCloseEvent *event );
-
-protected:
-
-    void showEvent(QShowEvent * event);
-
 
 public slots:
 

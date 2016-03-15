@@ -333,6 +333,111 @@ MainWindow::~MainWindow(){
     CodeAnalyzer::finalize();
 }
 
+//Console...
+//
+void MainWindow::print(const QString &str, QString kind ){
+
+    if(kind == "") {
+        _ui->outputTextEdit->setTextColor( Theme::isDark() ? QColor(0xc8c8c8) : QColor(0x050505) );
+    }
+    else if(kind == "error") {
+        _ui->outputTextEdit->setTextColor( Theme::isDark() ? QColor(0xE07464) : QColor(0x800000) );
+        _ui->outputDockWidget->setVisible(true);
+    }
+    else if(kind == "finish") {
+        _ui->outputTextEdit->setTextColor( Theme::isDark() ? QColor(0x69C1F1) : QColor(0x000080) );
+    }
+    else if(kind == "debug") {
+        _ui->outputTextEdit->setTextColor( Theme::isDark() ? QColor(128,0,128) : QColor(0,128,0) );
+    }
+    QTextCursor cursor=_ui->outputTextEdit->textCursor();
+    cursor.insertText( str );
+    cursor.insertBlock();
+    cursor.movePosition( QTextCursor::End,QTextCursor::MoveAnchor );
+    _ui->outputTextEdit->setTextCursor( cursor );
+}
+
+void MainWindow::debug( const QString &str ){
+    print( str, "debug" );
+}
+
+void MainWindow::runCommand( QString cmd, QWidget *fileWidget ){
+
+    cmd=cmd.replace( "${TARGET}",_targetsWidget->currentText().replace( ' ','_' ) );
+    cmd=cmd.replace( "${CONFIG}",_configsWidget->currentText() );
+    cmd=cmd.replace( "${MONKEYPATH}",_monkeyPath );
+    //cmd=cmd.replace( "${BLITZMAXPATH}",_blitzmaxPath );
+    if( fileWidget ) cmd=cmd.replace( "${FILEPATH}",widgetPath( fileWidget ) );
+
+    _consoleProc = new Process;
+
+    connect( _consoleProc,SIGNAL(lineAvailable(int)),SLOT(onProcLineAvailable(int)) );
+    connect( _consoleProc,SIGNAL(finished()),SLOT(onProcFinished()) );
+
+    _ui->outputTextEdit->clear();
+
+    print( cmd, "" );
+
+    if( !_consoleProc->start( cmd ) ){
+        delete _consoleProc;
+        _consoleProc=0;
+        QMessageBox::warning( this,"Process Error","Failed to start process: "+cmd );
+        return;
+    }
+    updateActions();
+}
+
+void MainWindow::build( QString mode, QString pathmonkey){
+
+    CodeEditor *editor = (_lockedEditor ? _lockedEditor : _codeEditor);
+    if( !isBuildable( editor ) )
+        return;
+
+    QString filePath = editor->path();
+    if( filePath.isEmpty() )
+        return;
+
+    QString cmd, msg = "Buillding: "+filePath+"...";
+
+
+    if( editor->fileType()=="monkey" ){
+        if( mode=="run" ){
+
+            if(pathmonkey.endsWith("run")){
+
+                cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} -run \"${FILEPATH}\"";
+
+            }else {
+
+                cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} -run "+pathmonkey;
+            }
+        }else if( mode=="build" ){
+
+            if(pathmonkey.endsWith("run")){
+                 cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} \"${FILEPATH}\"";
+
+            }else {
+                 cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} "+pathmonkey;
+            }
+
+        }else if( mode=="update" ){
+            cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} -update \"${FILEPATH}\"";
+            msg="Updating: "+filePath+"...";
+        }else if( mode=="check" ){
+            cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} -check \"${FILEPATH}\"";
+            msg="Checking: "+filePath+"...";
+        }
+    }
+
+    if( !cmd.length() ) return;
+
+    onFileSaveAll();
+
+    statusBar()->showMessage( msg );
+
+    runCommand( cmd,editor );
+}
+
 // void MainWindow::onStyleChanged(bool b) {
     /*qDebug()<<"style changed";
     QList<QAction*> list = _ui->menuStyles->actions();
@@ -1596,60 +1701,6 @@ void MainWindow::onSourceListViewClicked( const QModelIndex &index ) {
     qDebug()<<"onSourceListViewClicked";
 }
 
-//Console...
-//
-void MainWindow::print(const QString &str, QString kind ){
-
-    if(kind == "") {
-        _ui->outputTextEdit->setTextColor( Theme::isDark() ? QColor(0xc8c8c8) : QColor(0x050505) );
-    }
-    else if(kind == "error") {
-        _ui->outputTextEdit->setTextColor( Theme::isDark() ? QColor(0xE07464) : QColor(0x800000) );
-        _ui->outputDockWidget->setVisible(true);
-    }
-    else if(kind == "finish") {
-        _ui->outputTextEdit->setTextColor( Theme::isDark() ? QColor(0x69C1F1) : QColor(0x000080) );
-    }
-    else if(kind == "debug") {
-        _ui->outputTextEdit->setTextColor( Theme::isDark() ? QColor(128,0,128) : QColor(0,128,0) );
-    }
-    QTextCursor cursor=_ui->outputTextEdit->textCursor();
-    cursor.insertText( str );
-    cursor.insertBlock();
-    cursor.movePosition( QTextCursor::End,QTextCursor::MoveAnchor );
-    _ui->outputTextEdit->setTextCursor( cursor );
-}
-
-void MainWindow::debug( const QString &str ){
-    print( str, "debug" );
-}
-
-void MainWindow::runCommand( QString cmd, QWidget *fileWidget ){
-
-    cmd=cmd.replace( "${TARGET}",_targetsWidget->currentText().replace( ' ','_' ) );
-    cmd=cmd.replace( "${CONFIG}",_configsWidget->currentText() );
-    cmd=cmd.replace( "${MONKEYPATH}",_monkeyPath );
-    //cmd=cmd.replace( "${BLITZMAXPATH}",_blitzmaxPath );
-    if( fileWidget ) cmd=cmd.replace( "${FILEPATH}",widgetPath( fileWidget ) );
-
-    _consoleProc = new Process;
-
-    connect( _consoleProc,SIGNAL(lineAvailable(int)),SLOT(onProcLineAvailable(int)) );
-    connect( _consoleProc,SIGNAL(finished()),SLOT(onProcFinished()) );
-
-    _ui->outputTextEdit->clear();
-
-    print( cmd, "" );
-
-    if( !_consoleProc->start( cmd ) ){
-        delete _consoleProc;
-        _consoleProc=0;
-        QMessageBox::warning( this,"Process Error","Failed to start process: "+cmd );
-        return;
-    }
-    updateActions();
-}
-
 void MainWindow::onProcStdout(){
 
     static QString comerr = " : Error : ";
@@ -1763,57 +1814,6 @@ void MainWindow::onProcFinished(){
     updateActions();
 
     statusBar()->showMessage( "Ready." );
-}
-
-void MainWindow::build( QString mode, QString pathmonkey){
-
-    CodeEditor *editor = (_lockedEditor ? _lockedEditor : _codeEditor);
-    if( !isBuildable( editor ) )
-        return;
-
-    QString filePath = editor->path();
-    if( filePath.isEmpty() )
-        return;
-
-    QString cmd, msg = "Buillding: "+filePath+"...";
-
-
-    if( editor->fileType()=="monkey" ){
-        if( mode=="run" ){
-
-            if(pathmonkey.endsWith("run")){
-
-                cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} -run \"${FILEPATH}\"";
-
-            }else {
-
-                cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} -run "+pathmonkey;
-            }
-        }else if( mode=="build" ){
-
-            if(pathmonkey.endsWith("run")){
-                 cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} \"${FILEPATH}\"";
-
-            }else {
-                 cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} "+pathmonkey;
-            }
-
-        }else if( mode=="update" ){
-            cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} -update \"${FILEPATH}\"";
-            msg="Updating: "+filePath+"...";
-        }else if( mode=="check" ){
-            cmd="\"${MONKEYPATH}/bin/"+_transPath+"\" -target=${TARGET} -config=${CONFIG} -check \"${FILEPATH}\"";
-            msg="Checking: "+filePath+"...";
-        }
-    }
-
-    if( !cmd.length() ) return;
-
-    onFileSaveAll();
-
-    statusBar()->showMessage( msg );
-
-    runCommand( cmd,editor );
 }
 
 //***** File menu *****
