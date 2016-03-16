@@ -2288,13 +2288,16 @@ void MainWindow::onHelpQuickHelp(){
 void MainWindow::onHelpAbout(){
     QString hrefGithub = "https://github.com/engor/Jentos_IDE";
     QString hrefSite = "http://fingerdev.com/jentos";
-    QString hrefPaypal = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE";
+    QString hrefPaypal = "https://www.paypal.me/engor";//"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE";
+    QString hrefIcons = "https://icons8.com";
     QString APP_ABOUT = "<html><head><style>a{color:#CC8030;}</style></head><body bgcolor2='#ff3355'><b>"APP_NAME"</b> is a powefull code editor for the Monkey programming language.<br>"
             "Based on Ted V"TED_VERSION".<br><br>"
             "Visit <a href='"+hrefSite+"'>"+hrefSite+"</a> for more information.<br><br>"
             "Latest sources: <a href='"+hrefGithub+"'>"+hrefGithub+"</a><br><br>"
+            "Almost all icons taken from <a href='"+hrefIcons+"'>"+hrefIcons+"</a><br><br>"
             "Version: "APP_VERSION+"<br>Trans: "+_transVersion+"<br>Qt: "_STRINGIZE(QT_VERSION)+"<br><br>"
-            "Jentos is free and always be free.<br>But you may support engor/nerobot via <a href=\""+hrefPaypal+"\">donation</a>.<br>"
+            "Jentos is free and always be free.<br>But you may support the author (Evgeniy Goroshkin)<br>"
+            "via <a href=\""+hrefPaypal+"\">PayPal Donation</a>.<br>"
             "</body></html>";
     QMessageBox::information( this, "About", APP_ABOUT );
 }
