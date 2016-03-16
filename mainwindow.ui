@@ -657,6 +657,7 @@
      <addaction name="actionThemeAndroidStudio"/>
      <addaction name="actionThemeNetBeans"/>
      <addaction name="actionThemeQt"/>
+     <addaction name="separator"/>
      <addaction name="actionThemeMonokaiDarkSoda"/>
      <addaction name="actionThemeLightTable"/>
     </widget>
@@ -1413,7 +1414,7 @@ Don't change documents between find usages and rename</string>
     <string>Build and Run</string>
    </property>
    <property name="toolTip">
-    <string>Build/Run</string>
+    <string>Build and Run (F5)</string>
    </property>
    <property name="shortcut">
     <string>F5</string>
@@ -1743,6 +1744,9 @@ Don't change documents between find usages and rename</string>
    </property>
    <property name="text">
     <string>Build</string>
+   </property>
+   <property name="toolTip">
+    <string>Build (F7)</string>
    </property>
    <property name="shortcut">
     <string>F7</string>

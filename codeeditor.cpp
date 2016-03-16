@@ -17,46 +17,12 @@ See LICENSE.TXT for licensing terms.
 #include "mainwindow.h"
 #include "addpropertydialog.h"
 
-CodeEditor *extraSelsEditor;
-QList<QTextEdit::ExtraSelection> extraSels;
-QTextEdit::ExtraSelection rowSelection;
-QTextEdit::ExtraSelection hintWordSelection;
-QString _extraSelWord;
-int _extraSelScrollPos;
-
-
-void flushExtraSels() {
-    if( !extraSelsEditor ) return;
-    extraSels.clear();
-    extraSelsEditor->setExtraSelections( extraSels );
-    extraSelsEditor = 0;
-}
-void updateRowSelection(CodeEditor *editor) {
-    extraSelsEditor = editor;
-    if (!extraSels.isEmpty())
-        extraSels.removeAt(0);
-    extraSels.insert(0, rowSelection);
-    extraSelsEditor->setExtraSelections( extraSels );
-}
-void flushWordsExtraSels() {
-    if( !extraSelsEditor ) return;
-    if (extraSels.size() == 1) //has only row selection
-        return;
-    extraSels.clear();
-    extraSels.append(rowSelection);
-    extraSelsEditor->setExtraSelections( extraSels );
-}
-
-void appendExtraSels(const QTextEdit::ExtraSelection &sel, CodeEditor *editor) {
-    extraSelsEditor = editor;
-    extraSels.append(sel);
-    extraSelsEditor->setExtraSelections( extraSels );
-}
-
 
 //***** CodeEditor *****
 
 CodeEditor::CodeEditor( QWidget *parent ):QPlainTextEdit( parent ),_modified( 0 ){
+
+    _selection = new ExtraSelection(this);
 
     _editPosIndex = -1;
     _useAutoBrackets = Prefs::prefs()->getBool("autoBracket");
@@ -82,20 +48,15 @@ CodeEditor::CodeEditor( QWidget *parent ):QPlainTextEdit( parent ),_modified( 0 
 
     setLineWrapMode( QPlainTextEdit::NoWrap );
 
-    //qDebug()<<"editor";
     onPrefsChanged( "" );
-
-    flushExtraSels();
 
     setMouseTracking(true);
     setAcceptDrops(false);
 }
 
 CodeEditor::~CodeEditor(){
-    flushExtraSels();
-    //delete _lcomp;
-    //_lcomp = 0;
-
+    delete _highlighter;
+    delete _selection;
 }
 
 bool CodeEditor::aucompIsVisible() {
@@ -537,16 +498,6 @@ void CodeEditor::highlightLine( int line, Highlighting kind ){
     QTextBlock block = document()->findBlockByNumber( line );
 
     if( block.isValid() ){
-        QColor lineColor;
-        if( kind == HlCommon) {
-            lineColor = Prefs::prefs()->getColor( "highlightColor" );
-        }
-        else if( kind == HlCaretRow || kind == HlCaretRowCentered ) {
-            lineColor = Prefs::prefs()->getColor( "highlightCaretRowColor" );
-        }
-        else if( kind == HlError ) {
-            lineColor = Prefs::prefs()->getColor( "highlightErrorColor" );
-        }
 
         QTextCursor cursor = QTextCursor( block );
         if( kind == HlCommon || kind == HlError || kind == HlCaretRowCentered ) {
@@ -557,12 +508,9 @@ void CodeEditor::highlightLine( int line, Highlighting kind ){
         }
 
         if( _isHighlightLine || (kind != HlCaretRow && kind != HlCaretRowCentered) ) {
-            rowSelection.format.setBackground( lineColor );
-            rowSelection.format.setProperty( QTextFormat::FullWidthSelection,true );
-            rowSelection.cursor = cursor;
-            rowSelection.cursor.clearSelection();
+            cursor.clearSelection();
+            _selection->appendCaretRow(cursor, kind);
         }
-        updateRowSelection(this);
     }
 
 }
@@ -586,11 +534,12 @@ void CodeEditor::onThemeChanged() {
         }
         setExtraSelections(extraSels);
     }*/
-    flushExtraSels();
-    if(_isHighlightLine) {
-        rowSelection.format.setBackground( Prefs::prefs()->getColor("highlightColorCaretRow") );
-        updateRowSelection(this);
-    }
+    /*_selection->resetAll();
+    if (_isHighlightLine) {
+        SelItem *sel = _selection->caretRowSel();
+        sel->selection.format.setBackground( Prefs::prefs()->getColor("highlightCaretRowColor") );
+        _selection->appendCaretRow(sel->selection.cursor, );
+    }*/
 }
 
 void CodeEditor::onPrefsChanged( const QString &name ){
@@ -615,22 +564,22 @@ void CodeEditor::onPrefsChanged( const QString &name ){
         _isHighlightLine = prefs->getBool("highlightLine");
         _isHighlightWord = prefs->getBool("highlightWord");
 
-        if(_isHighlightLine != hl || _isHighlightWord != hw) {
-            flushExtraSels();
-            if(_isHighlightLine)
-                updateRowSelection(this);
+        if (_isHighlightLine != hl) {
+            if (_isHighlightLine)
+                _selection->appendCaretRow();
+            else
+                _selection->resetCaretRow();
+        }
+        if (_isHighlightWord != hl) {
+            if (!_isHighlightWord)
+                _selection->resetWords();
         }
 
         QColor bg = prefs->getColor( "backgroundColor" );
         QColor fg( 255-bg.red(),255-bg.green(),255-bg.blue() );
 
-        /*QPalette p = palette();
-        p.setColor( QPalette::Base,bg );
-        p.setColor( QPalette::Text,fg );
-        setPalette( p );*/
-
-        QString cbg = Theme::hexColor(bg);
-        QString cfg = Theme::hexColor(fg);
+        QString cbg = bg.name();
+        QString cfg = fg.name();
 
         QString s = "background:"+cbg+";background-color:"+cbg+";color:"+cfg+";";
         setStyleSheet(s);
@@ -690,57 +639,72 @@ void CodeEditor::onCursorPositionChanged(){
     _prevCursorPos = pos;
     //qDebug()<<"onCursorPositionChanged";
 
-    if(_isHighlightWord) {
-        cursor.select(QTextCursor::WordUnderCursor);
-        QString s = cursor.selectedText();
-        QScrollBar *sb = this->verticalScrollBar();
-        int scroll = sb->value();
-        //qDebug()<<"scroll:"<<scroll;
-        if(s == _extraSelWord && scroll == _extraSelScrollPos) {
-            //qDebug()<<"word is the same:"<<s;
-            return;
-        }
-        _extraSelWord = s;
-        _extraSelScrollPos = scroll;
-        //qDebug()<<"word:"<<s;
-        if(s == "" || !isAlpha(s[0]) || CodeAnalyzer::containsKeyword(s)) {
-            return;
-        }
-        QTextBlock b = firstVisibleBlock();
-        float bheight = blockBoundingRect(b).height();
-        int areaHeight = rect().height();
-        int n = (areaHeight/bheight)+2;
-        int i = 0;
-        flushWordsExtraSels();
-        QColor bg = Theme::selWordColor();
-        len = _extraSelWord.length();
-        int count = 0;
-        while (b.isValid() && i < n) {
-            s = b.text();
-            int p = -1;
-            while( (p = s.indexOf(_extraSelWord,p+1)) >= 0) {
-                QTextCursor cursor = textCursor();
-                int pos = p+b.position();
-                cursor.setPosition(pos+1);
-                cursor.select(QTextCursor::WordUnderCursor);
-                QString t = cursor.selectedText();
-                if(t == _extraSelWord) {
-                    QTextEdit::ExtraSelection sel;
-                    sel.format.setBackground(bg);
-                    sel.cursor = cursor;
-                    appendExtraSels(sel, this);
-                    ++count;
-                }
-                p += len;
-            }
-            if(b.isVisible())
-                ++i;
-            b = b.next();
-        }
-        //if(count < 2)
-        //    flushWordsExtraSels();
+
+    if(!_isHighlightWord)
+        return;
+
+    cursor.select(QTextCursor::WordUnderCursor);
+    QString s = cursor.selectedText();
+
+    if (s.trimmed().isEmpty()) {
+        //qDebug()<<"word is empty";
+        _selection->resetWords();
+        _selection->setLastWord("", -1);
+        return;
     }
 
+    QScrollBar *sb = this->verticalScrollBar();
+    int scroll = sb->value();
+
+    if (s == _selection->lastSelWord() && scroll == _selection->lastSelScrollPos()) {
+        //qDebug()<<"word is the same:"<<s;
+        return;
+    }
+
+    _selection->resetWords();
+    _selection->setLastWord(s, scroll);
+
+    //qDebug()<<"word:"<<s;
+    if(s == "" || !isAlpha(s[0]) || CodeAnalyzer::containsKeyword(s)) {
+        return;
+    }
+
+    QTextBlock b = firstVisibleBlock();
+    float bheight = blockBoundingRect(b).height();
+    int areaHeight = rect().height();
+    int n = (areaHeight/bheight)+2;
+    int i = 0;
+
+    QString selWord = _selection->lastSelWord();
+    len = selWord.length();
+    // fill list with selections
+    QList<SelItem*> sels;
+    while (b.isValid() && i < n) {
+        s = b.text();
+        int p = -1;
+        while( (p = s.indexOf(selWord,p+1)) >= 0) {
+            QTextCursor cursor = QTextCursor(b);
+            int pos = p+b.position();
+            cursor.setPosition(pos+1);
+            cursor.select(QTextCursor::WordUnderCursor);
+            QString t = cursor.selectedText();
+            if (t == selWord) {
+                SelItem *sel = new SelItem();
+                sel->selection.cursor = cursor;
+                sels.append(sel);
+            }
+            p += len;
+        }
+        if (b.isVisible())
+            ++i;
+        b = b.next();
+    }
+    if (!sels.isEmpty()) {
+        /*if (sels.size() < 2)
+            _selection->resetWords();
+        else*/
+            _selection->appendWords(sels);
+    }
 }
 
 void CodeEditor::onTextChanged(){
@@ -1353,16 +1317,11 @@ void CodeEditor::mouseMoveEvent(QMouseEvent *e) {
     cursor.select(QTextCursor::WordUnderCursor);
     QTextBlock block = cursor.block();
     if ( block.isValid() ) {
-        QTextEdit::ExtraSelection es = hintWordSelection;
-        flushWordsExtraSels();
-        es.format.setForeground( (Theme::isDark() ? QColor(250,250,250) : QColor(0,0,255)) );
-        es.format.setFontUnderline( true );
-        es.format.setFontWeight( QFont::Bold );
-        es.cursor = cursor;
-        extraSels.append( es );
+        SelItem *sel = _selection->toolTipSel();
+        sel->selection.cursor = cursor;
+        _selection->appendToolTip();
     }
-    setExtraSelections( extraSels );
-    extraSelsEditor = this;
+    //setExtraSelections( extraSels );
     QString word = cursor.selectedText();
 
     if ( !word.isEmpty() ) {
@@ -1618,7 +1577,10 @@ void CodeEditor::fillSourceListWidget(CodeItem *item, QStandardItem *si) {
 void CodeEditor::keyReleaseEvent( QKeyEvent *event ) {
     //highlightLine( textCursor().blockNumber(), HlCaretRow );
     QGuiApplication::restoreOverrideCursor();
-    flushWordsExtraSels();
+    if (event->key() == Qt::Key_Control) {
+        _selection->resetToolTip();
+        qDebug()<<"release control key";
+    }
 }
 
 void CodeEditor::keyPressEvent( QKeyEvent *e ) {
@@ -2350,6 +2312,7 @@ void Highlighter::onPrefsChanged( const QString &name ){
         _highlightColor = prefs->getColor("highlightColor");
         rehighlight();
         _editor->highlightCurrentLine();
+        _editor->_selection->readPrefs();
     }
 }
 
@@ -2614,4 +2577,158 @@ CodeItem* BlockData::item(QString &ident) {
             return i;
     }
     return 0;
+}
+
+ExtraSelection::ExtraSelection(CodeEditor *editor)
+{
+    _editor = editor;
+
+    _caretRowSel = new SelItem();
+    _caretRowSel->selection.format.setProperty( QTextFormat::FullWidthSelection,true );
+
+    _toolTipSel = new SelItem();
+    _toolTipSel->selection.format.setFontUnderline( true );
+    _toolTipSel->selection.format.setFontWeight( QFont::Bold );
+
+    _wordSel = new SelItem();
+}
+
+ExtraSelection::~ExtraSelection()
+{
+    foreach (SelItem *sel, _items) {
+        delete sel;
+    }
+    _items.clear();
+}
+
+void ExtraSelection::resetAll()
+{
+    if (_items.isEmpty())
+        return;
+    resetWords();//call it to do [delete sel;] for words
+    _items.clear();
+    adjust(true);
+}
+
+void ExtraSelection::resetToolTip()
+{
+    bool ok = _items.removeOne(_toolTipSel);
+    if (ok)
+        adjust(true);
+}
+
+void ExtraSelection::resetWords()
+{
+    QList<SelItem*> forDel;
+    foreach (SelItem *sel, _items) {
+        if (sel != _caretRowSel && sel != _toolTipSel)
+            forDel.append(sel);
+    }
+    foreach (SelItem *sel, forDel) {
+        _items.removeOne(sel);
+        delete sel;
+    }
+    adjust(!forDel.isEmpty());
+}
+
+void ExtraSelection::resetCaretRow()
+{
+    bool ok = _items.removeOne(_caretRowSel);
+    if (ok)
+        adjust(true);
+}
+
+void ExtraSelection::appendCaretRow() {
+    bool contains = _items.contains(_caretRowSel);
+    if (!contains) {
+        _items.insert(0, _caretRowSel);
+    }
+    adjust(!contains);
+}
+
+void ExtraSelection::appendCaretRow(QTextCursor &cursor, Highlighting kind)
+{
+    bool contains = _items.contains(_caretRowSel);
+    if (!contains) {
+        _items.insert(0, _caretRowSel);
+    }
+    _caretRowSel->selection.cursor = cursor;
+    QColor lineColor;
+    if( kind == HlCommon) {
+        lineColor = _commonColor;
+    }
+    else if( kind == HlCaretRow || kind == HlCaretRowCentered ) {
+        lineColor = _caretColor;
+    }
+    else if( kind == HlError ) {
+        lineColor = _errorColor;
+    }
+    _caretRowSel->selection.format.setBackground( lineColor );
+    adjust(!contains);
+}
+
+void ExtraSelection::appendToolTip()
+{
+    bool contains = _items.contains(_toolTipSel);
+    if (!contains) {
+        _items.append(_toolTipSel);
+    }
+    _toolTipSel->selection.format.setForeground(_toolTipColor);
+    adjust(!contains);
+}
+
+void ExtraSelection::appendWords(QList<SelItem*> list)
+{
+    bool dirty = false;
+    foreach (SelItem *sel, list) {
+        if (!_items.contains(sel)) {
+            sel->selection.format.setBackground(_wordColor);
+            sel->selection.cursor = QTextCursor(sel->selection.cursor);
+            _items.append(sel);
+            dirty = true;
+        }
+    }
+    adjust(dirty);
+}
+
+void ExtraSelection::setLastWord(QString word, int scroll)
+{
+    _lastSelWord = word;
+    _lastSelScrollPos = scroll;
+}
+
+void ExtraSelection::readPrefs()
+{
+    Prefs *p = Prefs::prefs();
+    _commonColor = p->getColor("highlightColor");
+    _caretColor = p->getColor("highlightCaretRowColor");
+    _wordColor = p->getColor("wordUnderCursorColor");
+    _errorColor = p->getColor("highlightErrorColor");
+    _toolTipColor = (Theme::isDark() ? QColor(250,250,250) : QColor(0,0,255));
+
+    foreach (SelItem *i, _items) {
+        QColor color;
+        if (i == _caretRowSel)
+            color = _caretColor;
+        else if (i == _toolTipSel)
+            color = _toolTipColor;
+        else
+            color = _wordColor;
+        i->selection.format.setBackground(color);
+    }
+
+    adjust(true);
+}
+
+void ExtraSelection::adjust(bool isDirty)
+{
+    //qDebug()<<"ExtraSelection::adjust";
+    isDirty = true;
+    if (isDirty) {
+        _sels.clear();
+        foreach (SelItem *i, _items) {
+            _sels.append(i->selection);
+        }
+    }
+    _editor->setExtraSelections(_sels);
 }

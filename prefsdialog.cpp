@@ -22,7 +22,8 @@ PrefsDialog::PrefsDialog(MainWindow *mainwnd, QWidget *parent ):QDialog( parent 
     QStringList list;
     list << "background"<<"default"<<"numbers"<<"strings"<<"identifiers"
          <<"keywords"<<"comments"<<"highlight"<<"highlightError"<<"highlightCaretRow"
-           <<"monkeywords"<<"userwords"<<"userwordsDecl"<<"userwordsVar"<<"params";
+           <<"monkeywords"<<"userwords"<<"userwordsDecl"<<"userwordsVar"<<"params"
+          <<"wordUnderCursor";
 
     foreach (QString param, list) {
         QString name = param+"Color";

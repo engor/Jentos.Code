@@ -1495,13 +1495,12 @@ void MainWindow::onCursorPositionChanged(){
 
 void MainWindow::onShowCode( const QString &path, int line, bool error ){
     //qDebug()<<"onShowCode";
-    if( CodeEditor *editor=qobject_cast<CodeEditor*>( openFile( path,true ) ) ){
-        //
-
+    CodeEditor *editor = qobject_cast<CodeEditor*>( openFile( path,true ) );
+    if (editor){
         editor->gotoLine( line );
-        editor->highlightLine( line, (error ? CodeEditor::HlError : CodeEditor::HlCommon) );
-        //
-        if( editor==_codeEditor ) editor->setFocus( Qt::OtherFocusReason );
+        editor->highlightLine( line, (error ? HlError : HlCommon) );
+        if (editor == _codeEditor)
+            editor->setFocus( Qt::OtherFocusReason );
     }
 }
 
@@ -2045,11 +2044,12 @@ void MainWindow::onFindReplace( int how ){
 }
 
 void MainWindow::onEditGoto(){
-    if( !_codeEditor ) return;
+    if( !_codeEditor )
+        return;
 
-    bool ok=false;
-    int line=QInputDialog::getInt( this,"Go to Line","Line number:",1,1,_codeEditor->document()->blockCount(),1,&ok );
-    if( ok ){
+    bool ok =false;
+    int line = QInputDialog::getInt( this,"Go to Line","Line number:",1,1,_codeEditor->document()->blockCount(),1,&ok );
+    if ( ok ){
         _codeEditor->gotoLine( line-1 );
         _codeEditor->highlightLine( line-1 );
     }

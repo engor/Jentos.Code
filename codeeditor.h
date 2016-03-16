@@ -23,7 +23,13 @@ class ListWidgetComplete;
 class LineNumberArea;
 class ListWidgetCompleteItem;
 class ItemWithData;
+class ExtraSelection;
+class SelItem;
 
+
+enum Highlighting {
+    HlCommon, HlCaretRow, HlError, HlCaretRowCentered
+};
 
 //***** CodeEditor *****
 
@@ -33,10 +39,6 @@ class CodeEditor : public QPlainTextEdit {
 public:
     CodeEditor( QWidget *parent=0 );
     ~CodeEditor();
-
-    enum Highlighting {
-        HlCommon, HlCaretRow, HlError, HlCaretRowCentered
-    };
 
     bool aucompIsVisible();
     //return true if successful and path updated
@@ -54,7 +56,7 @@ public:
     bool isMonkey(){ return _monkey; }
 
     void gotoLine( int line );
-    void highlightLine(int line , Highlighting kind=HlCommon);
+    void highlightLine(int line , Highlighting kind = HlCommon);
     void highlightCurrentLine();
 
     bool findNext( const QString &findText,bool cased,bool wrap,bool backward=false );
@@ -152,6 +154,7 @@ private:
     void showToolTip(QPoint pos, QString s, bool nowrap=true);
     void storeCurrentEditPosition(const QTextCursor &cursor);
 
+    ExtraSelection *_selection;
     Highlighter *_highlighter;
     //
     QString _path;
@@ -357,5 +360,52 @@ private:
     int _pressedPosLeft, _pressedPosRight;
 };
 
+
+
+/*  ExtraSelection */
+class ExtraSelection {
+
+public:
+
+    ExtraSelection(CodeEditor *editor);
+    ~ExtraSelection();
+
+    void resetAll();
+    void resetToolTip();
+    void resetWords();
+    void resetCaretRow();
+    void appendCaretRow();
+    void appendCaretRow(QTextCursor &cursor, Highlighting kind);
+    void appendToolTip();
+    void appendWords(QList<SelItem*> list);
+    void setLastWord(QString word, int scroll);
+    QList<QTextEdit::ExtraSelection> sels();
+
+    QString lastSelWord(){return _lastSelWord;}
+    int lastSelScrollPos(){return _lastSelScrollPos;}
+    SelItem* caretRowSel(){return _caretRowSel;}
+    SelItem* toolTipSel(){return _toolTipSel;}
+    SelItem* wordSel(){return _wordSel;}
+
+    void readPrefs();
+
+private:
+
+    QColor _commonColor, _wordColor, _caretColor, _errorColor, _toolTipColor;
+    CodeEditor *_editor;
+    QList<SelItem*> _items;
+    QList<QTextEdit::ExtraSelection> _sels;
+    SelItem *_caretRowSel, *_toolTipSel, *_wordSel;
+    QString _lastSelWord;
+    int _lastSelScrollPos;
+
+    void adjust(bool isDirty);
+
+};
+
+class SelItem {
+public:
+    QTextEdit::ExtraSelection selection;
+};
 
 #endif // CODEEDITOR_H

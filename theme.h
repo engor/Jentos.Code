@@ -27,8 +27,7 @@ public:
     static QImage imageLight(QString name);
     static QImage imageDark(QString name);
     static bool isDark();
-    static QString hexColor(const QColor &color);
-    static QColor selWordColor();
+
     static Theme* instance() {
         static Theme *t = 0;
         if(!t)
