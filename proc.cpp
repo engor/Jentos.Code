@@ -14,8 +14,6 @@ See LICENSE.TXT for licensing terms.
 
 #include <tlhelp32.h>
 
-#include <consolelog.h>
-
 //kill 'em all!
 //
 static bool killpg( HANDLE proc ){
@@ -87,6 +85,8 @@ static bool killpg( HANDLE proc ){
 #else
 
 #define CLOSE close
+
+#include <consolelog.h>
 
 #include <signal.h>
 
