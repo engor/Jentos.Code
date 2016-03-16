@@ -63,6 +63,8 @@ private slots:
 
     void on_labelResetColors_linkActivated(const QString &link);
 
+    void on_chbLineNumbers_clicked(bool checked);
+
 private:
 
     QColorDialog *_chooser;

@@ -94,12 +94,13 @@ int PrefsDialog::exec(){
     _ui->checkBoxFillAucompInherit->setChecked( _prefs->getBool( "codeFillAucompInherit" ) );
 
     _ui->checkBoxCheckUpdates->setChecked( _prefs->getBool( "updates" ) );
-    _ui->checkBoxAutoBracket->setChecked(_prefs->getBool("AutoBracket"));
+    _ui->checkBoxAutoBracket->setChecked(_prefs->getBool("autoBracket"));
     _ui->checkBoxShowHelpInDock->setChecked(_prefs->getBool("showHelpInDock"));
     _ui->checkBoxReplaceDocsStyle->setChecked(_prefs->getBool("replaceDocsStyle"));
 
-    _ui->spinBoxTypedCharsForCompletion->setValue(_prefs->getInt("CharsForCompletion"));
+    _ui->spinBoxTypedCharsForCompletion->setValue(_prefs->getInt("charsForCompletion"));
     _ui->checkBoxAddVoidForMethods->setChecked(_prefs->getBool("addVoidForMethods"));
+    _ui->chbLineNumbers->setChecked(_prefs->getBool("showLineNumbers"));
 
     Prefs *p = Prefs::prefs();
     _ui->labelSettingsFile->setText( p->settings()->fileName() );
@@ -216,7 +217,7 @@ void PrefsDialog::onReplaceDocsStyleChanged() {
 
 void PrefsDialog::on_checkBoxAutoBracket_stateChanged(int arg1)
 {
-    _prefs->setValue( "AutoBracket", _ui->checkBoxAutoBracket->isChecked() );
+    _prefs->setValue( "autoBracket", _ui->checkBoxAutoBracket->isChecked() );
 }
 
 void PrefsDialog::on_pushButtonOpenSettingsFolder_clicked()
@@ -228,7 +229,7 @@ void PrefsDialog::on_pushButtonOpenSettingsFolder_clicked()
 
 void PrefsDialog::on_spinBoxTypedCharsForCompletion_valueChanged(int arg1)
 {
-    _prefs->setValue( "CharsForCompletion", arg1 );
+    _prefs->setValue( "charsForCompletion", arg1 );
 }
 
 void PrefsDialog::on_checkBoxAddVoidForMethods_clicked()
@@ -247,4 +248,9 @@ void PrefsDialog::on_labelResetColors_linkActivated(const QString &link)
 {
     Theme::adjustDefaultColors(true);//set and notify everyone about new colors
     setColors();
+}
+
+void PrefsDialog::on_chbLineNumbers_clicked(bool checked)
+{
+    _prefs->setValue( "showLineNumbers", checked );
 }

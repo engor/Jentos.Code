@@ -53,12 +53,14 @@ QSettings* Prefs::settings() {
 
 void Prefs::setDefaults() {
     Prefs *p = prefs();
-    if (!p->contains("CharsForCompletion"))
-        p->setValue("CharsForCompletion", 3);
+    if (!p->contains("charsForCompletion"))
+        p->setValue("charsForCompletion", 3);
     if (!p->contains("addVoidForMethods"))
         p->setValue("addVoidForMethods", true);
-    if (!p->contains("AutoBracket"))
-        p->setValue("AutoBracket", true);
+    if (!p->contains("autoBracket"))
+        p->setValue("autoBracket", true);
+    if (!p->contains("showLineNumbers"))
+        p->setValue("showLineNumbers", true);
 
     if (!p->contains("updates")) {
         p->setValue("updates",true);

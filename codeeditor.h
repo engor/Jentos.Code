@@ -148,8 +148,8 @@ protected:
 
 private:
 
+    void adjustShowLineNumbers();
     void showToolTip(QPoint pos, QString s, bool nowrap=true);
-
     void storeCurrentEditPosition(const QTextCursor &cursor);
 
     Highlighter *_highlighter;
@@ -166,6 +166,7 @@ private:
     bool _blockChangeCursorMethod;
     int _storedBlockNumber;
     LineNumberArea *_lineNumberArea;
+    bool _showLineNumbers;
     int _prevCursorPos, _prevTextLen, _prevTextChangedPos;
 
     QList<int*> _editPosList;
@@ -323,6 +324,7 @@ public:
     int sizeHint() { return _wdth; }
 
     int maxwidth() { return _wdth; }
+    void setWidth(int value) { _wdth = value; }
 
     void pressed(int left, int right) { _pressedPosLeft = left; _pressedPosRight = right; }
     int pressedLeft() { return _pressedPosLeft; }

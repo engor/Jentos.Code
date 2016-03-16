@@ -59,11 +59,13 @@ void appendExtraSels(const QTextEdit::ExtraSelection &sel, CodeEditor *editor) {
 CodeEditor::CodeEditor( QWidget *parent ):QPlainTextEdit( parent ),_modified( 0 ){
 
     _editPosIndex = -1;
-    _useAutoBrackets = Prefs::prefs()->getBool("AutoBracket");
-    _charsCountForCompletion = Prefs::prefs()->getInt("CharsForCompletion");
+    _useAutoBrackets = Prefs::prefs()->getBool("autoBracket");
+    _charsCountForCompletion = Prefs::prefs()->getInt("charsForCompletion");
     _addVoidForMethods = Prefs::prefs()->getBool("addVoidForMethods");
 
-    _lineNumberArea = new LineNumberArea(this, 60);
+    _lineNumberArea = 0;
+    _showLineNumbers = false;
+    adjustShowLineNumbers();
 
     _prevCursorPos = _prevTextLen = _prevTextChangedPos = -1;
     _lcomp = 0;
@@ -84,8 +86,6 @@ CodeEditor::CodeEditor( QWidget *parent ):QPlainTextEdit( parent ),_modified( 0 
     onPrefsChanged( "" );
 
     flushExtraSels();
-
-    setViewportMargins(_lineNumberArea->maxwidth()-1, 0, 0, 0);
 
     setMouseTracking(true);
     setAcceptDrops(false);
@@ -601,9 +601,12 @@ void CodeEditor::onPrefsChanged( const QString &name ){
 
     Prefs *prefs = Prefs::prefs();
 
-    _useAutoBrackets = prefs->getBool("AutoBracket");
-    _charsCountForCompletion = prefs->getInt("CharsForCompletion");
+    _useAutoBrackets = prefs->getBool("autoBracket");
+    _charsCountForCompletion = prefs->getInt("charsForCompletion");
     _addVoidForMethods = prefs->getBool("addVoidForMethods");
+
+    if (name == "showLineNumbers")
+        adjustShowLineNumbers();
 
     if( t=="" || t=="backgroundColor" || t=="fontFamily" || t=="fontSize" || t=="tabSize" || t=="smoothFonts" || t=="highlightLine" || t=="highlightWord" ){
 
@@ -1115,19 +1118,11 @@ void CodeEditor::pressOnLineNumber(QMouseEvent *e) {
     QPoint p = e->pos();
     int px = p.x();
     p.setX(px+100);
+    bool folding = (px >= _lineNumberArea->width()-16);
     QTextCursor cursor = cursorForPosition(p);
     if( e->button() == Qt::LeftButton ) {
         QTextBlock block = cursor.block();
-        //select lines in textarea
-        if(px < _lineNumberArea->width()-12) {
-            int l = block.position();
-            int r = l+block.length()-1;
-            _lineNumberArea->pressed(l,r);
-            cursor.setPosition(l);
-            cursor.setPosition(r, QTextCursor::KeepAnchor);
-            setTextCursor(cursor);
-        }
-        else {//try to fold/unfold block
+        if(folding) {//try to fold/unfold block
             BlockData *data = BlockData::data(block);
             if( data ) {
                 highlightLine(cursor.blockNumber());
@@ -1140,8 +1135,14 @@ void CodeEditor::pressOnLineNumber(QMouseEvent *e) {
                     }
                 }
             }
+        } else {//select lines in textarea
+            int l = block.position();
+            int r = l+block.length()-1;
+            _lineNumberArea->pressed(l,r);
+            cursor.setPosition(l);
+            cursor.setPosition(r, QTextCursor::KeepAnchor);
+            setTextCursor(cursor);
         }
-
     }
     else if( e->button() == Qt::RightButton ) {
         highlightLine(cursor.blockNumber());
@@ -1204,8 +1205,6 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event) {
     int wd = 40;
 
     int areaHeight = rect().height();
-    //qDebug()<<top;
-    //return;
     int n = (areaHeight/bheight)+1;
     int i = 0;
     //
@@ -1230,21 +1229,22 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event) {
         bool inher = (data && data->code() && data->code()->isInherited());
         if( inher ) {
             painter.setPen(QColor(130,130,130));
-            int px = (bkmrk ? wd-(d?14:18) : wd);
+            int px = (bkmrk ? wd-(d?14:18): wd);
             painter.drawText(0, py, px, hg, Qt::AlignRight, "ovr.");
         }
         if( bkmrk ) {
             int yy = (d ? py+1 : py-2);
             painter.drawImage(wd-imgBookmark.width(), yy, imgBookmark);
         }
-        if( !bkmrk && !inher ) {
+        // draw line number
+        if(_showLineNumbers && !bkmrk && !inher ) {
             int num = block.blockNumber() + 1 ;
             QString number = QString::number(num);
             painter.setPen(QColor(130,130,130));
             painter.drawText(0, py, wd, hg, Qt::AlignRight, number);
         }
         if( data && data->modified() > 0 ) {
-            painter.fillRect(wd+3, py, 1, hg, (data->modified()==1 ? Qt::darkGray : clrGreen) );
+            painter.fillRect(wd+3, py, 2, hg, (data->modified()==1 ? Qt::darkGray : clrGreen) );
         }
         //
         if(infold || endfold) {
@@ -1317,6 +1317,22 @@ void CodeEditor::mousePressEvent(QMouseEvent *e) {
         }
     }
     QPlainTextEdit::mousePressEvent(e);
+}
+
+void CodeEditor::adjustShowLineNumbers()
+{
+    bool value = Prefs::prefs()->getBool("showLineNumbers");
+    if (_showLineNumbers == value && _lineNumberArea != 0)
+        return;
+    _showLineNumbers = value;
+    int wd = value ? 60 : 24;
+    if (_lineNumberArea == 0)
+        _lineNumberArea = new LineNumberArea(this, wd);
+    else
+        _lineNumberArea->setFixedWidth(wd);
+    int left = wd-1;
+    setViewportMargins(left, 0, 0, 0);
+    update();
 }
 
 void CodeEditor::showToolTip(QPoint pos, QString s, bool nowrap) {
