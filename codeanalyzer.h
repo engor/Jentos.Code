@@ -233,6 +233,7 @@ public:
         }
         //_descr = _descrAsItem = "<b>"+_ident+"</b> : <i>"+_identType+"</i>";
         _descr = _descrAsItem = _ident+" : "+_identType;
+        _decl = "property";
     }
 
     bool isPrivate(){ return _isPrivate; }

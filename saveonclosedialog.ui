@@ -57,9 +57,9 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButtonDiscard">
+        <widget class="QPushButton" name="pushButtonCancel">
          <property name="text">
-          <string>Discard All</string>
+          <string>Cancel Quit</string>
          </property>
         </widget>
        </item>
@@ -80,9 +80,9 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButtonCancel">
+        <widget class="QPushButton" name="pushButtonDiscard">
          <property name="text">
-          <string>Cancel Quit</string>
+          <string>Discard All</string>
          </property>
         </widget>
        </item>
@@ -124,7 +124,6 @@
  <tabstops>
   <tabstop>listWidget</tabstop>
   <tabstop>pushButtonSave</tabstop>
-  <tabstop>pushButtonCancel</tabstop>
  </tabstops>
  <resources/>
  <connections/>
