@@ -94,6 +94,7 @@ public:
     void adjustDocumentSize();
     void goBack();
     void goForward();
+    void gotoPos(int blockNum, int posInBlock);
     void autoformatAll();
     void lowerUpperCase(bool lower);
     //
@@ -149,7 +150,7 @@ private:
 
     void showToolTip(QPoint pos, QString s, bool nowrap=true);
 
-    void editPosInsert(int pos);
+    void storeCurrentEditPosition(const QTextCursor &cursor);
 
     Highlighter *_highlighter;
     //
@@ -167,7 +168,7 @@ private:
     LineNumberArea *_lineNumberArea;
     int _prevCursorPos, _prevTextLen, _prevTextChangedPos;
 
-    QList<int> _editPosList;
+    QList<int*> _editPosList;
     int _editPosIndex;
 
     bool _isHighlightLine, _isHighlightWord;

@@ -683,7 +683,7 @@ void CodeEditor::onCursorPositionChanged(){
                 block = block.next();
             }
             cursor.setPosition(pos);
-            editPosInsert(cursor.blockNumber());
+            storeCurrentEditPosition(cursor);
         }
         _prevTextLen = len;
     }
@@ -927,74 +927,77 @@ void CodeEditor::onShowAutocompleteList()
     }
 }
 
-void CodeEditor::editPosInsert(int pos) {
-    if(_editPosList.isEmpty()) {
+void CodeEditor::storeCurrentEditPosition(const QTextCursor &cursor) {
+    int* pos = new int[2];
+    pos[0] = cursor.blockNumber();
+    pos[1] = cursor.positionInBlock();
+    if (_editPosList.isEmpty()) {
         _editPosList.append(pos);
         _editPosIndex = 0;
-    }
-    else if(_editPosList.value(_editPosIndex) != pos) {
-        ++_editPosIndex;
-        _editPosList.insert(_editPosIndex, pos);
+    } else {
+        int* p = _editPosList.value(_editPosIndex);
+        if (pos[0] != p[0]) {
+            ++_editPosIndex;
+            _editPosList.insert(_editPosIndex, pos);
+        }
     }
 }
 
 void CodeEditor::goBack() {
-    if(_editPosList.isEmpty())
+    if (_editPosList.isEmpty())
         return;
-    int pos = -1;
-    if(_editPosList.length() > 1 && _editPosIndex > 0) {
+    int* pos =0;
+    if (_editPosList.length() > 1) {
+        if (_editPosIndex == 0) //already reached the first edit pos
+            return;
         --_editPosIndex;
         pos = _editPosList.value(_editPosIndex);
-    }
-    else {
+    } else {
         pos = _editPosList.first();
     }
-    QTextBlock b = document()->findBlockByNumber(pos);
-    if(b.isValid()) {
-
-        CodeItem *i = CodeAnalyzer::scopeAt(b);
-        if(i) {
-            unfoldBlock(i->block());
-            if(i->parent())
-                unfoldBlock(i->parent()->block());
-        }
-        setCenterOnScroll(true);
-        QTextCursor c = textCursor();
-        c.setPosition(b.position());
-        setTextCursor(c);
-
-        ensureCursorVisible();
-        setCenterOnScroll(false);
-    }
+    gotoPos(pos[0], pos[1]);
 }
+
 void CodeEditor::goForward() {
-    if(_editPosList.isEmpty())
+    if (_editPosList.isEmpty())
         return;
-    int pos = -1;
+    int* pos = 0;
     int len = _editPosList.length();
-    if(len > 1 && _editPosIndex < len-1) {
+    if (len > 1) {
+        if (_editPosIndex == len-1) //already reached the last edit pos
+            return;
         ++_editPosIndex;
         pos = _editPosList.value(_editPosIndex);
-    }
-    else {
+    } else {
         pos = _editPosList.first();
     }
-    QTextBlock b = document()->findBlockByNumber(pos);
-    if(b.isValid()) {
+    gotoPos(pos[0], pos[1]);
+}
 
+void CodeEditor::gotoPos(int blockNum, int posInBlock) {
+    QTextCursor c = textCursor();
+    int bNum = c.blockNumber();
+    int bPos = c.positionInBlock();
+    if (blockNum == bNum && posInBlock == bPos) {
+        qDebug()<<"the same pos";
+        return;
+    }
+    QTextBlock b = document()->findBlockByNumber(blockNum);
+    if (b.isValid()) {
         CodeItem *i = CodeAnalyzer::scopeAt(b);
-        if(i) {
+        if (i) {
             unfoldBlock(i->block());
-            if(i->parent())
+            if (i->parent())
                 unfoldBlock(i->parent()->block());
         }
-
-        QTextCursor c = textCursor();
-        c.setPosition(b.position());
-        setTextCursor(c);
-
-        ensureCursorVisible();
         setCenterOnScroll(true);
+        int len = b.length()-1;
+        if (posInBlock > len)
+            posInBlock = len;
+        c.setPosition(b.position()+posInBlock);
+        setTextCursor(c);
+        ensureCursorVisible();
+        setCenterOnScroll(false);
     }
 }
 
@@ -1288,11 +1291,11 @@ void CodeEditor::mousePressEvent(QMouseEvent *e) {
         if(item) {
             if(!item->isKeyword()) {
                 QTextCursor cursor = textCursor();
-                editPosInsert(cursor.blockNumber());//save 'from' position
+                storeCurrentEditPosition(cursor);//save 'from' position
                 emit openCodeFile( item->filepath(),"", item->blockNumber() );
                 e->accept();
                 cursor = textCursor();
-                editPosInsert(cursor.blockNumber());//save 'to' position
+                storeCurrentEditPosition(cursor);//save 'to' position
                 return;
             }
             else if(_scope.ident == "Import") {
@@ -1732,7 +1735,7 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     //autocomplete for "",'',(),[]
     if (_useAutoBrackets) {
         bool k1 = (evtxt == "\"");
-        bool k2 = (evtxt == "'");
+        bool k2 = false;//(evtxt == "'");
         bool k3 = (evtxt == "(");
         bool k4 = (evtxt == "[");
 
