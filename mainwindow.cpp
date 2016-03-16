@@ -1208,19 +1208,35 @@ void MainWindow::onChangeAnalyzerProperties(bool) {
 }
 
 void MainWindow::updateWindowTitle(){
-    QWidget *widget=_mainTabWidget->currentWidget();
-    if( CodeEditor *editor=qobject_cast<CodeEditor*>( widget ) ){
-        //setWindowTitle( editor->path() + " - "APP_NAME);
-         setWindowTitle( APP_NAME" v"APP_VERSION );
-    }else if( QWebView *webView=qobject_cast<QWebView*>( widget ) ){
-        //QString s = webView->url().toString();
-       // s = s.mid(8,s.length());
-       // setWindowTitle( s  + " - "APP_NAME);
-         setWindowTitle( APP_NAME" v"APP_VERSION );
-    }else{
-        setWindowTitle( APP_NAME" v"APP_VERSION );
+    QWidget *widget = _mainTabWidget->currentWidget();
+    QString title = "";
+    if( CodeEditor *editor = qobject_cast<CodeEditor*>( widget ) ){
+        title = stripDir(editor->path());
+        if (editor->modified())
+            title += "*";
+    } else if( QWebView *webView = qobject_cast<QWebView*>( widget ) ){
+        QString s = webView->url().toString();
+        int i = s.lastIndexOf("/");
+        if (i > 0) {
+            title = s.mid(i+1);
+            title = title.replace(".html","");
+            i = title.lastIndexOf("#");
+            if (i > 0)
+                title = title.mid(i+1);
+            i = title.lastIndexOf("lang_");
+            if (i > 0)
+                title = title.mid(i+5);
+
+            title += " - Help";
+        } else {
+            title = "Help";
+        }
 
     }
+    if (!title.isEmpty())
+        title += " - ";
+    title += APP_NAME" v"APP_VERSION;
+    setWindowTitle(title);
 }
 
 //Main tab widget...
@@ -1256,27 +1272,21 @@ void MainWindow::onMainTabChanged( int index ){
 
         connect( _codeEditor,SIGNAL(showCode(QString,int)),SLOT(onShowCode(QString,int)) );
         CodeAnalyzer::setCurFilePath(_codeEditor->path());
-        //qDebug()<<"111";
+
         _codeEditor->setFocus( Qt::OtherFocusReason );
-        //qDebug()<<"222";
-        //onCursorPositionChanged();
-        //qDebug()<<"333";
-        _ui->sourceDockWidget->widget()->setEnabled(true);
-        _ui->codeTreeView->setEnabled(true);
 
         //CodeAnalyzer::disable();
         //onCodeAnalyze();
         //CodeAnalyzer::enable();
     }
-    else {
-        _ui->sourceDockWidget->widget()->setEnabled(false);
-        _ui->codeTreeView->setEnabled(false);
-    }
+
+    bool enable = (_codeEditor != 0);
+    _ui->sourceDockWidget->widget()->setEnabled(enable);
+    _ui->codeTreeView->setEnabled(enable);
 
     updateWindowTitle();
 
     updateActions();
-    //qDebug()<<"444";
 }
 
 void MainWindow::onDockVisibilityChanged( bool visible ){
@@ -1476,9 +1486,10 @@ void MainWindow::onUsagesMenu( const QPoint &pos ) {
 //Editor...
 //
 void MainWindow::onTextChanged(){
-    if( CodeEditor *editor=qobject_cast<CodeEditor*>( sender() ) ){
+    if( CodeEditor *editor = qobject_cast<CodeEditor*>( sender() ) ){
         if( editor->modified()<2 ){
             updateTabLabel( editor );
+            updateWindowTitle();
         }
     }
     updateActions();

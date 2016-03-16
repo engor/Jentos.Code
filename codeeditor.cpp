@@ -1575,11 +1575,9 @@ void CodeEditor::fillSourceListWidget(CodeItem *item, QStandardItem *si) {
 }
 
 void CodeEditor::keyReleaseEvent( QKeyEvent *event ) {
-    //highlightLine( textCursor().blockNumber(), HlCaretRow );
     QGuiApplication::restoreOverrideCursor();
     if (event->key() == Qt::Key_Control) {
         _selection->resetToolTip();
-        qDebug()<<"release control key";
     }
 }
 

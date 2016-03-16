@@ -73,7 +73,7 @@
             <x>0</x>
             <y>0</y>
             <width>454</width>
-            <height>710</height>
+            <height>724</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -86,10 +86,13 @@
               <string>Theme</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_13">
+              <property name="topMargin">
+               <number>4</number>
+              </property>
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_12">
                 <property name="spacing">
-                 <number>12</number>
+                 <number>6</number>
                 </property>
                 <property name="topMargin">
                  <number>0</number>
@@ -110,7 +113,7 @@
                     <number>0</number>
                    </property>
                    <property name="bottomMargin">
-                    <number>0</number>
+                    <number>7</number>
                    </property>
                    <item>
                     <widget class="QLabel" name="label_4">
@@ -121,7 +124,7 @@
                       </sizepolicy>
                      </property>
                      <property name="text">
-                      <string>Current theme:</string>
+                      <string>Current:</string>
                      </property>
                     </widget>
                    </item>
@@ -170,6 +173,19 @@
                   </property>
                  </widget>
                 </item>
+                <item>
+                 <widget class="QCheckBox" name="checkBoxShowHelpInDock">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>Show help in docked panel instead of tab</string>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
              </layout>
@@ -181,6 +197,9 @@
               <string>Editor</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_8">
+              <property name="topMargin">
+               <number>4</number>
+              </property>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_6">
                 <property name="spacing">
@@ -973,8 +992,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>98</width>
-        <height>71</height>
+        <width>473</width>
+        <height>432</height>
        </rect>
       </property>
       <attribute name="label">
@@ -1006,8 +1025,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>338</width>
-            <height>138</height>
+            <width>471</width>
+            <height>430</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -1142,8 +1161,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>98</width>
-        <height>71</height>
+        <width>473</width>
+        <height>409</height>
        </rect>
       </property>
       <attribute name="label">
@@ -1175,8 +1194,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>237</width>
-            <height>111</height>
+            <width>471</width>
+            <height>407</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -1241,14 +1260,13 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="checkBoxShowHelpInDock">
-             <property name="text">
-              <string>Show help in docked panel instead of tab</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QCheckBox" name="checkBoxCheckUpdates">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="statusTip">
               <string>Check for Updates at startup</string>
              </property>
@@ -1287,8 +1305,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>98</width>
-        <height>71</height>
+        <width>473</width>
+        <height>432</height>
        </rect>
       </property>
       <attribute name="label">
@@ -1320,8 +1338,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>166</width>
-            <height>120</height>
+            <width>471</width>
+            <height>430</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
