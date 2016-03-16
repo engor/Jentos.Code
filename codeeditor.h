@@ -163,7 +163,8 @@ private:
     int _modified;
 
     ListWidgetComplete *_lcomp;//autocomplete list
-    bool _lcompInheritance, _lcompProcess;
+    bool _lcompInheritance, _lcompProcess, _lcompFillClassesOnly;
+    QString _lcompTargetIdentType;
     CodeScope _scope;
     QTextBlock _storedBlock;
     bool _blockChangeCursorMethod;

@@ -133,7 +133,7 @@ void Theme::adjustDefaultColors(bool emitSignals)
         prefs->setValue( "userwordsDeclColor",QColor( 0x000001 ) );
         prefs->setValue( "userwordsVarColor",QColor( 0x800000 ) );
         prefs->setValue( "paramsColor",QColor( 0xc80808 ) );
-        prefs->setValue( "wordUnderCursorColor",QColor( 0xEAEAEA ) );
+        prefs->setValue( "wordUnderCursorColor",QColor( 0xE4E4E4 ) );
     }
 
     else if (_theme == DARK_SODA) {

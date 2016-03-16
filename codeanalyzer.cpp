@@ -1404,11 +1404,11 @@ void CodeAnalyzer::fillListFromCommon( QListWidget *l, const QString &ident, con
 
 }
 
-void CodeAnalyzer::tryToAddItemToList(CodeItem *item, CodeItem *scopeItem, QListWidget *list) {
+ListWidgetCompleteItem * CodeAnalyzer::tryToAddItemToList(CodeItem *item, CodeItem *scopeItem, QListWidget *list) {
     if (item->isPrivate()) {
         bool ok = checkScopeForPrivate(item, scopeItem);
         if (!ok)
-            return;
+            return 0;
     }
     QString descr = item->descrAsItem();
 
@@ -1434,6 +1434,7 @@ void CodeAnalyzer::tryToAddItemToList(CodeItem *item, CodeItem *scopeItem, QList
     ListWidgetCompleteItem *lwi = new ListWidgetCompleteItem(icon, descr, item, list);
     lwi->setToolTip( item->toString() );
     list->addItem( lwi );
+    return lwi;
 }
 
 bool CodeAnalyzer::checkScopeForPrivate(CodeItem *item, CodeItem *scopeItem) {

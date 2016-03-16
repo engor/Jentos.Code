@@ -2463,8 +2463,9 @@ void MainWindow::onNetworkFinished(QNetworkReply *reply) {
     int i = s.indexOf("$$$");
     int hasInfo = (i >= 0);
     QString title = "Updater";
-    if (!hasInfo && !_isUpdaterQuiet) {
-        QMessageBox::information(this, title, "<html><head><style>a{color:#CC8030;}</style></head><body>Check new version error.<br><br>Visit <a href=\"http://fingerdev.com/jentos\">Jentos Homepage</a> to get information about latest version.</body></html>");
+    if (!hasInfo) {
+        if (!_isUpdaterQuiet)
+            QMessageBox::information(this, title, "<html><head><style>a{color:#CC8030;}</style></head><body>Check new version error.<br><br>Visit <a href=\"http://fingerdev.com/jentos\">Jentos Homepage</a> to get information about latest version.</body></html>");
         return;
     }
     s = s.mid(3).trimmed();// skip $$$

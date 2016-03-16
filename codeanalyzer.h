@@ -16,7 +16,7 @@ class ItemWithData;
 class CodeScope;
 class FileInfo;
 class ImportedFiles;
-
+class ListWidgetCompleteItem;
 
 class CodeAnalyzer : public QObject {
     Q_OBJECT
@@ -59,7 +59,7 @@ public:
     static void allClasses(QString ident, bool addSelf, bool addBase, QList<CodeItem *> &list, CodeItem *item=0);
     static void allClasses(QList<CodeItem*> &targetList);
     static bool checkScopeForPrivate(CodeItem *item, CodeItem *scopeItem);
-    static void tryToAddItemToList(CodeItem *item, CodeItem *scopeItem, QListWidget *list);
+    static ListWidgetCompleteItem *tryToAddItemToList(CodeItem *item, CodeItem *scopeItem, QListWidget *list);
     //
     static void setShowVariables(bool value);
     static void setSortByName(bool value);

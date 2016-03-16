@@ -820,14 +820,38 @@ void CodeEditor::onShowAutocompleteList()
         _lcomp = new ListWidgetComplete(this);
     }
 
-    _lcomp->setIsForInheritance(_lcompInheritance);
 
-    QTextCursor cursor = textCursor();
 
-    if (_lcompInheritance)
-        CodeAnalyzer::fillListInheritance(cursor.block(), _lcomp);
-    else
-        CodeAnalyzer::findInScope(cursor.block(), cursor.positionInBlock(), _lcomp);
+    // need to fill with class names
+    if (_lcompFillClassesOnly) {
+        QList<CodeItem*> list;
+        CodeAnalyzer::allClasses(list);
+        CodeItem *targetItem = 0;
+
+        foreach (CodeItem *item, list) {
+            if (item->ident() == _lcompTargetIdentType)
+                targetItem = item;
+        }
+
+        if (targetItem != 0) {
+            QListWidgetItem *lwi = CodeAnalyzer::tryToAddItemToList(targetItem, 0, _lcomp);
+        }
+        foreach (CodeItem *item, list) {
+            if (item != targetItem)
+                QListWidgetItem *lwi = CodeAnalyzer::tryToAddItemToList(item, 0, _lcomp);
+        }
+
+        _lcompFillClassesOnly = false;
+        _lcompTargetIdentType = "";
+    } else {
+        _lcomp->setIsForInheritance(_lcompInheritance);
+        QTextCursor cursor = textCursor();
+
+        if (_lcompInheritance)
+            CodeAnalyzer::fillListInheritance(cursor.block(), _lcomp);
+        else
+            CodeAnalyzer::findInScope(cursor.block(), cursor.positionInBlock(), _lcomp);
+    }
 
     int count = _lcomp->count();
     if( count > 0 ) {
@@ -1791,8 +1815,6 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
         }
     }
 
-    bool checkNew = false;
-
     QString tab = CodeAnalyzer::tab();
 
     //Ctrl + v
@@ -2047,37 +2069,45 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     if( e ) QPlainTextEdit::keyPressEvent( e );
 
     //auto ident for var = new ...
-    if((key == ' ' && !ctrl && !shift) || checkNew) {
-        /*QString s = block.text().trimmed();//.replace(" ","");
-        if(s.endsWith("= New") || s.endsWith("=New")) {
-
-            int i = s.length()-6;
+    if (key == Qt::Key_Space && !ctrl && !shift) {
+        QString s = block.text().trimmed();//.replace(" ","");
+        bool v1 = s.endsWith("= New");
+        bool v2 = s.endsWith("=New");
+        if (v1 || v2) {
+            int len = v1 ? 6 : 5;
+            int i = s.length()-len;
             QChar c = s[i];
             qDebug()<<"char:"<<c;
+            QString identName, identType="";
             if(c != ':') {//not :=
-                s = s.left(i).trimmed();
+                s = s.left(i+1).trimmed();
                 qDebug()<<"s1:"<<s;
                 i = s.lastIndexOf(' ');
-                if(i) {
+                if(i > 0) {
                     s = s.mid(i+1);
                     qDebug()<<"s2:"<<s;
                     i = s.indexOf(':');
-                    if(i) {
-                        s = s.mid(i+1);
-                        qDebug()<<"s3:"<<s;
-
+                    if (i > 0) {
+                        identName = s.left(i);
+                        identType = s.mid(i+1);
+                        //qDebug()<<"s3:"<<s;
+                    } else {
+                        identName = s;
                     }
                 }
             }
-            e->accept();
-            return;
-        }*/
-
-        //exit if we typed 'method ' and shown inherited methods
-        if (!listShown && aucompIsVisible()) {
+            _lcompFillClassesOnly = true;
+            _lcompTargetIdentType = identType;
+            aucompShowList();
             e->accept();
             return;
         }
+
+        //exit if we typed 'method ' and shown inherited methods
+        /*if (!listShown && aucompIsVisible()) {
+            e->accept();
+            return;
+        }*/
     }
 
     //
