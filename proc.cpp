@@ -8,6 +8,8 @@ See LICENSE.TXT for licensing terms.
 
 #include "proc.h"
 
+#include <consolelog.h>
+
 #ifdef Q_OS_WIN
 
 #define CLOSE CloseHandle
@@ -85,8 +87,6 @@ static bool killpg( HANDLE proc ){
 #else
 
 #define CLOSE close
-
-#include <consolelog.h>
 
 #include <signal.h>
 
