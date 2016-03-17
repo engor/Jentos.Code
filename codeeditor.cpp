@@ -33,6 +33,7 @@ CodeEditor::CodeEditor( QWidget *parent ):QPlainTextEdit( parent ),_modified( 0 
     _showLineNumbers = false;
     adjustShowLineNumbers();
 
+    _lcompFillClassesOnly = false;
     _prevCursorPos = _prevTextLen = _prevTextChangedPos = -1;
     _lcomp = 0;
     _blockChangeCursorMethod = false;
@@ -83,7 +84,7 @@ void CodeEditor::aucompProcess( CodeItem *item, bool forInheritance ) {
         line = item->descrAsItem();
     } else {
         if (item->isProperty()) {
-
+            // this branch to avoid append brackets for method
         } else if (i0 == blockEndPos) {
             line = item->identWithParamsBraces(d);
         } else {
@@ -103,6 +104,11 @@ void CodeEditor::aucompProcess( CodeItem *item, bool forInheritance ) {
     if ( d != 0 ) {
         c.setPosition( c.position()+d );
         setTextCursor(c);
+    }
+    //qDebug()<<line;
+
+    if (line == "New ") {
+        checkFor_New(textCursor().block().text());
     }
 }
 
@@ -811,8 +817,6 @@ void CodeEditor::onShowAutocompleteList()
 {
     if(_lcomp != 0) {
         _lcomp->disconnect();
-        //this->layout()->removeWidget(_lcomp);
-        //delete _lcomp;
         _lcomp->hide();
         _lcomp->clear();
     }
@@ -824,25 +828,24 @@ void CodeEditor::onShowAutocompleteList()
 
     // need to fill with class names
     if (_lcompFillClassesOnly) {
+        _lcompProcess = false;// disable auto insert
         QList<CodeItem*> list;
-        CodeAnalyzer::allClasses(list);
-        CodeItem *targetItem = 0;
-
+        // if have type - get only this type
+        if (!_lcompTargetIdentType.isEmpty()) {
+            CodeItem *item = CodeAnalyzer::getClassOrKeyword(_lcompTargetIdentType);
+            if (item) {
+                list.append(item);
+            }
+        } else {
+            //here get all classes
+            CodeAnalyzer::allClasses(list);
+        }
         foreach (CodeItem *item, list) {
-            if (item->ident() == _lcompTargetIdentType)
-                targetItem = item;
+            CodeAnalyzer::tryToAddItemToList(item, 0, _lcomp);
         }
-
-        if (targetItem != 0) {
-            QListWidgetItem *lwi = CodeAnalyzer::tryToAddItemToList(targetItem, 0, _lcomp);
-        }
-        foreach (CodeItem *item, list) {
-            if (item != targetItem)
-                QListWidgetItem *lwi = CodeAnalyzer::tryToAddItemToList(item, 0, _lcomp);
-        }
-
         _lcompFillClassesOnly = false;
         _lcompTargetIdentType = "";
+
     } else {
         _lcomp->setIsForInheritance(_lcompInheritance);
         QTextCursor cursor = textCursor();
@@ -1507,7 +1510,7 @@ void CodeEditor::updateSourceNavigationByCurrentScope() {
         code = code->parent();
     }
     if(code) {
-        //qDebug()<<"list from scope: "<<code->descrAsItem();
+        qDebug()<<"list from scope: "<<code->descrAsItem();
         QStandardItem *si = CodeAnalyzer::getStandardItem( code->fullItemPath() );
         fillSourceListWidget(code, si);
         if(code->parent()) {
@@ -1534,7 +1537,6 @@ void CodeEditor::fillSourceListWidget(CodeItem *item, QStandardItem *si) {
         //qDebug()<<"fillSourceListWidget.parent"<<item->parent()->descrAsItem();
         //selected = item->descrAsItem();
         item = item->parent();
-        //ident = item->parent()->ident();
         si = si->parent();
     }
     //qDebug()<<"si2:"<<si->text();
@@ -1544,6 +1546,11 @@ void CodeEditor::fillSourceListWidget(CodeItem *item, QStandardItem *si) {
     bool sort = CodeAnalyzer::isSortByName();
     for(int r = 0; r < si->rowCount(); ++r) {
         itree = si->child(r);
+        CodeItem *code = CodeAnalyzer::getCodeItemFromStandardItem(itree);
+        if (code->isInnerItem()) {// skip inner If / For / etc blocks
+            //qDebug()<<"skip inner"<<code->toString();
+            continue;
+        }
         ilist = new ItemWithData;
         model->appendRow(ilist);
         QString t = itree->text();
@@ -1560,14 +1567,15 @@ void CodeEditor::fillSourceListWidget(CodeItem *item, QStandardItem *si) {
         ilist->setIcon(itree->icon());
         ilist->setToolTip(itree->toolTip());
         //ilist->setData(itree->data());
-        CodeItem *code = CodeAnalyzer::getCodeItemFromStandardItem(itree);
+
         ilist->setCode(code);
         if(code == selected)
             CodeAnalyzer::listView()->setCurrentIndex(ilist->index());
     }
     if(sort) {
         model->sort(0);
-        for(int r = 0; r < si->rowCount(); ++r) {
+        int count = model->rowCount();
+        for(int r = 0; r < count; ++r) {
             QStandardItem *i = model->item(r);
             QString t = i->text();
             if(t.startsWith("---"))
@@ -2064,50 +2072,22 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
 
     block = cursor.block();
 
-    bool listShown = aucompIsVisible();
+    //bool listShown = aucompIsVisible();
 
     if( e ) QPlainTextEdit::keyPressEvent( e );
 
     //auto ident for var = new ...
     if (key == Qt::Key_Space && !ctrl && !shift) {
-        QString s = block.text().trimmed();//.replace(" ","");
-        bool v1 = s.endsWith("= New");
-        bool v2 = s.endsWith("=New");
-        if (v1 || v2) {
-            int len = v1 ? 6 : 5;
-            int i = s.length()-len;
-            QChar c = s[i];
-            qDebug()<<"char:"<<c;
-            QString identName, identType="";
-            if(c != ':') {//not :=
-                s = s.left(i+1).trimmed();
-                qDebug()<<"s1:"<<s;
-                i = s.lastIndexOf(' ');
-                if(i > 0) {
-                    s = s.mid(i+1);
-                    qDebug()<<"s2:"<<s;
-                    i = s.indexOf(':');
-                    if (i > 0) {
-                        identName = s.left(i);
-                        identType = s.mid(i+1);
-                        //qDebug()<<"s3:"<<s;
-                    } else {
-                        identName = s;
-                    }
-                }
+        QString tt = block.text();
+        // check only if cursor is after "New" keyword
+        int i = tt.indexOf("New");
+        if (i > 0 && cursor.positionInBlock() >= i) {
+            bool ok = checkFor_New(tt);
+            if (ok) {
+                e->accept();
+                return;
             }
-            _lcompFillClassesOnly = true;
-            _lcompTargetIdentType = identType;
-            aucompShowList();
-            e->accept();
-            return;
         }
-
-        //exit if we typed 'method ' and shown inherited methods
-        /*if (!listShown && aucompIsVisible()) {
-            e->accept();
-            return;
-        }*/
     }
 
     //
@@ -2118,8 +2098,16 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
             return;
         }
         else if( (key >= Qt::Key_A && key <= Qt::Key_Z) || (key >= Qt::Key_0 && key <= Qt::Key_9) || key == Qt::Key_Backspace ) {
-            if(key != Qt::Key_Backspace || !_lcomp->isForInheritance()) {
-                aucompShowList( false );
+            if (key != Qt::Key_Backspace || !_lcomp->isForInheritance()) {
+                bool show = true;
+                if (key == Qt::Key_Backspace) {
+                    cursor.select(QTextCursor::WordUnderCursor);
+                    show = !(cursor.selectedText().isEmpty());
+                }
+                if (show)
+                    aucompShowList( false );
+                else
+                    onCompleteFocusOut();
             }
             e->accept();
             return;
@@ -2141,6 +2129,40 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
         }
     }
 
+}
+
+bool CodeEditor::checkFor_New(const QString &text) {
+    QString s = text.trimmed();
+    bool v1 = s.endsWith("= New");
+    bool v2 = s.endsWith("=New");
+    if (v1 || v2) {
+        int len = v1 ? 6 : 5;
+        int i = s.length()-len;
+        QChar c = s[i];
+        //qDebug()<<"char:"<<c;
+        QString identType="";
+
+        //check type only for non := case
+        if (c != ':') {
+            s = s.left(i+1).trimmed();
+            //qDebug()<<"s1:"<<s;
+            i = s.lastIndexOf(' ');
+            if (i > 0) {
+                s = s.mid(i+1);
+                //qDebug()<<"s2:"<<s;
+                i = s.indexOf(':');
+                if (i > 0) {
+                    identType = s.mid(i+1);
+                    //qDebug()<<"s3:"<<s;
+                }
+            }
+        }
+        _lcompFillClassesOnly = true;
+        _lcompTargetIdentType = identType;
+        aucompShowList();
+        return true;
+    }
+    return false;
 }
 
 bool CodeEditor::findNext( const QString &findText,bool cased,bool wrap,bool backward ){

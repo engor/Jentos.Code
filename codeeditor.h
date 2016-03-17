@@ -182,6 +182,8 @@ private:
     int _charsCountForCompletion;
 
     friend class Highlighter;
+
+    bool checkFor_New(const QString &text);
 };
 
 

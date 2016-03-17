@@ -1,12 +1,12 @@
 #include "saveonclosedialog.h"
 #include "ui_saveonclosedialog.h"
+#include <QDebug>
 
 SaveOnCloseDialog::SaveOnCloseDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SaveOnCloseDialog)
 {
     ui->setupUi(this);
-    retval = 0;
 }
 
 SaveOnCloseDialog::~SaveOnCloseDialog()
@@ -14,7 +14,7 @@ SaveOnCloseDialog::~SaveOnCloseDialog()
     delete ui;
 }
 
-void SaveOnCloseDialog::fillList(QStringList lst)
+void SaveOnCloseDialog::fillList(QStringList &lst)
 {
     list.clear();
     list.append(lst);
@@ -31,8 +31,9 @@ void SaveOnCloseDialog::on_pushButtonSave_clicked()
     int count = ui->listWidget->count();
     for (int k = 0; k < count; ++k) {
         QListWidgetItem *item = ui->listWidget->item(k);
-        if (item->checkState() != Qt::Checked)
-            list.removeAt(k);
+        if (item->checkState() != Qt::Checked) {
+            list.removeOne(item->text());
+        }
     }
     setResult(1);
     hide();

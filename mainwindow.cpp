@@ -863,6 +863,7 @@ bool MainWindow::confirmQuit(){
 
     CodeAnalyzer::disable();//skip analyzer while saving files on exit
 
+    // grab all modified files into list
     QStringList files;
     QList<CodeEditor*> editors;
     for (int i = 0; i < _mainTabWidget->count(); ++i ){
@@ -883,8 +884,12 @@ bool MainWindow::confirmQuit(){
         } else if (retval == 0) {// cancel
             ok = false;
         } else { // save
+            QStringList filesToSave = dialog->filesToSave();
             foreach (CodeEditor *editor, editors) {
-                saveFile( editor,editor->path() );
+                QString path = editor->path();
+                if (filesToSave.contains(path)) {// check if this file is checked in save-dialog
+                    saveFile( editor,path );
+                }
             }
         }
         delete dialog;
@@ -1216,17 +1221,21 @@ void MainWindow::updateWindowTitle(){
             title += "*";
     } else if( QWebView *webView = qobject_cast<QWebView*>( widget ) ){
         QString s = webView->url().toString();
-        int i = s.lastIndexOf("/");
+        int i = s.lastIndexOf("/"), i2;
         if (i > 0) {
             title = s.mid(i+1);
             title = title.replace(".html","");
             i = title.lastIndexOf("#");
             if (i > 0)
                 title = title.mid(i+1);
-            i = title.lastIndexOf("lang_");
-            if (i > 0)
-                title = title.mid(i+5);
+            i = title.lastIndexOf("_");
+            i2 = title.lastIndexOf(".");
+            if (i > i2)
+                title = title.mid(i+1);
+            else if (i2 > 0)
+                title = title.mid(i2+1);
 
+            title[0] = title[0].toUpper();
             title += " - Help";
         } else {
             title = "Help";
@@ -2265,12 +2274,14 @@ void MainWindow::onHelpBack(){
     if( !_helpWidget ) return;
 
     _helpWidget->back();
+    updateWindowTitle();
 }
 
 void MainWindow::onHelpForward(){
     if( !_helpWidget ) return;
 
     _helpWidget->forward();
+    updateWindowTitle();
 }
 
 void MainWindow::onHelpQuickHelp(){

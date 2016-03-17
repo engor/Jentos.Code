@@ -46,6 +46,7 @@ public:
     static bool containsUser(const QString &ident );
     static bool containsKeyword(const QString &ident );
     static void clearMonkey();
+    static void printKeywords();
     static QString toolTip(const QString &ident, const QTextBlock &block);
     static QString toolTip(CodeItem *itemAtBlock);
     static void removeUserFile(const QString &path);
@@ -129,7 +130,7 @@ public:
     static void begin();
     static void end();
 
-
+    static CodeItem *getClassOrKeyword(const QString &ident);
 
 private:
     static QList<int> _listFoldTypes;
@@ -239,6 +240,9 @@ public:
     bool isPrivate(){ return _isPrivate; }
     void markAsPrivate(){ _isPrivate = true; }
 
+    bool isArray(){ return _isArray; }
+    void markAsArray(){ _isArray = true; }
+
     bool hasChildren(){ return !_children.isEmpty(); }
     bool isClassOrInterface(){ return _isClass||_isInterface; }
     bool isClass(){ return _isClass; }
@@ -248,6 +252,7 @@ public:
     bool isVar(){ return _isVar; }
     bool isParam(){ return _isParam; }
     bool isKeyword(){ return _isKeyword; }
+    bool isInnerItem(){ return _isInnerItem; }
     bool isMonkey(){ return _isMonkey; }
     bool isUser(){ return _isUser; }
     void setIsMonkey(bool value){ _isMonkey = value; }
@@ -276,11 +281,12 @@ private:
     QList<CodeItem*> _children;
     int _indent, _blockNumber, _blockEndNumber;
     bool _foldable;
-    bool _isClass, _isFunc, _isField, _isVar, _isKeyword, _isParam, _isInherited, _isInterface, _isProperty, _isPrivate;
+    bool _isClass, _isFunc, _isField, _isVar, _isKeyword, _isParam, _isInherited, _isInterface, _isProperty, _isPrivate, _isArray, _isInnerItem;
     bool _isMonkey, _isUser;
     QHash<QString,ItemWithData*> _itemsWithData;
     QStringList _baseClasses, _templWords;
     QString _tempIdentType;
+    void updateDescrAsItem();
 };
 
 

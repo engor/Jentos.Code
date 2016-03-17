@@ -188,7 +188,9 @@ QString CodeAnalyzer::templateWord( const QString &key ) {
 }
 
 QString CodeAnalyzer::keyword( const QString &key ) {
-    CodeItem *item = mapKeywords()->value(key.toLower(), 0);
+    QString s = key;
+    s[0] = s[0].toUpper();
+    CodeItem *item = mapKeywords()->value(s, 0);
     if(item)
         return item->ident();
     return "";
@@ -263,10 +265,10 @@ void CodeAnalyzer::loadKeywords( const QString &path ) {
         text = "Void;Strict;Public;Private;Property;"
             "Bool;Int;Float;String;Array;Object;Mod;Continue;Exit;"
             "Include;Import;Module;Extern;"
-            "New;Self;Super;Eachin;True;False;Null;Not;"
+            "New;Self;Super;EachIn;True;False;Null;Not;"
             "Extends;Abstract;Final;Native;Select;Case;Default;"
             "Const;Local;Global;Field;Method;Function;Class;Interface;Implements;"
-            "And;Or;Shl;Shr;End;If;Then;Else;Elseif;Endif;While;Wend;Repeat;Until;Forever;For;To;Step;Next;Return;Inline;"
+            "And;Or;Shl;Shr;End;If;Then;Else;ElseIf;EndIf;While;Wend;Repeat;Until;Forever;For;To;Step;Next;Return;Inline;"
             "Try;Catch;Throw;Throwable;"
             "Print;Error;Alias;Rem";
     }
@@ -711,6 +713,14 @@ QStringList CodeAnalyzer::extractParams(const QString &text) {
 
 void CodeAnalyzer::clearMonkey() {
     mapMonkey()->clear();
+}
+
+void CodeAnalyzer::printKeywords()
+{
+    QList<CodeItem*> items = mapKeywords()->values();
+    foreach (CodeItem *i, items) {
+        qDebug()<< i->descrAsItem();
+    }
 }
 
 void CodeAnalyzer::analyzeDir( const QString &path, const QStringList &exclude ) {
@@ -1314,7 +1324,9 @@ bool CodeAnalyzer::containsKeyword( const QString &ident ) {
 }
 
 CodeItem* CodeAnalyzer::itemKeyword(const QString &ident ) {
-    return mapKeywords()->value(ident.toLower(), 0);
+    QString s = ident;
+    s[0] = s[0].toUpper();
+    return mapKeywords()->value(s, 0);
 }
 
 CodeItem* CodeAnalyzer::itemMonkey(const QString &ident ) {
@@ -1324,6 +1336,7 @@ CodeItem* CodeAnalyzer::itemMonkey(const QString &ident ) {
 CodeItem* CodeAnalyzer::itemUser(const QString &ident, bool withChildren ) {
     QList<CodeItem*> items = mapUser()->values();
     foreach(CodeItem *i, items){
+        //qDebug()<<i->ident()<<ident;
         if(i->ident() == ident /*&& i->filepath() == _curFilePath*/) {
             return i;
         }
@@ -1405,6 +1418,10 @@ void CodeAnalyzer::fillListFromCommon( QListWidget *l, const QString &ident, con
 }
 
 ListWidgetCompleteItem * CodeAnalyzer::tryToAddItemToList(CodeItem *item, CodeItem *scopeItem, QListWidget *list) {
+    if (item->isInnerItem()) {
+        //qDebug()<<"skip inner item";
+        return 0;
+    }
     if (item->isPrivate()) {
         bool ok = checkScopeForPrivate(item, scopeItem);
         if (!ok)
@@ -1480,6 +1497,16 @@ void CodeAnalyzer::fillListFromScope( QListWidget *l, const QString &ident, Code
         tryToAddItemToList(child, scope.item, l);
 
     }
+}
+
+CodeItem* CodeAnalyzer::getClassOrKeyword(const QString &ident) {
+    CodeItem *i;
+    i = itemUser(ident);
+    if (!i)
+        i = itemMonkey(ident);
+    if (!i)
+        i = itemKeyword(ident);
+    return i;
 }
 
 void CodeAnalyzer::allClasses(QString identType, bool addSelf, bool addBase, QList<CodeItem*> &list, CodeItem *item) {
@@ -2283,30 +2310,38 @@ QString CodeAnalyzer::clearSpaces( QString &s ) {
 }
 
 void CodeAnalyzer::refreshIdentTypes() {
-    if(_listForRefreshIdentTypes.isEmpty())
+    if (_listForRefreshIdentTypes.isEmpty())
         return;
+    // here we process items that we taken in EachIn section
     foreach (CodeItem *item, _listForRefreshIdentTypes) {
         QString type = item->tempIdentType();
+        //qDebug()<<"refine"<<type;
         bool isEachin = (type[0] == '+');
-        if(isEachin)
+        if (isEachin)
             type = type.mid(1);
-        int i = type.indexOf("<");
-        if(i > 0) {
-            //qDebug()<<"TYPE1:"<<type;
-        }
-        else {
-            i = type.indexOf('(');
+        int i;
+        // check for arrays
+        i = type.indexOf("[");
+        bool isArray = (i > 0);
+        bool isFunc = false;
+        if (isArray) {
             type = type.left(i);
-            //qDebug()<<"TYPE2:"<<type;
-            QTextBlock b = item->block();
-            CodeItem *code = findInScope(b,type.length(),0,true,type);
-            if(code) {
-                type = code->identType();
-                if(isEachin && !code->templWords().isEmpty())
-                    type = code->templWords().first();
-                //qDebug()<<"TYPE3:"<<type;
-            }
+        } else {
+            i = type.indexOf("(");
+            isFunc = (i > 0);
+            if (isFunc)
+                type = type.left(i);
         }
+        //qDebug()<<"TYPE 1:"<<type;
+        QTextBlock b = item->block();
+        CodeItem *code = findInScope(b,type.length(),0,true,type);
+        if (code) {
+            type = code->identType();
+            if (isEachin && !code->templWords().isEmpty())
+                type = code->templWords().first();
+            //qDebug()<<"TYPE 2:"<<type;
+        }
+
         item->setIdentType(type);
     }
     _listForRefreshIdentTypes.clear();
@@ -2321,6 +2356,9 @@ void CodeAnalyzer::flushFileModified(const QString &path) {
 //----------- CODE ITEM -----------------------------
 
 CodeItem::CodeItem(QString decl, QString line, int indent, QTextBlock &block, const QString &path, CodeItem *parent) {
+
+    //qDebug()<<"newitem:"<<decl<<line;
+
     line = CodeAnalyzer::clearSpaces(line);
     _decl = decl;
     _indent = indent;
@@ -2331,7 +2369,7 @@ CodeItem::CodeItem(QString decl, QString line, int indent, QTextBlock &block, co
     _identType = "Int";
     _foldable = false;
     _isClass = _isFunc = _isField = _isKeyword = _isMonkey = _isUser = false;
-    _isParam = _isVar = _isInherited = _isInterface = _isProperty = _isPrivate = false;
+    _isParam = _isVar = _isInherited = _isInterface = _isProperty = _isPrivate = _isArray = _isInnerItem = false;
     _identForInsert = "";
     _filepath = path;
     _filename = stripDir(path);
@@ -2439,8 +2477,7 @@ CodeItem::CodeItem(QString decl, QString line, int indent, QTextBlock &block, co
         //qDebug()<<"line:"<<line;
         int i;
         i = line.indexOf(":=");
-        QString prefix = "";
-        if(i > 0) {
+        if (i > 0) {
             QString s1, s2, s3, t="";
             s1 = line.left(i).trimmed();
             s2 = line.mid(i+2).trimmed();
@@ -2448,46 +2485,47 @@ CodeItem::CodeItem(QString decl, QString line, int indent, QTextBlock &block, co
             i = s2.indexOf(' ');
             s3 = (i > 0 ? s2.left(i) : s2);
             //qDebug()<<"s3_1:"<<s3;
-            if(s3 == "New" || s3 == "Eachin") {
-                if(s3 == "Eachin")
-                    prefix = "+";
+            bool isEachin = (s3 == "EachIn");
+            if (s3 == "New" || isEachin) {
                 s2 = s2.mid(i+1);
                 i = s2.indexOf(' ');
                 s3 = (i > 0 ? s2.left(i) : s2);
-                //qDebug()<<"s3_2:"<<s3;
-                /*i = 0;
-                int n = s3.length();
-                while(i < n && isIdent(s3[i])) {
-                    ++i;
-                }
-                if(i < n-1) {
-                    s3 = s3.left(i);
-                    qDebug()<<"s3_3:"<<s3;
-                }*/
             }
-            if(s3.startsWith('\"') || s3 == "String" || s3.startsWith("String(")) {
+            //qDebug()<<"s3_2:"<<s3;
+
+            // check for array kind
+            i = s3.indexOf("[");
+            if (i > 0) {
+                 int i2 = s3.indexOf("]");
+                 _isArray = (i2 > i);
+            }
+
+            if (s3.startsWith('\"') || s3 == "String" || s3.startsWith("String(")) {
                 t = "String";
+                _isArray = false; // avoid check s = "[0]" as array
             }
-            else if(s3 == "Int") {
+            else if (s3 == "Int" || s3.startsWith("$")) {
                 t = "Int";
             }
-            else if(s3 == "Float") {
+            else if (s3 == "Float") {
                 t = "Float";
             }
-            else if(s3 == "True" || s3 == "False" || s3 == "Bool") {
+            else if (s3 == "True" || s3 == "False" || s3 == "Bool") {
                 t = "Bool";
             }
-            else if(isDigit(s3[0])) {
-                if(s3.contains('.'))
+            else if (isDigit(s3[0]) || s3[0] == '.') {
+                if (s3.contains('.'))
                     t = "Float";
+                else
+                    t = "Int";
             }
             else {
-                //need to store for futher processing
-                _tempIdentType = prefix+s3;
+                // now we need to know type of var for futher parsing / refining
+                _tempIdentType = isEachin ? "+"+s3 : s3;
                 CodeAnalyzer::addToListForRefreshIdentTypes(this);
                 //qDebug()<<"_tempIdentType:"<<_tempIdentType;
             }
-            if(t != "") {
+            if (t != "") {
                 //qDebug()<<"type:"<<t;
                 setIdentType(t);
             }
@@ -2496,17 +2534,23 @@ CodeItem::CodeItem(QString decl, QString line, int indent, QTextBlock &block, co
         else {
             //qDebug() << "if 3";
             i = line.indexOf("=");
-            if(i)
+            if (i > 0)
                 line = line.left(i).trimmed();
             i = line.indexOf(":");
-            if(i) {
+            if (i > 0) {
                 QString type = line.mid(i+1);
                 line = line.left(i);
-                setIdentType( type );
+                // check for arrays
+                i = line.indexOf("[");
+                if (i > 0) {
+                    //type = type.left(i);
+                    _isArray = true;
+                }
+                setIdentType(type);
             }
         }
         _ident = line;
-        _descrAsItem = _ident+":"+_identType;
+        updateDescrAsItem();
         _isVar = true;
         _isField = (decl == "field" || decl == "global" || decl == "const");
         _isParam = (decl == "param");
@@ -2516,7 +2560,7 @@ CodeItem::CodeItem(QString decl, QString line, int indent, QTextBlock &block, co
         _ident = line;
         //qDebug() << "keyword: "+line;
         if( line=="Include"||line=="Import"||line=="Module"||line=="Extern"||
-                line=="New"||line=="Eachin"||
+                line=="New"||line=="EachIn"||line=="If"||
                 line=="Extends"||/*topic=="Abstract"||topic=="Final"||*/line=="Native"||line=="Select"||line=="Case"||
                 line=="Const"||line=="Local"||line=="Global"||line=="Field"||line=="Method"||line=="Function"||line=="Class"||line=="Interface"||line=="Implements"||
                 line=="And"||line=="Or"||
@@ -2528,8 +2572,9 @@ CodeItem::CodeItem(QString decl, QString line, int indent, QTextBlock &block, co
         _isKeyword = true;
     }
     else {
-        //qDebug() << "if 5";
+        //qDebug() << "else:"<<line;
         _ident = line;
+        _isInnerItem = true;
     }
     if(_identForInsert == "")
         _identForInsert = _ident;
@@ -2571,7 +2616,14 @@ void CodeItem::setIdentType(const QString &type) {
             }
         }
     }
-    _descrAsItem = _ident+":"+_identType;
+    updateDescrAsItem();
+}
+
+void CodeItem::updateDescrAsItem() {
+    if (_isArray)
+        _descrAsItem = _ident+":"+_identType+"[]";
+    else
+        _descrAsItem = _ident+":"+_identType;
 }
 
 QString CodeItem::descrAsItem() {
@@ -2743,11 +2795,11 @@ QString CodeItem::toolTip() {
 }
 
 void CodeItem::setItemWithData(const QString &name, ItemWithData *iwd) {
-    qDebug()<<"setItemWithData:"<<this->descrAsItem()<<name<<iwd->text();
+    //qDebug()<<"setItemWithData:"<<this->descrAsItem()<<name<<iwd->text();
     _itemsWithData.insert(name, iwd);
     if(_itemsWithData.size() > 1) {
         foreach(ItemWithData *i, _itemsWithData) {
-            qDebug()<<"iwd: "<<i->text();
+            //qDebug()<<"iwd: "<<i->text();
         }
     }
 }

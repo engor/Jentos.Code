@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
     MainWindow w;
 
     int dt = t.msec()-(msec+2000);
+    qDebug()<<"start.dt:"<<dt;
     if (dt > 0)
         QThread::msleep(dt);
 

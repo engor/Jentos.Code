@@ -44,6 +44,15 @@ inline bool isIdent( QChar ch ){
     return isAlpha(ch) || isDigit(ch);
 }
 
+inline bool isIdentWord( QString &word ){
+    foreach (QChar ch, word) {
+        bool ok = (isAlpha(ch) || isDigit(ch));
+        if (!ok)
+            return false;
+    }
+    return true;
+}
+
 QString fixPath( QString path );
 
 QString stripDir( const QString &path );

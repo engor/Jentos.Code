@@ -43,10 +43,10 @@ bool QuickHelp::init( QString &monkeyPath ) {
         text = "Void;Strict;Public;Private;Property;"
             "Bool;Int;Float;String;Array;Object;Mod;Continue;Exit;"
             "Include;Import;Module;Extern;"
-            "New;Self;Super;Eachin;True;False;Null;Not;"
+            "New;Self;Super;EachIn;True;False;Null;Not;"
             "Extends;Abstract;Final;Native;Select;Case;Default;"
             "Const;Local;Global;Field;Method;Function;Class;Interface;Implements;"
-            "And;Or;Shl;Shr;End;If;Then;Else;Elseif;Endif;While;Wend;Repeat;Until;Forever;For;To;Step;Next;Return;Inline;"
+            "And;Or;Shl;Shr;End;If;Then;Else;ElseIf;EndIf;While;Wend;Repeat;Until;Forever;For;To;Step;Next;Return;Inline;"
             "Try;Catch;Throw;Throwable;"
             "Print;Error;Alias";
     }
@@ -62,7 +62,7 @@ bool QuickHelp::init( QString &monkeyPath ) {
         h->kind = "keyword";
         h->isKeyword = true;
         if( topic=="Include"||topic=="Import"||topic=="Module"||topic=="Extern"||
-                topic=="New"||topic=="Eachin"||
+                topic=="New"||topic=="EachIn"||
                 topic=="Extends"||/*topic=="Abstract"||topic=="Final"||*/topic=="Native"||topic=="Select"||topic=="Case"||
                 topic=="Const"||topic=="Local"||topic=="Global"||topic=="Field"||topic=="Method"||topic=="Function"||topic=="Class"||topic=="Interface"||topic=="Implements"||
                 topic=="And"||topic=="Or"||
@@ -227,14 +227,14 @@ QuickHelp* QuickHelp::help2( const QString &descr ) {
 }
 
 QMap<QString,QuickHelp*>* QuickHelp::map() {
-    static QMap<QString, QuickHelp*> *m;
+    static QMap<QString, QuickHelp*> *m = 0;
     if( !m )
         m = new QMap<QString,QuickHelp*>;
     return m;
 }
 
 QMap<QString,QuickHelp*>* QuickHelp::map2() {
-    static QMap<QString, QuickHelp*> *m;
+    static QMap<QString, QuickHelp*> *m = 0;
     if( !m )
         m = new QMap<QString,QuickHelp*>;
     return m;

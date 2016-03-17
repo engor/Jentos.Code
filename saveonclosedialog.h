@@ -15,9 +15,8 @@ public:
     explicit SaveOnCloseDialog(QWidget *parent = 0);
     ~SaveOnCloseDialog();
 
-    void fillList(QStringList list);
-    QStringList list;
-    int retval;
+    void fillList(QStringList &list);
+    QStringList filesToSave() {return list;}
 
 private slots:
     void on_pushButtonSave_clicked();
@@ -28,6 +27,7 @@ private slots:
 
 private:
     Ui::SaveOnCloseDialog *ui;
+    QStringList list;
 };
 
 #endif // SAVEONCLOSEDIALOG_H
