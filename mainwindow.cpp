@@ -26,6 +26,7 @@ See LICENSE.TXT for licensing terms.
 #include <QHostInfo>
 #include "addpropertydialog.h"
 #include "saveonclosedialog.h"
+#include "updaterdialog.h"
 
 
 #define SETTINGS_VERSION 2
@@ -2484,11 +2485,19 @@ void MainWindow::onNetworkFinished(QNetworkReply *reply) {
     i = s.indexOf("\n");
     QString newVersion = s.left(i).trimmed();
     QString curVersion = APP_VERSION;
-    if (newVersion > curVersion) {
+
+    bool allow = (!_isUpdaterQuiet && newVersion == curVersion);
+
+    if (newVersion > curVersion || allow) {
         s = s.mid(i+1);
+        UpdaterDialog *d = new UpdaterDialog(this);
+        d->setParams(curVersion, newVersion, s);
+        d->exec();
+        delete d;
+        /*
         s = s.replace("%CURRENT_VER%", curVersion);
         s = s.replace("%NEW_VER%", newVersion);
-        QMessageBox::information(this, title, s);
+        QMessageBox::information(this, title, s);*/
     } else if (!_isUpdaterQuiet){
         QMessageBox::information(this, title, "<html><head><style>a{color:#CC8030;}</style></head><body>No updates available.<br><b>You are using the latest version "+curVersion+".</b><br><br>Visit <a href=\"http://fingerdev.com/jentos\">Jentos Homepage</a> to get information about latest version.</body></html>");
     }

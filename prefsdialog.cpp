@@ -63,7 +63,7 @@ void PrefsDialog::writeSettings(){
 
 void PrefsDialog::openPathSection()
 {
-    _ui->toolBox->setCurrentIndex(3);
+    _ui->toolBox->setCurrentIndex(2);
 }
 
 int PrefsDialog::exec(){
