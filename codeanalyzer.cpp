@@ -274,10 +274,10 @@ void CodeAnalyzer::loadKeywords( const QString &path ) {
     }
     QStringList lines = text.split(';');
     QTextBlock block;
-    foreach(QString s, lines){
+    foreach (QString s, lines){
         //qDebug() << "kw: "+s;
         CodeItem *item = new CodeItem("keyword",s,0,block,"");
-        mapKeywords()->insert(item->ident().toLower(), item);
+        mapKeywords()->insert(item->ident(), item);
     }
 }
 
@@ -1319,8 +1319,11 @@ bool CodeAnalyzer::containsUser( const QString &ident ) {
     return mapUser()->contains(ident);
 }
 
-bool CodeAnalyzer::containsKeyword( const QString &ident ) {
-    return mapKeywords()->contains(ident.toLower());
+bool CodeAnalyzer::containsKeyword(const QString &ident , bool uppercaseFirstLetter) {
+    QString s = ident;
+    if (uppercaseFirstLetter)
+        s[0] = s[0].toUpper();
+    return mapKeywords()->contains(s);
 }
 
 CodeItem* CodeAnalyzer::itemKeyword(const QString &ident ) {
@@ -2541,9 +2544,9 @@ CodeItem::CodeItem(QString decl, QString line, int indent, QTextBlock &block, co
                 QString type = line.mid(i+1);
                 line = line.left(i);
                 // check for arrays
-                i = line.indexOf("[");
+                i = type.indexOf("[");
                 if (i > 0) {
-                    //type = type.left(i);
+                    type = type.left(i);
                     _isArray = true;
                 }
                 setIdentType(type);

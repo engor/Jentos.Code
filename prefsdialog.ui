@@ -73,7 +73,7 @@
             <x>0</x>
             <y>0</y>
             <width>454</width>
-            <height>724</height>
+            <height>729</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -413,17 +413,44 @@
                </layout>
               </item>
               <item>
-               <widget class="QCheckBox" name="chbLineNumbers">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
+               <layout class="QHBoxLayout" name="horizontalLayout_10">
+                <property name="topMargin">
+                 <number>0</number>
                 </property>
-                <property name="text">
-                 <string>Show line numbers</string>
-                </property>
-               </widget>
+                <item>
+                 <widget class="QCheckBox" name="chbLineNumbers">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>Show line numbers</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="checkBoxCapitalizeKeywords">
+                  <property name="text">
+                   <string>Capitalize keywords</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_12">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
               </item>
              </layout>
             </widget>
@@ -1162,7 +1189,7 @@
         <x>0</x>
         <y>0</y>
         <width>473</width>
-        <height>409</height>
+        <height>432</height>
        </rect>
       </property>
       <attribute name="label">
@@ -1195,7 +1222,7 @@
             <x>0</x>
             <y>0</y>
             <width>471</width>
-            <height>407</height>
+            <height>430</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">

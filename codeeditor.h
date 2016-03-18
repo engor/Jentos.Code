@@ -150,10 +150,6 @@ protected:
 
 private:
 
-    void adjustShowLineNumbers();
-    void showToolTip(QPoint pos, QString s, bool nowrap=true);
-    void storeCurrentEditPosition(const QTextCursor &cursor);
-
     ExtraSelection *_selection;
     Highlighter *_highlighter;
     //
@@ -178,12 +174,17 @@ private:
 
     bool _isHighlightLine, _isHighlightWord;
     bool _useAutoBrackets;
-    bool _addVoidForMethods;
+    bool _addVoidForMethods, _capitalizeKeywords;
     int _charsCountForCompletion;
 
     friend class Highlighter;
 
+    void capitalizeKeywords(const QTextBlock &block, bool checkCursorPos);
+    void adjustShowLineNumbers();
+    void showToolTip(QPoint pos, QString s, bool nowrap=true);
+    void storeCurrentEditPosition(const QTextCursor &cursor);
     bool checkFor_New(const QString &text);
+
 };
 
 

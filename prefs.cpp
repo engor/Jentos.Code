@@ -61,6 +61,8 @@ void Prefs::setDefaults() {
         p->setValue("autoBracket", true);
     if (!p->contains("showLineNumbers"))
         p->setValue("showLineNumbers", true);
+    if (!p->contains("capitalizeKeywords"))
+        p->setValue("capitalizeKeywords", true);
 
     if (!p->contains("updates")) {
         p->setValue("updates",true);

@@ -65,6 +65,8 @@ private slots:
 
     void on_chbLineNumbers_clicked(bool checked);
 
+    void on_checkBoxCapitalizeKeywords_clicked(bool checked);
+
 private:
 
     QColorDialog *_chooser;

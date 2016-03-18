@@ -102,6 +102,8 @@ int PrefsDialog::exec(){
     _ui->spinBoxTypedCharsForCompletion->setValue(_prefs->getInt("charsForCompletion"));
     _ui->checkBoxAddVoidForMethods->setChecked(_prefs->getBool("addVoidForMethods"));
     _ui->chbLineNumbers->setChecked(_prefs->getBool("showLineNumbers"));
+    _ui->checkBoxCapitalizeKeywords->setChecked(_prefs->getBool("capitalizeKeywords"));
+
 
     Prefs *p = Prefs::prefs();
     _ui->labelSettingsFile->setText( p->settings()->fileName() );
@@ -254,4 +256,9 @@ void PrefsDialog::on_labelResetColors_linkActivated(const QString &link)
 void PrefsDialog::on_chbLineNumbers_clicked(bool checked)
 {
     _prefs->setValue( "showLineNumbers", checked );
+}
+
+void PrefsDialog::on_checkBoxCapitalizeKeywords_clicked(bool checked)
+{
+    _prefs->setValue( "capitalizeKeywords", checked );
 }

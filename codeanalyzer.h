@@ -44,7 +44,7 @@ public:
     static CodeItem* itemUser(const QString &ident , bool withChildren=false);
     static bool containsMonkey(const QString &ident );
     static bool containsUser(const QString &ident );
-    static bool containsKeyword(const QString &ident );
+    static bool containsKeyword(const QString &ident, bool uppercaseFirstLetter=true );
     static void clearMonkey();
     static void printKeywords();
     static QString toolTip(const QString &ident, const QTextBlock &block);

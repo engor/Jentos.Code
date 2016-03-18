@@ -252,6 +252,10 @@ void CodeEditor::cursorLineChanged() {
     }
     if(isTxt())
         return;
+
+    // capitalize
+     capitalizeKeywords(_storedBlock, false);
+
     //autoformat line
     //replace # -> :Float, % -> :Int, etc...
     QTextCursor cursor = textCursor();
@@ -559,6 +563,7 @@ void CodeEditor::onPrefsChanged( const QString &name ){
     _useAutoBrackets = prefs->getBool("autoBracket");
     _charsCountForCompletion = prefs->getInt("charsForCompletion");
     _addVoidForMethods = prefs->getBool("addVoidForMethods");
+    _capitalizeKeywords = prefs->getBool("capitalizeKeywords");
 
     if (name == "showLineNumbers")
         adjustShowLineNumbers();
@@ -613,9 +618,15 @@ void CodeEditor::onPrefsChanged( const QString &name ){
 void CodeEditor::onCursorPositionChanged(){
     if(!_highlighter->isEnabled())
         return;
+
     QTextCursor cursor = textCursor();
     if( cursor.isNull() )
         return;
+
+    //qDebug()<<"cursor pos changed";
+
+    capitalizeKeywords(cursor.block(), true);
+
     int row = cursor.blockNumber();
     //highlightLine( row, HlCaretRow );
     if( row != _storedBlockNumber ) {
@@ -1333,6 +1344,71 @@ void CodeEditor::mousePressEvent(QMouseEvent *e) {
     QPlainTextEdit::mousePressEvent(e);
 }
 
+void CodeEditor::capitalizeKeywords(const QTextBlock &block, bool checkCursorPos)
+{
+    if (!isCode())
+        return;
+    if (!_capitalizeKeywords)
+        return;
+
+    const QString ctext = block.text();
+    //qDebug()<<"capitalize:"<<ctext;
+    int i = 0, n = ctext.length();
+
+    // skip for indent
+    while( i < n && ctext[i] <= ' ' ) ++i;
+
+    // is it empty line
+    if (i == n)
+        return;
+
+    int prev = i;
+
+    while( i < n ) {
+
+        QChar c0 = (i > 0 ? ctext[i-1] : ' ');
+        QChar c = ctext[i++];
+
+        if( c <= ' ' ) {
+            //prev = i;
+            while( i < n && ctext[i] <= ' ' ) {
+                ++i;
+            }
+            prev = i;
+        }
+        else if( isAlpha(c) ) {
+            while( i < n && isIdent(ctext[i]) ) ++i;
+            QString ident = ctext.mid(prev,i-prev);
+            // if not already uppercased (optimization)
+            if (ident[0].isLower()) {
+                if (CodeAnalyzer::containsKeyword(ident) ) {
+                    QTextCursor cursor = textCursor();
+                    bool allow = true;
+                    if (checkCursorPos) {
+                        int p = cursor.positionInBlock();
+                        // check for cursor is outside of this ident
+                        allow = (p < prev || p > i);
+                    }
+                    if (allow) {
+                        //cursor.beginEditBlock();
+                        int p0 = cursor.position();
+                        int p1 = block.position()+prev;
+                        cursor.setPosition(p1);
+                        cursor.setPosition(p1+1, QTextCursor::KeepAnchor);
+                        setTextCursor(cursor);
+                        insertPlainText(ident[0].toUpper());
+                        cursor.setPosition(p0);
+                        setTextCursor(cursor);
+                        //cursor.endEditBlock();
+                        //qDebug()<<"capitalize:"<<ident;
+                    }
+                }
+            }
+            prev = i;
+        }
+    }
+}
+
 void CodeEditor::adjustShowLineNumbers()
 {
     bool value = Prefs::prefs()->getBool("showLineNumbers");
@@ -1644,9 +1720,13 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     bool ctrl = (e->modifiers() & Qt::ControlModifier);
     bool shift = (e->modifiers() & Qt::ShiftModifier);
 
-    QTextCursor cursor = textCursor();
-    QTextBlock block = cursor.block();
-    bool hasSel = cursor.hasSelection();
+    //switch for Insert / Overwrite mode
+    if (key == Qt::Key_Insert && !ctrl && !shift) {
+        setOverwriteMode(!overwriteMode());
+        e->accept();
+        return;
+    }
+
 
 
     //escape
@@ -1655,7 +1735,7 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     }
 
     //ctrl + s
-    if (ctrl && key == 83){
+    if (ctrl && key == Qt::Key_S){
         e->accept();
         return;
     }
@@ -1671,6 +1751,13 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
         e->accept();
         return;
     }
+
+
+    QTextCursor cursor = textCursor();
+    QTextBlock block = cursor.block();
+    bool hasSel = cursor.hasSelection();
+
+
 
     //ctrl + x || shift + del
     bool ctrl_x = (ctrl && key == Qt::Key_X);
@@ -2442,27 +2529,16 @@ void Highlighter::highlightBlock( const QString &ctext ){
             while( i < n && isIdent(ctext[i]) ) ++i;
             format = FormatDefault;
             QString ident = ctext.mid(prev,i-prev);
-            //qDebug()<<"my_ident: "+ident;
+            //qDebug()<<"my_ident: "<<ident<<"c0:"<<c0;
             if (c0 == '.') {
                 //format = FormatDefault;
             }
-            else if ( CodeAnalyzer::containsKeyword(ident) ) {
+            else if ( CodeAnalyzer::containsKeyword(ident, false) ) {
                 format = FormatKeyword;
-                //try to capitalize
-                bool allow = (i < n && !isIdent(ctext[i]));
-                if (allow && ident[0].isLower()) {
-                    QTextCursor c = _editor->textCursor();
-                    int p0 = c.position();
-                    int p1 = block.position()+prev;
-                    c.setPosition(p1);
-                    c.setPosition(p1+1, QTextCursor::KeepAnchor);
-                    _editor->setTextCursor(c);
-                    _editor->insertPlainText(ident[0].toUpper());
-                    c.setPosition(p0);
-                    _editor->setTextCursor(c);
-                }
+                //qDebug()<<"keyword:"<<ident;
             }
             else {
+                //qDebug()<<"check code scope for"<<ident;
                 CodeItem *item = CodeAnalyzer::findInScope(block, i);
                 if (item) {
                     if (item->isParam()) {
