@@ -198,7 +198,7 @@ public:
 
     enum Formats {
         FormatDefault, FormatIdentifier,
-        FormatUserClass, FormatUserClassVar, FormatUserDecl,
+        FormatUserClass, FormatUserClassVar, FormatUserDecl, FormatUserFirstDecl,
         FormatMonkeyClass,
         FormatKeyword, FormatParam, FormatNumber, FormatString, FormatComment
     };
@@ -224,7 +224,7 @@ private:
     QColor _identifiersColor;
     QColor _keywordsColor;
     QColor _monkeywordsColor;
-    QColor _userwordsColor, _userwordsVarColor, _userwordsDeclColor, _paramsColor;
+    QColor _userwordsColor, _userwordsVarColor, _userwordsDeclColor, _userwordsFirstDeclColor, _paramsColor;
     QColor _commentsColor;
     QColor _highlightColor;
 

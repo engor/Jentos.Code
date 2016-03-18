@@ -767,14 +767,13 @@ void MainWindow::onTabsCloseAllTabs() {
 
 QWidget *MainWindow::openFile( const QString &cpath,bool addToRecent ){
 
-    if( isUrl( cpath ) ){
+    if( isUrl( cpath ) ) {
         if(_isShowHelpInDock) {
             _ui->webView->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
             _ui->webView->setUrl( cpath );
             _ui->docsDockWidget->setVisible(true);
             return 0;
-        }
-        else {
+        } else {
             QWebView *webView = 0;
             for( int i = 0; i < _mainTabWidget->count(); ++i ){
                 if( webView = qobject_cast<QWebView*>( _mainTabWidget->widget( i ) ) ) break;

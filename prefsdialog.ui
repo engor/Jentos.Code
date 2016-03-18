@@ -28,7 +28,7 @@
         <x>0</x>
         <y>0</y>
         <width>473</width>
-        <height>233</height>
+        <height>248</height>
        </rect>
       </property>
       <attribute name="label">
@@ -62,9 +62,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
-            <width>460</width>
-            <height>616</height>
+            <y>-279</y>
+            <width>454</width>
+            <height>544</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -90,7 +90,7 @@
                </property>
                <property name="currentFont">
                 <font>
-                 <family>Cousine</family>
+                 <family>Consolas</family>
                 </font>
                </property>
               </widget>
@@ -204,6 +204,9 @@
                    <string>Background</string>
                   </property>
                  </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="ColorSwatch" name="backgroundColorWidget" native="true"/>
                 </item>
                 <item row="1" column="0">
                  <widget class="QLabel" name="defaultColorLabel">
@@ -335,38 +338,45 @@
                 <item row="13" column="1">
                  <widget class="ColorSwatch" name="userwordsDeclColorWidget" native="true"/>
                 </item>
-                <item row="14" column="0">
+                <item row="15" column="0">
                  <widget class="QLabel" name="userwordsVarColorLabel">
                   <property name="text">
                    <string>userwordsVar</string>
                   </property>
                  </widget>
                 </item>
-                <item row="14" column="1">
+                <item row="15" column="1">
                  <widget class="ColorSwatch" name="userwordsVarColorWidget" native="true"/>
                 </item>
-                <item row="15" column="0">
+                <item row="16" column="0">
                  <widget class="QLabel" name="paramsColorLabel">
                   <property name="text">
                    <string>Params</string>
                   </property>
                  </widget>
                 </item>
-                <item row="15" column="1">
+                <item row="16" column="1">
                  <widget class="ColorSwatch" name="paramsColorWidget" native="true"/>
                 </item>
-                <item row="16" column="0">
+                <item row="17" column="0">
                  <widget class="QLabel" name="commentsColorLabel">
                   <property name="text">
                    <string>Comments</string>
                   </property>
                  </widget>
                 </item>
-                <item row="16" column="1">
+                <item row="17" column="1">
                  <widget class="ColorSwatch" name="commentsColorWidget" native="true"/>
                 </item>
-                <item row="0" column="1">
-                 <widget class="ColorSwatch" name="backgroundColorWidget" native="true"/>
+                <item row="14" column="0">
+                 <widget class="QLabel" name="userwordsFirstDeclColorLabel">
+                  <property name="text">
+                   <string>userwordsFirstDecl</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="14" column="1">
+                 <widget class="ColorSwatch" name="userwordsFirstDeclColorWidget" native="true"/>
                 </item>
                </layout>
               </item>
@@ -398,7 +408,7 @@
         <x>0</x>
         <y>0</y>
         <width>473</width>
-        <height>233</height>
+        <height>248</height>
        </rect>
       </property>
       <attribute name="label">
@@ -431,7 +441,7 @@
             <x>0</x>
             <y>0</y>
             <width>471</width>
-            <height>231</height>
+            <height>246</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -536,7 +546,7 @@
         <x>0</x>
         <y>0</y>
         <width>473</width>
-        <height>233</height>
+        <height>248</height>
        </rect>
       </property>
       <attribute name="label">
@@ -569,7 +579,7 @@
             <x>0</x>
             <y>0</y>
             <width>471</width>
-            <height>231</height>
+            <height>246</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -638,7 +648,7 @@
         <x>0</x>
         <y>0</y>
         <width>473</width>
-        <height>233</height>
+        <height>248</height>
        </rect>
       </property>
       <attribute name="label">
@@ -671,7 +681,7 @@
             <x>0</x>
             <y>0</y>
             <width>471</width>
-            <height>231</height>
+            <height>246</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -783,7 +793,7 @@
         <x>0</x>
         <y>0</y>
         <width>473</width>
-        <height>233</height>
+        <height>248</height>
        </rect>
       </property>
       <attribute name="label">
@@ -816,7 +826,7 @@
             <x>0</x>
             <y>0</y>
             <width>471</width>
-            <height>231</height>
+            <height>246</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">

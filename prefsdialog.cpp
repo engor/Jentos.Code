@@ -81,6 +81,7 @@ int PrefsDialog::exec(){
 
 
     _ui->userwordsDeclColorWidget->setColor( _prefs->getColor( "userwordsDeclColor" ) );
+    _ui->userwordsFirstDeclColorWidget->setColor( _prefs->getColor( "userwordsFirstDeclColor" ) );
     _ui->userwordsVarColorWidget->setColor( _prefs->getColor( "userwordsVarColor" ) );
     _ui->paramsColorWidget->setColor( _prefs->getColor( "paramsColor" ) );
 

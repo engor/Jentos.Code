@@ -59,6 +59,7 @@ void Theme::save() {
         prefs->setValue( "monkeywordsColor",QColor( 0xc8c8c8 ) );
         prefs->setValue( "userwordsColor",QColor( 0xc8c8c8 ) );
         prefs->setValue( "userwordsDeclColor",QColor( 0xFFC66D ) );
+        prefs->setValue( "userwordsFirstDeclColor",QColor( 0xFFC66D ) );
         prefs->setValue( "userwordsVarColor",QColor( 0xAE8ABE ) );
         prefs->setValue( "paramsColor",QColor( 0xcfefefe ) );
     }
@@ -78,6 +79,7 @@ void Theme::save() {
         prefs->setValue( "monkeywordsColor",QColor( 0xc000001 ) );
         prefs->setValue( "userwordsColor",QColor( 0x000001 ) );
         prefs->setValue( "userwordsDeclColor",QColor( 0x000001 ) );
+        prefs->setValue( "userwordsFirstDeclColor",QColor( 0x000001 ) );
         prefs->setValue( "userwordsVarColor",QColor( 0x009900 ) );
         prefs->setValue( "paramsColor",QColor( 0xc80808 ) );
     }
@@ -97,6 +99,7 @@ void Theme::save() {
         prefs->setValue( "monkeywordsColor",QColor( 0xc800080 ) );
         prefs->setValue( "userwordsColor",QColor( 0x800080 ) );
         prefs->setValue( "userwordsDeclColor",QColor( 0x000001 ) );
+        prefs->setValue( "userwordsFirstDeclColor",QColor( 0x000001 ) );
         prefs->setValue( "userwordsVarColor",QColor( 0x800000 ) );
         prefs->setValue( "paramsColor",QColor( 0xc80808 ) );
         //cur line #c2e1ff
@@ -119,6 +122,7 @@ void Theme::save() {
         prefs->setValue( "monkeywordsColor",QColor( 0x2BBF1C ) );
         prefs->setValue( "userwordsColor",QColor( 0xfd971f ) );
         prefs->setValue( "userwordsDeclColor",QColor( 0xa6e22e ) );
+        prefs->setValue( "userwordsFirstDeclColor",QColor( 0xa6e22e ) );
         prefs->setValue( "userwordsVarColor",QColor( 0x9effff ) );
         prefs->setValue( "paramsColor",QColor( 0x66D9EF ) );
     }
@@ -140,6 +144,7 @@ void Theme::save() {
         prefs->setValue( "monkeywordsColor",QColor( 0xAFCDFB ) );
         prefs->setValue( "userwordsColor",QColor( 0x2886AC ) );
         prefs->setValue( "userwordsDeclColor",QColor( 0xCCAAFF ) );
+        prefs->setValue( "userwordsDeclColor",QColor( 0xCCAAFF ) );
         prefs->setValue( "userwordsVarColor",QColor( 0x2CA2A2 ) );
         prefs->setValue( "paramsColor",QColor( 0x66D9EF ) );
     }
@@ -160,6 +165,7 @@ void Theme::save() {
         prefs->setValue( "monkeywordsColor",QColor( 0x6969e1 ) );
         prefs->setValue( "userwordsColor",QColor( 0x0073BF ) );
         prefs->setValue( "userwordsDeclColor",QColor( 0x160050 ) );
+        prefs->setValue( "userwordsFirstDeclColor",QColor( 0x160050 ) );
         prefs->setValue( "userwordsVarColor",QColor( 0x221177 ) );
         prefs->setValue( "paramsColor",QColor( 0x160050 ) );
     }

@@ -2190,6 +2190,7 @@ void Highlighter::onPrefsChanged( const QString &name ){
         _userwordsColor = prefs->getColor("userwordsColor");
         _userwordsVarColor = prefs->getColor("userwordsVarColor");
         _userwordsDeclColor = prefs->getColor("userwordsDeclColor");
+        _userwordsFirstDeclColor = prefs->getColor("userwordsFirstDeclColor");
         _paramsColor = prefs->getColor("paramsColor");
         _commentsColor = prefs->getColor("commentsColor");
         _highlightColor = prefs->getColor("highlightColor");
@@ -2276,7 +2277,7 @@ void Highlighter::highlightBlock( const QString &ctext ){
                         }
                         else if(item->block() == block) {
                             if(item->isClassOrInterface() || item->isFunc())//for local color is default
-                                format = FormatUserDecl; // first time declaration
+                                format = FormatUserFirstDecl; // first time declaration
                         }
                         else if(item->isFunc()) {
                             format = FormatUserDecl; // new Color comming soon
@@ -2383,6 +2384,8 @@ void Highlighter::setTextFormat(int start, int end, Formats format, bool italic)
         color = _userwordsVarColor;
     else if(format == FormatUserDecl)
         color = _userwordsDeclColor;
+    else if(format == FormatUserFirstDecl)
+        color = _userwordsFirstDeclColor;
     else if(format == FormatMonkeyClass)
         color = _monkeywordsColor;
     tcf.setForeground(QBrush(color));
