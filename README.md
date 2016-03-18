@@ -10,6 +10,8 @@
 
 It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official IDE for Monkey.
 
+For Linux, OS X and Windows. [Download](http://jentos_ide.malublu.de/)
+
 ## Jentos IDE 1.3.1
 News
 
