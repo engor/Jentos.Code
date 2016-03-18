@@ -24,6 +24,7 @@ CodeEditor::CodeEditor( QWidget *parent ):QPlainTextEdit( parent ),_modified( 0 
 
     _selection = new ExtraSelection(this);
 
+    _lcompCursorPosition = -1;
     _editPosIndex = -1;
     _useAutoBrackets = Prefs::prefs()->getBool("autoBracket");
     _charsCountForCompletion = Prefs::prefs()->getInt("charsForCompletion");
@@ -359,10 +360,6 @@ void CodeEditor::showDialogAddProperty()
     }
 
     if (addWrap) {
-        if (propType == "String") {
-            defValue = defValue.replace("\"", "~q");
-            defValue = "\""+defValue+"\"";
-        }
         QString def = defValue.isEmpty() ? "" : " = "+defValue;
         text = indent+"Field "+wrapName+":"+propType+def+"\n" + text;
     }
@@ -884,10 +881,13 @@ void CodeEditor::onShowAutocompleteList()
         _lcomp->setIsForInheritance(_lcompInheritance);
         QTextCursor cursor = textCursor();
 
-        if (_lcompInheritance)
+        if (_lcompInheritance) {
             CodeAnalyzer::fillListInheritance(cursor.block(), _lcomp);
-        else
-            CodeAnalyzer::findInScope(cursor.block(), cursor.positionInBlock(), _lcomp);
+        } else {
+            int pos = (_lcompCursorPosition != -1 ? _lcompCursorPosition : cursor.positionInBlock());
+            CodeAnalyzer::findInScope(cursor.block(), pos, _lcomp);
+            _lcompCursorPosition = -1;
+        }
     }
 
     int count = _lcomp->count();
@@ -1899,9 +1899,20 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     //dot, check for ClassInstance.{fields,funcs}
     if (key == 46) {
         int i = cursor.positionInBlock();
-        bool flagShow = (i > 0 && isIdent(cursor.block().text()[i-1]));
+        QString t = cursor.block().text();
+        // check for arrays
+        if (i > 0 && t[i-1] == ']') {
+            int i2 = t.lastIndexOf("[");
+            if (i2 > 0)
+                i = i2;
+        }
+        int n = i;
+        while (i > 0 && isIdent(t[i-1])) --i;
+        QString ident = t.mid(i,n-i);
+        qDebug()<<ident;
         insertPlainText(".");
-        if( flagShow ) {
+        if ( !ident.isEmpty() ) {
+            _lcompCursorPosition = n;
             aucompShowList(false);
         }
         e->accept();

@@ -407,10 +407,9 @@ CodeItem *CodeAnalyzer::findInScope(const QTextBlock &block, int pos, QListWidge
 
     //qDebug() << "findInScope. block:" << block.text() << ", list is null:" << (l==0);
 
-
     QStringList list;
     QString text = blockText;
-    if(text == "")
+    if (text == "")
         text = block.text();
     identsList(text, pos, list);
     if(list.isEmpty()) {
@@ -489,7 +488,7 @@ CodeItem *CodeAnalyzer::findInScope(const QTextBlock &block, int pos, QListWidge
     //CodeItem *res = item;
     for( int k = 1, n = list.size()-1; k < n; ++k) {
         QString type = item->identTypeCleared();
-
+        //qDebug()<<"type:"<<type;
         CodeItem *c = itemUser(type);
         if(!c)
             c = itemMonkey(type);
@@ -509,6 +508,7 @@ CodeItem *CodeAnalyzer::findInScope(const QTextBlock &block, int pos, QListWidge
     if(sc.item) {
         //qDebug()<<"scope: "+sc.item->descrAsItem();
         if(l) {
+            //qDebug()<<"list.last:"<<list.last();
             fillListFromScope(l,list.last(),sc);
         }
         if(findLastIdent && list.size() > 1) {
@@ -1485,7 +1485,7 @@ void CodeAnalyzer::fillListFromScope( QListWidget *l, const QString &ident, Code
     QStringList templField = item->templWords();
     bool hasTempl = !templField.isEmpty();
     foreach (item, list) {
-        //qDebug() << "base: "+ item->ident();
+        qDebug() << "base: "+ item->ident();
         QList<CodeItem*> listChildren = item->children();
         foreach (CodeItem *child, listChildren) {
             //qDebug() << "child: "+ child->ident();

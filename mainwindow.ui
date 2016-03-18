@@ -1417,7 +1417,7 @@ Don't change documents between find usages and rename</string>
     <string>Run (F5, Ctrl+R)</string>
    </property>
    <property name="shortcut">
-    <string>F5, Ctrl+R</string>
+    <string>F5</string>
    </property>
   </action>
   <action name="actionNew">
@@ -1749,7 +1749,7 @@ Don't change documents between find usages and rename</string>
     <string>Build (F7, Ctrl+B)</string>
    </property>
    <property name="shortcut">
-    <string>F7, Ctrl+B</string>
+    <string>F7</string>
    </property>
   </action>
   <action name="actionEditFindInFiles">
@@ -2086,7 +2086,7 @@ Don't change documents between find usages and rename</string>
     <string>Add new Property at cursor position</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+I</string>
+    <string>Ctrl+I</string>
    </property>
   </action>
   <action name="actionUsagesSelectAll">

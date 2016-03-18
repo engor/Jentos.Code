@@ -161,6 +161,7 @@ private:
     ListWidgetComplete *_lcomp;//autocomplete list
     bool _lcompInheritance, _lcompProcess, _lcompFillClassesOnly;
     QString _lcompTargetIdentType;
+    int _lcompCursorPosition;
     CodeScope _scope;
     QTextBlock _storedBlock;
     bool _blockChangeCursorMethod;

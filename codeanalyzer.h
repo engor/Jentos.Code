@@ -69,7 +69,7 @@ public:
     static QStringList extractParams(const QString &text);
     static CodeItem* findInScope(const QTextBlock &block, int pos, QListWidget *l=0, bool findLastIdent=false, const QString &blockText="");
     //static CodeItem* findInScope(const QString &ident, const QTextBlock &block, bool outsideScope=true);
-    static CodeItem* scopeAt(const QTextBlock &block, bool classOnly=false, bool checkCurFile=false);
+    static CodeItem* scopeAt(const QTextBlock &block, bool classOnly=false, bool checkCurFile=true);
     static CodeItem* findScopeForIdent(const QString &ident, const QTextCursor &cursor, CodeScope &scope);
     static CodeItem* remAt(const QTextBlock &block);
     static CodeItem* foldAt(const QTextBlock &block);
