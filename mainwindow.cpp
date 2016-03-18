@@ -2606,7 +2606,7 @@ void MainWindow::on_pushButtonClassSummary_clicked()
         }
     }
     if (msg.isEmpty()) {
-        msg = "Class/Interface isn't selected in Source List.";
+        msg = "Class or Interface isn't selected in Source List.";
     }
     QMessageBox m;
     m.setWindowTitle("Summary Info");

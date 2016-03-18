@@ -2826,7 +2826,7 @@ QString CodeItem::summary() {
             ++fld;
     }
     QString s = "<u><b>"+decl()+" "+descrAsItem()+":</b></u>";
-    s += "<table widt2h='222' cellspacing='5'>";
+    s += "<table width='222' cellspacing='5'>";
     s += "<tr><td align='right'>fields:</td><td>"+QString::number(fld)+"</td></tr>";
     s += "<tr><td align='right'>globals:</td><td>"+QString::number(glbl)+"</td></tr>";
     s += "<tr><td align='right'>consts:</td><td>"+QString::number(cnst)+"</td></tr>";

@@ -678,28 +678,51 @@ void CodeEditor::onCursorPositionChanged(){
     QTextBlock b = firstVisibleBlock();
     float bheight = blockBoundingRect(b).height();
     int areaHeight = rect().height();
-    int n = (areaHeight/bheight)+2;
+    int visibleCount = (areaHeight/bheight)+2;
+    int n = visibleCount;
     int i = 0;
 
+    // try to parse 3-screen height area
+    // up
+    QTextBlock bbb = b;
+    while (bbb.isValid() && i < visibleCount) {
+        b = bbb;
+        if (bbb.isVisible())
+            ++i;
+        bbb = bbb.previous();
+    }
+    n += i;
+    // down
+    n += visibleCount;
+
+    i = 0;
     QString selWord = _selection->lastSelWord();
     len = selWord.length();
     // fill list with selections
     QList<SelItem*> sels;
     while (b.isValid() && i < n) {
         s = b.text();
-        int p = -1;
-        while( (p = s.indexOf(selWord,p+1)) >= 0) {
+        int len = s.length();
+        for (int k = 0; k < len; /**/) {
+            QChar c = s.at(k);
+            // skip non-latin chars
+            bool big = (c >= 'A' && c <= 'Z');
+            bool small = (c >= 'a' && c <= 'z');
+            if (!big && !small) {
+                ++k;
+                continue;
+            }
             QTextCursor cursor = QTextCursor(b);
-            int pos = p+b.position();
-            cursor.setPosition(pos+1);
+            cursor.setPosition(b.position()+k);
             cursor.select(QTextCursor::WordUnderCursor);
             QString t = cursor.selectedText();
+            //qDebug()<<"word:"<<t;
             if (t == selWord) {
                 SelItem *sel = new SelItem();
                 sel->selection.cursor = cursor;
                 sels.append(sel);
             }
-            p += len;
+            k += t.length()+1;
         }
         if (b.isVisible())
             ++i;
@@ -1510,7 +1533,7 @@ void CodeEditor::updateSourceNavigationByCurrentScope() {
         code = code->parent();
     }
     if(code) {
-        qDebug()<<"list from scope: "<<code->descrAsItem();
+        //qDebug()<<"list from scope: "<<code->descrAsItem();
         QStandardItem *si = CodeAnalyzer::getStandardItem( code->fullItemPath() );
         fillSourceListWidget(code, si);
         if(code->parent()) {
@@ -1957,20 +1980,20 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
                 // and add :Void if it's empty
                 // exclude New()
                 if (_addVoidForMethods && (isMethod || isFunc)) {
-                    QString origText = block.text();
+                    QString origText = block.text().trimmed();
                     int i1 = origText.indexOf(":");
                     int i2 = origText.indexOf("(");
                     if ((i1 == -1 && i2 > 0) // has no :
                             || i2 < i1) { // has : but after (
-                        int i = i2;
-                        while (i > 0 && origText[i] != ' ') --i;
-                        QString name = origText.mid(i+1, i2-i-1);
+                        int i = origText.indexOf(" ");
+                        QString name = origText.mid(i+1, i2-i-1).trimmed();
                         if (name != "New") {
                             int pp = cursor.position();
                             cursor.setPosition(block.position()+i2);
                             setTextCursor(cursor);
-                            insertPlainText(":Void");
-                            cursor.setPosition(pp+5);
+                            QString s = (name == "Main" ? ":Int" : ":Void");
+                            insertPlainText(s);
+                            cursor.setPosition(pp+s.length());
                             setTextCursor(cursor);
                         }
                     }
