@@ -646,11 +646,9 @@ void CodeEditor::onPrefsChanged( const QString &name ){
 }
 
 void CodeEditor::onCursorPositionChanged(){
-    if(!_highlighter->isEnabled())
-        return;
+    if(!_highlighter->isEnabled()) return;
     QTextCursor cursor = textCursor();
-    if( cursor.isNull() )
-        return;
+    if( cursor.isNull() ) return;
     int row = cursor.blockNumber();
     //highlightLine( row, HlCaretRow );
     if( row != _storedBlockNumber ) {
@@ -693,7 +691,8 @@ void CodeEditor::onCursorPositionChanged(){
         _extraSelWord = s;
         _extraSelScrollPos = scroll;
         //qDebug()<<"word:"<<s;
-        if(s == "" || !isAlpha(s[0]) || CodeAnalyzer::containsKeyword(s)) {
+        if(s == ""||!isAlpha(s[0]) || CodeAnalyzer::containsKeyword(s)) {
+            flushWordsExtraSelections();
             return;
         }
         QTextBlock b = firstVisibleBlock();
@@ -1282,10 +1281,14 @@ void CodeEditor::mouseMoveEvent(QMouseEvent *e) {
         QTextCursor cursor = cursorForPosition(e->pos());
         CodeScope cur = codescopeForTextCursor(cursor, true);
         if(!cur.isEmpty()) {
-            if(!QGuiApplication::overrideCursor()) QGuiApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
+            if(cur.item->isKeyword()) {
+                viewport()->setCursor(QCursor(Qt::IBeamCursor));
+            } else {
+                viewport()->setCursor(QCursor(Qt::PointingHandCursor));
+            }
             if(!cur.toolTip.isEmpty()) showToolTip(e->globalPos(), QString::number(cursor.blockNumber()+1) + ": " + cur.toolTip);
         } else {
-            QGuiApplication::restoreOverrideCursor();
+            viewport()->setCursor(QCursor(Qt::IBeamCursor));
             QToolTip::hideText();
         }
         return;
@@ -1305,7 +1308,7 @@ void CodeEditor::keyReleaseEvent( QKeyEvent *e ) {
     //highlightLine( textCursor().blockNumber(), HlCaretRow );
     if(e->key() == Qt::Key_Control) {
         flushExtraSelections();
-        QGuiApplication::restoreOverrideCursor();
+        viewport()->setCursor(QCursor(Qt::IBeamCursor));
         QToolTip::hideText();
     }
 
@@ -1527,7 +1530,6 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     int key = e->key();
     bool ctrl = (e->modifiers() & Qt::ControlModifier);
     bool shift = (e->modifiers() & Qt::ShiftModifier);
-    bool alt = (e->modifiers() & Qt::AltModifier);
 
     //escape
     if(key == Qt::Key_Escape && !aucompIsVisible()) {
@@ -1668,15 +1670,6 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
         e->accept();
         return;
     }
-
-    // override mouse cursor
-    // if(ctrl) {
-    //     if( !alt && this->underMouse() ) {
-    //         QGuiApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
-    //     } else if( key == Qt::Key_Alt ) {
-    //         QGuiApplication::restoreOverrideCursor();
-    //     }
-    // }
 
     //select word in autocomplete list
     if( aucompIsVisible()) {
@@ -2206,11 +2199,9 @@ void Highlighter::onPrefsChanged( const QString &name ){
 
 void Highlighter::highlightBlock( const QString &ctext ){
     //_enabled = false;
-    if(!_enabled)
-        return;
+    if(!_enabled) return;
 
-    if(ctext.trimmed().isEmpty())
-        return;
+    if(ctext.trimmed().isEmpty()) return;
     //qDebug() << "highlight: "+ctext;
 
     int i = 0, n = ctext.length();
@@ -2249,8 +2240,7 @@ void Highlighter::highlightBlock( const QString &ctext ){
             }
             prev = i;
             format = FormatDefault;
-        }
-        else if( isAlpha(c) ) {
+        } else if( isAlpha(c) ) {
             while( i < n && isIdent(ctext[i]) ) ++i;
             format = FormatDefault;
             QString ident = ctext.mid(prev,i-prev);
@@ -2258,14 +2248,13 @@ void Highlighter::highlightBlock( const QString &ctext ){
             //bool containsDot
             if(c0 == '.') {
                 //format = FormatDefault;
-            }
-            else if( CodeAnalyzer::containsKeyword(ident) ) {
+            } else if( CodeAnalyzer::containsKeyword(ident) ) {
                 format = FormatKeyword;
                 //capitalize
                 //QString s1 = ctext.left(prev);
                 //QString s2 = ctext.mid(i);
                 if(ident[0].isLower()) {
-                    //qDebug()<<"capitalize: "+ident;
+                    qDebug()<<"capitalize: "+ident;
                     QTextCursor c = _editor->textCursor();
                     int p0 = c.position();
                     int p1 = block.position()+prev;
@@ -2276,21 +2265,23 @@ void Highlighter::highlightBlock( const QString &ctext ){
                     c.setPosition(p0);
                     _editor->setTextCursor(c);
                 }
-            }
-            else {
+            } else {
                 CodeItem *item = CodeAnalyzer::findInScope(block, i);
                 if(item) {
                     if(item->isParam()) {
                         format = FormatParam;
-                    }
-                    else if(item->isUser()) {
+                    } else if(item->isUser()) {
                         if(item->isField()) {
                             format = FormatUserClassVar;
                         }
                         else if(item->block() == block) {
                             if(item->isClassOrInterface() || item->isFunc())//for local color is default
-                                format = FormatUserDecl;
+                                format = FormatUserDecl; // first time declaration
                         }
+                        else if(item->isFunc()) {
+                            format = FormatUserDecl; // new Color comming soon
+                        }
+                        // let me see it
                         else if(item->isClassOrInterface()) {
                             format = FormatUserClass;
                         }

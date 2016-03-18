@@ -81,6 +81,12 @@ public:
 
     static const int KIND_USER = 0;
     static const int KIND_MONKEY = 1;
+
+    static const int IS_PUBLIC = 0;
+    static const int IS_PRIVATE = 1;
+    static const int IS_PROTECTED = 2;
+
+
     static CodeAnalyzer* instance();
 
     static bool isSortByName() { return _isSortByName; }
@@ -254,6 +260,7 @@ private:
     int _indent, _blockNumber, _blockEndNumber;
     bool _foldable;
     bool _isClass, _isFunc, _isField, _isVar, _isKeyword, _isParam, _isInherited, _isInterface;
+    bool _isPublic, _isPrivate, _isProtected;
     bool _isMonkey, _isUser;
     QHash<QString,ItemWithData*> _itemsWithData;
     QStringList _baseClasses, _templWords;

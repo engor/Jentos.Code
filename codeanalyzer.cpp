@@ -260,9 +260,9 @@ void CodeAnalyzer::loadKeywords( const QString &path ) {
         file.close();
     }
     else {
-        text = "Void;Strict;Public;Private;Property;"
+        text = "Void;Strict;Public;Protected;Private;Property;"
             "Bool;Int;Float;String;Array;Object;Mod;Continue;Exit;"
-            "Include;Import;Module;Extern;"
+            "Include;Import;Module;Extern;Friend;"
             "New;Self;Super;Eachin;True;False;Null;Not;"
             "Extends;Abstract;Final;Native;Select;Case;Default;"
             "Const;Local;Global;Field;Method;Function;Class;Interface;Implements;"
@@ -400,13 +400,11 @@ CodeItem *CodeAnalyzer::findInScope(const QTextBlock &block, int pos, QListWidge
     //qDebug()<<"cur:"<<_curFilePath;
     QStringList list;
     QString text = blockText;
-    if(text == "")
-        text = block.text();
+    if(text == "") text = block.text();
     identsList(text, pos, list);
     if(list.isEmpty()) {
         //qDebug()<<"list is empty. try to fill common";
-        if(l)
-            fillListFromCommon(l, "", block);
+        if(l) fillListFromCommon(l, "", block);
         return 0;
     }
     QString ident = list.first();
@@ -997,8 +995,7 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
                     //_listFoldTypes.replace(_listFoldTypes.size()-1,2);
                     BlockData *d = BlockData::data(block,true);
                     d->foldType |= 2;
-                    if(!container)
-                        d->foldType = 2;
+                    if(!container) d->foldType = 2;
                     foldBlock = 0;
                 }
             }
@@ -1033,8 +1030,7 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
                                 if(kind == KIND_USER) {
                                     BlockData *d = BlockData::data(block,true);
                                     d->foldType |= 2;
-                                    if(container || foldBlock)
-                                        d->foldType |= 1;
+                                    if(container || foldBlock) d->foldType |= 1;
                                 }
                                 remBlock = 0;
                             }
@@ -1063,29 +1059,25 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
                 //if(indent == container->indent()) {
                     container->setFoldable(true);
                     container->setBlockEnd(block);
-                    if(container->isClassOrInterface())
-                        isPrivateInClass = false;
+                    if(container->isClassOrInterface()) isPrivateInClass = false;
                     container = (stack.isEmpty() ? 0 : stack.pop());
                     if(kind == KIND_USER) {
                         //_listFoldTypes.replace(_listFoldTypes.size()-1,2);
                         BlockData *d = BlockData::data(block,true);
                         d->foldType |= 2;
-                        if(!container && !foldBlock)
-                            d->foldType = 2;
+                        if(!container && !foldBlock) d->foldType = 2;
                     }
                     block = block.next();
                     continue;
                 }
-            }
-            else if(lower == "private") {
+            } else if(lower == "private") {
                 if(container && container->isClassOrInterface())
                     isPrivateInClass = true;
                 else
                     isPrivateInFile = true;
                 block = block.next();
                 continue;
-            }
-            else if(lower == "public") {
+            } else if(lower == "public") {
                 if(container && container->isClassOrInterface())
                     isPrivateInClass = false;
                 else
@@ -1099,8 +1091,7 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
             continue;
         }
         int rem = line.indexOf("'");
-        if(rem)
-            line = line.left(rem);
+        if(rem) line = line.left(rem);
         QString line0 = line;
         //qDebug()<<"line0:"<<line0;
         QString decl = line.left(i).toLower();
@@ -1120,8 +1111,7 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
                 if(kind == KIND_USER) {
                     BlockData *d = BlockData::data(b,true);
                     d->foldType |= 2;
-                    if(!foldBlock)
-                        d->foldType = 2;
+                    if(!foldBlock) d->foldType = 2;
                 }
             }
             container = item;
@@ -1129,8 +1119,7 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
                 BlockData *d = BlockData::data(block,true);
                 d->foldType |= 1;
             }
-        }
-        else if(decl == "field" || decl == "global" || decl == "const") {
+        } else if(decl == "field" || decl == "global" || decl == "const") {
             if(container && container->indent() >= indent) {
                 QTextBlock b = block.previous();
                 container->setBlockEnd(b);
@@ -1149,13 +1138,11 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
                 item->setKind(kind);
                 if(container) {
                     container->addChild(item);
-                }
-                else {
+                } else {
                     insertItem(item->ident(), item, kind);
                 }
             }
-        }
-        else if(decl == "method" || decl == "function") {
+        } else if(decl == "method" || decl == "function") {
             if(container && container->indent() >= indent) {
                 QTextBlock b = block.previous();
                 container->setBlockEnd(b);
@@ -1185,8 +1172,7 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
             item->setKind(kind);
             if(container) {
                 container->addChild(item);
-            }
-            else {
+            } else {
                 insertItem(item->ident(), item, kind);
             }
             if(container && container->isInterface())
@@ -1194,16 +1180,14 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
             else if(line.contains(" Abstract"))
                 singleLine = true;
             if(!singleLine) {
-                if(container)
-                    stack.push(container);
+                if(container) stack.push(container);
                 container = item;
             }
             if(kind == KIND_USER) {
                 BlockData *d = BlockData::data(block,true);
                 d->foldType |= 1;
             }
-        }
-        else if(container && decl == "local") {
+        } else if(container && decl == "local") {
             QStringList l = extractParams(line);
             foreach (QString s, l) {
                 s = s.trimmed();
@@ -1211,8 +1195,7 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
                 item->setKind(kind);
                 container->addChild(item);
             }
-        }
-        else if(container) {
+        } else if(container) {
 
             bool bif = (line0.startsWith("If") && !line0.contains("Then "));
             bool bfor = line0.startsWith("For ");
@@ -1237,14 +1220,11 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
                 QString decl="";
                 if(bif) {
                     decl = "if";
-                }
-                else if(bfor) {
+                } else if(bfor) {
                     decl = "for";
-                }
-                else if(bwhile) {
+                } else if(bwhile) {
                     decl = "while";
-                }
-                else if(bselect) {
+                } else if(bselect) {
                     decl = "select";
                 }
                 CodeItem *item = new CodeItem(decl, line0, indent, block, path, 0);
