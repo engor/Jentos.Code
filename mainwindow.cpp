@@ -842,8 +842,7 @@ bool MainWindow::closeFile( QWidget *widget,bool really ){
 
     if(!path.isEmpty()) {
         CodeAnalyzer::removeUserFile(path);
-        CodeAnalyzer::treeItemModel()->clear();
-        CodeAnalyzer::listItemModel()->clear();
+
         /*if(_codeEditor) {
             //qDebug()<<"fill tree here:"<<_codeEditor->fileName();
             _codeEditor->fillCodeTree();

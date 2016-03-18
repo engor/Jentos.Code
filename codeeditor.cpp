@@ -1309,6 +1309,7 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event) {
 
 void CodeEditor::mousePressEvent(QMouseEvent *e) {
     if( (e->button() & Qt::LeftButton) && (e->modifiers() & Qt::ControlModifier) ) {
+        _selection->resetToolTip();
         CodeItem *item = _scope.item;
         if(item) {
             if(!item->isKeyword()) {
@@ -1733,6 +1734,7 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     if (key == Qt::Key_Escape && !aucompIsVisible()) {
         emit keyEscapePressed();
     }
+
 
     //ctrl + s
     if (ctrl && key == Qt::Key_S){

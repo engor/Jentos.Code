@@ -1411,13 +1411,13 @@ Don't change documents between find usages and rename</string>
      <normaloff>:/icons/light/Build-Run.png</normaloff>:/icons/light/Build-Run.png</iconset>
    </property>
    <property name="text">
-    <string>Build and Run</string>
+    <string>Run</string>
    </property>
    <property name="toolTip">
-    <string>Build and Run (F5)</string>
+    <string>Run (F5, Ctrl+R)</string>
    </property>
    <property name="shortcut">
-    <string>F5</string>
+    <string>F5, Ctrl+R</string>
    </property>
   </action>
   <action name="actionNew">
@@ -1746,10 +1746,10 @@ Don't change documents between find usages and rename</string>
     <string>Build</string>
    </property>
    <property name="toolTip">
-    <string>Build (F7)</string>
+    <string>Build (F7, Ctrl+B)</string>
    </property>
    <property name="shortcut">
-    <string>F7</string>
+    <string>F7, Ctrl+B</string>
    </property>
   </action>
   <action name="actionEditFindInFiles">

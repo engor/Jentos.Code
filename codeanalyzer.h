@@ -131,6 +131,8 @@ public:
     static void end();
 
     static CodeItem *getClassOrKeyword(const QString &ident);
+    static QStringList replaceFrom(){return _replaceFrom;}
+    static QStringList replaceTo(){return _replaceTo;}
 
 private:
     static QList<int> _listFoldTypes;
@@ -158,6 +160,7 @@ private:
         return h;
     }*/
 
+    static QStringList _replaceFrom, _replaceTo;
     static QStringList _userFiles, _storedUserFiles;
     static QHash<QString,FileInfo*>* userFilesModified() {
         static QHash<QString,FileInfo*> *h = 0;
@@ -287,6 +290,7 @@ private:
     QStringList _baseClasses, _templWords;
     QString _tempIdentType;
     void updateDescrAsItem();
+    bool fixIdentType();
 };
 
 
