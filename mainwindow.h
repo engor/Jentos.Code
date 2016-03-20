@@ -268,7 +268,7 @@ private:
 
     CodeEditor *_codeEditor;
     CodeEditor *_lockedEditor;
-    QWebView *_helpWidget;
+    QWebEngineView *_helpWidget;
 
     PrefsDialog *_prefsDialog;
     //FindDialog *_findDialog;

@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow( parent ),ConsoleLog(),_ui
 #endif
 
     //Enables pdf viewing!
-    QWebSettings::globalSettings()->setAttribute( QWebSettings::PluginsEnabled,true );
+    QWebEngineSettings::globalSettings()->setAttribute( QWebEngineSettings::PluginsEnabled,true );
 
     QSettings::setDefaultFormat( QSettings::IniFormat );
     QCoreApplication::setOrganizationName( "FingerDev Studio" );
@@ -634,7 +634,7 @@ bool MainWindow::isBuildable( CodeEditor *editor ){
 QString MainWindow::widgetPath( QWidget *widget ){
     if( CodeEditor *editor=qobject_cast<CodeEditor*>( widget ) ){
        return editor->path();
-    }else if( QWebView *webView=qobject_cast<QWebView*>( widget ) ){
+    }else if( QWebEngineView *webView=qobject_cast<QWebEngineView*>( widget ) ){
         return webView->url().toString();
     }
     return "";
@@ -769,19 +769,17 @@ QWidget *MainWindow::openFile( const QString &cpath,bool addToRecent ){
 
     if( isUrl( cpath ) ) {
         if(_isShowHelpInDock) {
-            _ui->webView->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
+            //_ui->webView->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
             _ui->webView->setUrl( cpath );
             _ui->docsDockWidget->setVisible(true);
             return 0;
         } else {
-            QWebView *webView = 0;
+            QWebEngineView *webView = 0;
             for( int i = 0; i < _mainTabWidget->count(); ++i ){
-                if( webView = qobject_cast<QWebView*>( _mainTabWidget->widget( i ) ) ) break;
+                if( webView = qobject_cast<QWebEngineView*>( _mainTabWidget->widget( i ) ) ) break;
             }
             if( !webView ){
-                webView = new QWebView;
-                webView->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
-                connect( webView,SIGNAL(linkClicked(QUrl)),SLOT(onLinkClicked(QUrl)) );
+                webView = new QWebEngineView;
                 _mainTabWidget->addTab( webView,"Help" );
             }
 
@@ -1323,14 +1321,14 @@ void MainWindow::updateWindowTitle(){
     QWidget *widget=_mainTabWidget->currentWidget();
     if( CodeEditor *editor=qobject_cast<CodeEditor*>( widget ) ){
         //setWindowTitle( editor->path() + " - "APP_NAME);
-         setWindowTitle( APP_NAME" v"APP_VERSION );
-    }else if( QWebView *webView=qobject_cast<QWebView*>( widget ) ){
+         setWindowTitle( QString(APP_NAME)+" v"+APP_VERSION+" "+_mainTabWidget->tabText(_mainTabWidget->indexOf(editor)) );
+    }else if( QWebEngineView *webView=qobject_cast<QWebEngineView*>( widget ) ){
         //QString s = webView->url().toString();
        // s = s.mid(8,s.length());
        // setWindowTitle( s  + " - "APP_NAME);
-         setWindowTitle( APP_NAME" v"APP_VERSION );
+         setWindowTitle( QString(APP_NAME)+" v"+APP_VERSION );
     }else{
-        setWindowTitle( APP_NAME" v"APP_VERSION );
+        setWindowTitle( QString(APP_NAME)+" v"+APP_VERSION );
 
     }
 }
@@ -1360,7 +1358,7 @@ void MainWindow::onMainTabChanged( int index ){
     _codeEditor = qobject_cast<CodeEditor*>( widget );
 
 
-    _helpWidget = qobject_cast<QWebView*>( widget );
+    _helpWidget = qobject_cast<QWebEngineView*>( widget );
 
     if(_oldEditor) {
         connect( _oldEditor,SIGNAL(showCode(QString,int)),SLOT(onShowCode(QString,int)) );
@@ -1392,7 +1390,6 @@ void MainWindow::onMainTabChanged( int index ){
 }
 
 void MainWindow::onDockVisibilityChanged( bool visible ){
-
     updateActions();
 }
 
@@ -2300,10 +2297,10 @@ void MainWindow::onHelpQuickHelp(){
 
 void MainWindow::onHelpAbout(){
     QString href = "https://github.com/malublu/Jentos_IDE";
-    QString APP_ABOUT = "<html><head><style>a{color:#CC8030;}</style></head><body bgcolor2='#ff3355'><b>"APP_NAME"</b> is a powefull code editor for the Monkey programming language.<br>"
-            "Based on Ted V"TED_VERSION".<br> This binary is Malublu fork <br>Please send bug reports to him on monkey-x.com<br>"
+    QString APP_ABOUT = QString("<html><head><style>a{color:#CC8030;}</style></head><body bgcolor2='#ff3355'><b>")+APP_NAME+"</b> is a powefull code editor for the Monkey programming language.<br>"
+            "Based on Ted V"+TED_VERSION+".<br> This binary is Malublu fork <br>Please send bug reports to him on monkey-x.com<br>"
             "Visit <a href='"+href+"'>"+href+"</a> for more information.<br><br>"
-            "Version: "APP_VERSION+"<br>Trans: "+_transVersion+"<br>Qt: "_STRINGIZE(QT_VERSION)+"<br><br>"
+            "Version: "+APP_VERSION+"<br>Trans: "+_transVersion+"<br>Qt: "+_STRINGIZE(QT_VERSION)+"<br><br>"
             "Jentos is free and always be free.<br>But you may support Malublu via <a href=''>Commin Soon</a>.<br>"
 
             "</body></html>";
@@ -2363,9 +2360,9 @@ void MainWindow::onHelpRebuild(){
     initKeywords();
 
     for( int i=0;i<_mainTabWidget->count();++i ){
-        QWebView *webView=qobject_cast<QWebView*>( _mainTabWidget->widget( i ) );
+        QWebEngineView *webView=qobject_cast<QWebEngineView*>( _mainTabWidget->widget( i ) );
 
-        if( webView ) webView->triggerPageAction( QWebPage::ReloadAndBypassCache );
+        if( webView ) webView->triggerPageAction( QWebEnginePage::ReloadAndBypassCache );
     }
 }
 
@@ -2469,8 +2466,7 @@ void MainWindow::onCheckForUpdates() {
 
 void MainWindow::onCheckForUpdatesSilent() {
     QUrl url("https://raw.githubusercontent.com/nerionx/Jentos_IDE/master/updates.txt");
-    if(_networkManager)
-        delete _networkManager;
+    if(_networkManager) delete _networkManager;
     _networkManager = new QNetworkAccessManager(this);
     connect(_networkManager, SIGNAL(finished(QNetworkReply*)), SLOT(onNetworkFinished(QNetworkReply*)));
     QNetworkRequest request;

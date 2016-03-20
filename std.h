@@ -12,10 +12,8 @@ See LICENSE.TXT for licensing terms.
 #include <QtGui/QtGui>
 #if QT_VERSION>=0x50000
 #include <QtWidgets/QtWidgets>
-#include <QtWebKitWidgets/QtWebKitWidgets>
-#else
-#include <QtWebKit/QWebView>
 #endif
+#include <QtWebEngineWidgets>
 
 static QString textFileTypes=";txt;monkeydoc;";
 static QString codeFileTypes=";monkey;bmx;cpp;java;js;as;cs;py;";
