@@ -22,6 +22,7 @@ See LICENSE.TXT for licensing terms.
 
 CodeEditor::CodeEditor( QWidget *parent ):QPlainTextEdit( parent ),_modified( 0 ){
 
+    _scopeUnderCursor = 0;
     _selection = new ExtraSelection(this);
 
     _lcompCursorPosition = -1;
@@ -255,11 +256,12 @@ void CodeEditor::cursorLineChanged() {
         return;
 
     // capitalize
-     capitalizeKeywords(_storedBlock, false);
+    capitalizeKeywords(_storedBlock, false);
+
+    QTextCursor cursor = textCursor();
 
     //autoformat line
     //replace # -> :Float, % -> :Int, etc...
-    QTextCursor cursor = textCursor();
     QTextBlock b = _storedBlock;
     QString s0 = b.text();
     QString s = s0;
@@ -612,6 +614,21 @@ void CodeEditor::onPrefsChanged( const QString &name ){
     }
 }
 
+int CodeEditor::getBlockScreenPositionY(const QTextBlock &block) {
+    QTextBlock b = firstVisibleBlock();
+    int py = 0;
+    int fontH = fontMetrics().height();
+    while (b.isValid()) {
+        if (b.isVisible()) {
+            py += fontH;
+        }
+        if (b == block)
+            break;
+        b = b.next();
+    }
+    return py;
+}
+
 void CodeEditor::onCursorPositionChanged(){
     if(!_highlighter->isEnabled())
         return;
@@ -623,6 +640,54 @@ void CodeEditor::onCursorPositionChanged(){
     //qDebug()<<"cursor pos changed";
 
     capitalizeKeywords(cursor.block(), true);
+
+    // try to show hint for method parameters
+    if (cursor.selectedText().isEmpty()) {
+        // get current scope
+        int cursorPos = cursor.positionInBlock();
+        QString line = cursor.block().text();
+        if (!line.isEmpty()) {
+            QString linePartLeft = line.left(cursorPos);
+            int i1 = linePartLeft.lastIndexOf("(");
+            int i2 = linePartLeft.lastIndexOf(")");
+            CodeItem *itemWithParams = 0;
+            if (i1 > i2) {// is cursor inside brackets?
+                int i = i1;
+                while (i > 0 && !isIdent(linePartLeft[i])) --i; //skip ( and possible spaces
+                int n = i+1;
+                itemWithParams = CodeAnalyzer::findInScope(cursor.block(), n, 0, true);
+            }
+            if (itemWithParams) {
+                // extract params
+                int i2 = line.lastIndexOf(")");
+                if (i2 == -1)
+                    i2 = line.length();
+                QString lineParams = line.mid(i1+1,i2-i1-1);
+                CodeAnalyzer::extractParams(lineParams);
+                QList<int> splitPos = CodeAnalyzer::lastParamsSplitPositions();
+                // get param index
+                int paramIndex = 0;
+                if (!splitPos.isEmpty()) {
+                    int size = splitPos.size();
+                    int offset = i1+2;
+                    for (int k = 0; k < size; ++k) {
+                        int p1 = splitPos.at(k)+offset;
+                        if (cursorPos >= p1) {
+                            paramIndex = k+1;
+                        }
+                    }
+                }
+                QPoint p = mapToGlobal(pos());
+                int px = p.x()+200;
+                int py = p.y()+getBlockScreenPositionY(cursor.block())-50;
+                QPoint point(px, py);
+                QString hint = itemWithParams->paramsToolTip(paramIndex);
+                showToolTip(point, hint);
+            } else {
+                QToolTip::hideText();
+            }
+        }
+    }
 
     int row = cursor.blockNumber();
     //highlightLine( row, HlCaretRow );
@@ -1352,9 +1417,16 @@ void CodeEditor::capitalizeKeywords(const QTextBlock &block, bool checkCursorPos
     if (!_capitalizeKeywords)
         return;
 
-    const QString ctext = block.text();
+    QString text = block.text();
+    int i = 0;
+    i = text.indexOf("'");
+    if (i != -1)
+        text = text.left(i);
+
+    const QString ctext = text;
     //qDebug()<<"capitalize:"<<ctext;
-    int i = 0, n = ctext.length();
+    int n = ctext.length();
+    i = 0;
 
     // skip for indent
     while( i < n && ctext[i] <= ' ' ) ++i;

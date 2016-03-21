@@ -150,6 +150,8 @@ protected:
 
 private:
 
+    CodeItem *_scopeUnderCursor;
+
     ExtraSelection *_selection;
     Highlighter *_highlighter;
     //
@@ -186,6 +188,7 @@ private:
     void storeCurrentEditPosition(const QTextCursor &cursor);
     bool checkFor_New(const QString &text);
 
+    int getBlockScreenPositionY(const QTextBlock &block);
 };
 
 

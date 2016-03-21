@@ -39,6 +39,7 @@ QHash<QString,QStandardItem*> CodeAnalyzer::_standardItemLinks;
 QList<CodeItem*> CodeAnalyzer::_listUserItems;
 QList<CodeItem*> CodeAnalyzer::_listForRefreshIdentTypes;
 QList<int> CodeAnalyzer::_listFoldTypes;
+QList<int> CodeAnalyzer::_lastParamsSplitPositions;
 //
 QHash<QString, QTextDocument *> CodeAnalyzer::_docs;
 
@@ -671,15 +672,16 @@ CodeItem* CodeAnalyzer::isBlockHasClassOrFunc(const QTextBlock &block) {
     }
     return 0;
 }
-//Modify this code to stop the autobracing
+
 QStringList CodeAnalyzer::extractParams(const QString &text) {
+    _lastParamsSplitPositions.clear();
     QStringList list;
     int st1=0, st2=0, st3=0, pos = 0;
     bool quo = false;
     QChar ch;
     QString s;
     int len = text.length();
-    for(int k = 0; k < len; ++k) {
+    for (int k = 0; k < len; ++k) {
         ch = text.at(k);
         if(ch == '\"') {
             quo = !quo;
@@ -690,12 +692,15 @@ QStringList CodeAnalyzer::extractParams(const QString &text) {
         if(end) {
             s = text.mid(pos,len-pos).trimmed();
             list.append(s);
+            if (ch == ',')
+                _lastParamsSplitPositions.append(k);
         }
         else if(ch == ',') {
             if( st1 <= 0 && st3 <= 0 && st2 % 2 == 0 ) {
                 s = text.mid(pos,k-pos).trimmed();
                 list.append(s);
                 pos = k+1;
+                _lastParamsSplitPositions.append(k);
             }
         }
         else if(ch == '[')
@@ -710,7 +715,6 @@ QStringList CodeAnalyzer::extractParams(const QString &text) {
             ++st3;
         else if(ch == '>')
             --st3;
-
 
     }
     return list;
@@ -1925,6 +1929,7 @@ CodeItem::CodeItem(QString decl, QString line, int indent, QTextBlock &block, co
     //qDebug()<<"newitem:"<<decl<<line;
 
     line = CodeAnalyzer::clearSpaces(line);
+    _defaultValue = "";
     _decl = decl;
     _indent = indent;
     _parent = parent;
@@ -2110,8 +2115,10 @@ CodeItem::CodeItem(QString decl, QString line, int indent, QTextBlock &block, co
         else {
             //qDebug() << "if 3";
             i = line.indexOf("=");
-            if (i > 0)
+            if (i > 0) {
+                _defaultValue = line.mid(i+1).trimmed();
                 line = line.left(i).trimmed();
+            }
             i = line.indexOf(":");
             if (i > 0) {
                 QString type = line.mid(i+1);
@@ -2333,6 +2340,32 @@ QString CodeItem::identWithParamsBraces(int &cursorDelta) {
 
 QString CodeItem::identTypeCleared() {
     return clearType(_identType);
+}
+
+QString CodeItem::paramsToolTip(int paramIndex)
+{
+    if (!_paramsToolTip.isEmpty() && paramIndex == _paramsLastIndex)
+        return _paramsToolTip;
+    _paramsLastIndex = paramIndex;
+    QString s = "";
+    if (_params.isEmpty()) {
+        s = "Empty params";
+    } else {
+        int i = 0;
+        foreach (CodeItem *item, _params) {
+            if (s.length() > 0)
+                s += ", ";
+            QString defVal = item->_defaultValue.isEmpty() ? "" : "="+item->_defaultValue;
+            QString part = item->ident()+":<i>"+item->identType()+defVal+"</i>";
+            if (i == paramIndex)
+                part = "<b>"+part+"</b>";
+            s += part;
+            ++i;
+        }
+    }
+    s = decl()+" "+ident()+":<i>"+identType()+"</i> ("+s+")";
+    _paramsToolTip = s;
+    return _paramsToolTip;
 }
 
 CodeItem *CodeItem::parentClass() const

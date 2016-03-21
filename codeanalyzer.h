@@ -134,7 +134,11 @@ public:
     static QStringList replaceFrom(){return _replaceFrom;}
     static QStringList replaceTo(){return _replaceTo;}
 
+    static QList<int> lastParamsSplitPositions() {return _lastParamsSplitPositions;}
+
 private:
+
+    static QList<int> _lastParamsSplitPositions;
     static QList<int> _listFoldTypes;
 
     static QList<CodeItem*> _listForRefreshIdentTypes;
@@ -215,6 +219,7 @@ public:
     QTextBlock block() { return _block; }
     QTextBlock blockEnd() { return _blockEnd; }
     QList<CodeItem*> params() const { return _params; }
+    QString paramsToolTip(int paramIndex);
     CodeItem* parent() const { return _parent; }
     CodeItem* parentClass() const;
     QList<CodeItem*> children() { return _children; }
@@ -274,9 +279,11 @@ public:
     QString fullItemPath();
     QString tempIdentType() { return _tempIdentType; }
     bool isMultiLine() { return _blockNumber != _blockEndNumber; }
-
+    QString defaultValue(){return _defaultValue;}
 
 private:
+
+    QString _defaultValue;
     QString _decl, _ident, _identType, _descr, _descrAsItem, _identForInsert, _filepath, _filename, _module;
     QList<CodeItem*> _params;
     CodeItem *_parent;
@@ -289,6 +296,8 @@ private:
     QHash<QString,ItemWithData*> _itemsWithData;
     QStringList _baseClasses, _templWords;
     QString _tempIdentType;
+    QString _paramsToolTip;
+    int _paramsLastIndex;
     void updateDescrAsItem();
     bool fixIdentType();
 };

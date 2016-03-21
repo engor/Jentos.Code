@@ -1414,7 +1414,7 @@ Don't change documents between find usages and rename</string>
     <string>Run</string>
    </property>
    <property name="toolTip">
-    <string>Run (F5, Ctrl+R)</string>
+    <string>Run (F5)</string>
    </property>
    <property name="shortcut">
     <string>F5</string>
@@ -1746,7 +1746,7 @@ Don't change documents between find usages and rename</string>
     <string>Build</string>
    </property>
    <property name="toolTip">
-    <string>Build (F7, Ctrl+B)</string>
+    <string>Build (F7)</string>
    </property>
    <property name="shortcut">
     <string>F7</string>
