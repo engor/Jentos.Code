@@ -3,6 +3,9 @@ branches:
     - master
     - stable
 init:
+  - cd ..
+  - mkdir scripts
+  - cd scripts
   - curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/win/before_install.bat
   - curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/win/install.bat
   - curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/win/script.bat
@@ -10,7 +13,8 @@ init:
 install:
   - .\install.bat
 build_script:
-  - .\script.bat
+  - cd "%APPVEYOR_BUILD_FOLDER%"
+  - ..\scripts\script.bat
 artifacts:
   - path: win32-$(APPVEYOR_REPO_COMMIT)-$(APPVEYOR_REPO_BRANCH).zip
     name: win32-$(APPVEYOR_REPO_COMMIT)-$(APPVEYOR_REPO_BRANCH)

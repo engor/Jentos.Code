@@ -4,12 +4,18 @@ branches:
     - stable
 language: cpp
 before_install:
+  - cd ..
+  - mkdir scripts
+  - cd scripts
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          sudo apt-get update
       && sudo apt-get install curl
       && curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/linux/before_install.sh
       && curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/linux/install.sh
       && curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/linux/script.sh
+      && chmod +x before_install.sh
+      && chmod +x install.sh
+      && chmod +x script.sh
       ;
     else
          curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/osx/before_install.sh
@@ -21,7 +27,8 @@ before_install:
 install:
   - ./install.sh
 script:
-  - ./script.sh
+  - cd $TRAVIS_BUILD_DIR
+  - ../scripts/script.sh
 os:
   - linux
   - osx
