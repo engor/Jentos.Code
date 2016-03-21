@@ -2,19 +2,15 @@ branches:
   only:
     - master
     - stable
+init:
+  - curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/win/before_install.bat
+  - curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/win/install.bat
+  - curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/win/script.bat
+  - .\before_install.bat
 install:
-  - set QTDIR=C:\Qt\5.5\mingw492_32
-  - set QTBINDIR=%QTDIR%\bin
-  - set MINGWBIN=C:\MinGW\bin
-  - set PATH=%PATH%;%QTBINDIR%;%MINGWBIN%
+  - .\install.bat
 build_script:
-  - qmake jentos_ide.pro -r -spec win32-g++
-  - mingw32-make
-  - mingw32-make clean
-  - windeployqt --release .\release\JentosIDE.exe
-  - copy %QTBINDIR%\libwinpthread-1.dll .\release /y
-  - copy "%QTBINDIR%\libstdc++-6.dll" .\release /y
-  - 7z a win32-%APPVEYOR_REPO_COMMIT%-%APPVEYOR_REPO_BRANCH%.zip .\release
+  - .\script.bat
 artifacts:
   - path: win32-$(APPVEYOR_REPO_COMMIT)-$(APPVEYOR_REPO_BRANCH).zip
     name: win32-$(APPVEYOR_REPO_COMMIT)-$(APPVEYOR_REPO_BRANCH)
