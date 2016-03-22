@@ -1510,6 +1510,7 @@ void CodeEditor::mouseMoveEvent(QMouseEvent *e) {
     if (!proc) {
         QToolTip::hideText();
         QPlainTextEdit::mouseMoveEvent(e);
+        QGuiApplication::restoreOverrideCursor();
         return;
     }
     QTextCursor cursor = cursorForPosition(e->pos());
@@ -1524,6 +1525,7 @@ void CodeEditor::mouseMoveEvent(QMouseEvent *e) {
     QString word = cursor.selectedText();
 
     if ( !word.isEmpty() ) {
+        QGuiApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
         QString tip = "";
         if (_scope.ident == word) {
             tip = _scope.toolTip;
@@ -1801,7 +1803,6 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     }
 
 
-
     //escape
     if (key == Qt::Key_Escape && !aucompIsVisible()) {
         emit keyEscapePressed();
@@ -1991,13 +1992,6 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
         return;
     }
 
-    //
-    if( ctrl && this->underMouse() ) {
-        QGuiApplication::setOverrideCursor(QCursor(Qt::PointingHandCursor));
-    } else {
-        QGuiApplication::restoreOverrideCursor();
-    }
-
 
     //select word in autocomplete list
     if( aucompIsVisible()) {
@@ -2159,14 +2153,18 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
                             || i2 < i1) { // has : but after (
                         int i = origText.indexOf(" ");
                         QString name = origText.mid(i+1, i2-i-1).trimmed();
-                        if (name != "New") {
-                            int pp = cursor.position();
-                            cursor.setPosition(block.position()+i2);
-                            setTextCursor(cursor);
-                            QString s = (name == "Main" ? ":Int" : ":Void");
-                            insertPlainText(s);
-                            cursor.setPosition(pp+s.length());
-                            setTextCursor(cursor);
+                        if (!name.isEmpty() && name != "New") {
+                            QChar last = name[name.length()-1];
+                            // not add if already had short type
+                            if (last != '#' && last != '$' && last != '%' && last != '?') {
+                                int pp = cursor.position();
+                                cursor.setPosition(block.position()+i2+1);
+                                setTextCursor(cursor);
+                                QString s = (name == "Main" ? ":Int" : ":Void");
+                                insertPlainText(s);
+                                cursor.setPosition(pp+s.length());
+                                setTextCursor(cursor);
+                            }
                         }
                     }
                 }

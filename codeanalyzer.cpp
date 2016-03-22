@@ -937,7 +937,6 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
         return false;
     }
 
-
     if(!blocks && kind == KIND_USER) {
 
         FileInfo *fi = userFilesModified()->value(path,0);
@@ -981,7 +980,17 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
             d->foldType |= ( container||foldBlock ? 1 : 0 );
         }
 
-        QString line = trimmedRight( block.text() );
+        QString line = block.text();
+        //qDebug()<<"line:"<<line;
+        // skip for empty lines
+        QString trim = line.trimmed();
+        if (trim.isEmpty() /*|| trim.startsWith("'")*/) {
+            block = block.next();
+            //qDebug()<<"skip empty line";
+            continue;
+        }
+
+        line = trimmedRight( line );
         int len = line.length();
         int indent = 0;
         while( indent < len && line.at(indent) <= ' ' )
@@ -1030,94 +1039,103 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
             continue;
         }
         //
-        int i = line.indexOf(' ');
         QString lower = line.toLower();
-        if(i < 0 || lower.startsWith("end ")) {
-            //line = lower;
 
-            if(lower.startsWith("#rem")) {
-                if(kind == KIND_USER) {
-                    CodeItem *item = new CodeItem("","rem"+QString::number(block.blockNumber())+path,0,block,path,0);
-                    item->setFoldable(true);
-                    remBlock = item;
-                    mapRem()->insert(item->ident(),item);
-                }
-                int st = 0;
-                while(block.isValid()) {
-
-                    line = block.text().trimmed().toLower();
-                    if(line.startsWith("#if")) {
-                        ++st;
-                    }
-                    else if(line == "#end") {
-                        if(st == 0) {
-                            if(remBlock) {
-                                remBlock->setBlockEnd(block);
-                                //_listFoldTypes.replace(_listFoldTypes.size()-1,2);
-                                if(kind == KIND_USER) {
-                                    BlockData *d = BlockData::data(block,true);
-                                    d->foldType |= 2;
-                                    if(container || foldBlock)
-                                        d->foldType |= 1;
-                                }
-                                remBlock = 0;
-                            }
-                            break;
-                        }
-                        else {
-                            --st;
-                        }
-                    }
-                    if(kind == KIND_USER) {
-                        BlockData *d = BlockData::data(block,true);
-                        d->foldType |= 1;
-                    }
-                    //_listFoldTypes.append( remBlock ? 1 : 0 );
-                    block = block.next();
-                }
-                block = block.next();
-                continue;
+        // check for rem-block
+        if (lower.startsWith("#rem")) {
+            if (kind == KIND_USER) {
+                CodeItem *item = new CodeItem("","rem"+QString::number(block.blockNumber())+path,0,block,path,0);
+                item->setFoldable(true);
+                remBlock = item;
+                mapRem()->insert(item->ident(),item);
             }
-            //
-            if(container && (lower == "end" || lower.startsWith("end ") || lower == "endif" || lower == "next" || lower == "wend")) {
-                while(container && container->indent() > indent) {
-                    container = (stack.isEmpty() ? 0 : stack.pop());
+            int st = 0;
+            while (block.isValid()) {
+
+                line = block.text().trimmed().toLower();
+                if (line.startsWith("#if")) {
+                    ++st;
+                } else if (line == "#end") {
+                    if (st == 0) {
+                        if (remBlock) {
+                            remBlock->setBlockEnd(block);
+                            //_listFoldTypes.replace(_listFoldTypes.size()-1,2);
+                            if (kind == KIND_USER) {
+                                BlockData *d = BlockData::data(block,true);
+                                d->foldType |= 2;
+                                if (container || foldBlock)
+                                    d->foldType |= 1;
+                            }
+                            remBlock = 0;
+                        }
+                        break;
+                    } else {
+                        --st;
+                    }
                 }
-                if(container && indent <= container->indent()) {
-                //if(indent == container->indent()) {
+                if (kind == KIND_USER) {
+                    BlockData *d = BlockData::data(block,true);
+                    d->foldType |= 1;
+                }
+                //_listFoldTypes.append( remBlock ? 1 : 0 );
+                block = block.next();
+            }
+            block = block.next();
+            continue;
+        }
+
+        // check for end of current container
+        if (container) {
+            bool foundEndOfBlock = false;
+            QString decl = container->decl();
+            if (decl == "for") {
+                foundEndOfBlock = (lower == "next" || lower.startsWith("next "));
+            } else if (decl == "while") {
+                foundEndOfBlock = (lower == "wend");
+            } else if (decl == "if") {
+                foundEndOfBlock = (lower == "endif");
+            }
+            if (!foundEndOfBlock)
+                foundEndOfBlock = (lower == "end" || lower.startsWith("end "));
+
+            if (foundEndOfBlock) {
+                /*while(container && container->indent() > indent) {
+                    container = (stack.isEmpty() ? 0 : stack.pop());
+                }*/
+                if (container && indent <= container->indent()) {
                     container->setFoldable(true);
                     container->setBlockEnd(block);
-                    if(container->isClassOrInterface())
+                    if (container->isClassOrInterface())
                         isPrivateInClass = false;
                     container = (stack.isEmpty() ? 0 : stack.pop());
-                    if(kind == KIND_USER) {
-                        //_listFoldTypes.replace(_listFoldTypes.size()-1,2);
+                    if (kind == KIND_USER) {
                         BlockData *d = BlockData::data(block,true);
                         d->foldType |= 2;
-                        if(!container && !foldBlock)
+                        if (!container && !foldBlock)
                             d->foldType = 2;
                     }
                     block = block.next();
                     continue;
                 }
             }
-            else if(lower == "private") {
-                if(container && container->isClassOrInterface())
-                    isPrivateInClass = true;
-                else
-                    isPrivateInFile = true;
-                block = block.next();
-                continue;
-            }
-            else if(lower == "public") {
-                if(container && container->isClassOrInterface())
-                    isPrivateInClass = false;
-                else
-                    isPrivateInFile = false;
-                block = block.next();
-                continue;
-            }
         }
+        if (lower == "private") {
+            if (container && container->isClassOrInterface())
+                isPrivateInClass = true;
+            else
+                isPrivateInFile = true;
+            block = block.next();
+            continue;
+        }
+        else if(lower == "public") {
+            if(container && container->isClassOrInterface())
+                isPrivateInClass = false;
+            else
+                isPrivateInFile = false;
+            block = block.next();
+            continue;
+        }
+
         if(isPrivateInFile /*|| isPrivateInClass*/) {
             block = block.next();
             continue;
@@ -1126,6 +1144,7 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
         if(rem)
             line = line.left(rem);
         QString line0 = line;
+        int i = line.indexOf(" ");
         //qDebug()<<"line0:"<<line0;
         QString decl = line.left(i).toLower();
         line = line.mid(i+1).trimmed();
@@ -1155,7 +1174,7 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
             }
         }
         else if(decl == "field" || decl == "global" || decl == "const") {
-            if(container && container->indent() >= indent) {
+            /*if(container && container->indent() >= indent) {
                 QTextBlock b = block.previous();
                 container->setBlockEnd(b);
                 if(b != container->block())
@@ -1165,7 +1184,7 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
                     d->foldType |= 2;
                 }
                 container = (stack.isEmpty() ? 0 : stack.pop());
-            }
+            }*/
             QStringList l = extractParams(line);
             foreach (QString s, l) {
                 s = s.trimmed();
@@ -1260,7 +1279,7 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
             bool bwhile = line0.startsWith("While");
             bool bselect = line0.startsWith("Select");
 
-            if(bif) {
+            /*if(bif) {
                 QTextBlock b = block.next();
                 if(b.isValid()) {
                     int indent2 = 0;
@@ -1272,7 +1291,7 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
                         bif = false;
                     }
                 }
-            }
+            }*/
 
             if(bif || bfor || bwhile || bselect) {
                 QString decl="";
@@ -1300,7 +1319,7 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
                     item = new CodeItem("local", line, indent, block, path, 0);
                     container->addChild(item);
                 }
-                //qDebug()<<"if-for-while container";
+                //qDebug()<<"if-for-while container:"<<item->toString();
             }
         }
         block = block.next();
