@@ -289,6 +289,7 @@ private:
     int _lastHelpCursorPos;
 
 
+    void showWindowWithImage(const QString &path);
 };
 
 #endif // MAINWINDOW_H

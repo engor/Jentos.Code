@@ -2368,7 +2368,7 @@ QString CodeItem::paramsToolTip(int paramIndex)
     _paramsLastIndex = paramIndex;
     QString s = "";
     if (_params.isEmpty()) {
-        s = "Empty params";
+        s = "<i>Empty params</i>";
     } else {
         int i = 0;
         foreach (CodeItem *item, _params) {

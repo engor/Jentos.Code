@@ -75,4 +75,22 @@ bool isUrl( const QString &path ){
     return path.startsWith( "file:" ) || path.startsWith( "http:" ) || path.startsWith( "https:" ) || path.startsWith( "qrc:" );
 }
 
+bool isMonkeyFile(const QString &path)
+{
+    static QStringList list;
+    if (list.isEmpty()) {
+        list<<"monkey"<<"monkey2";
+    }
+    QString ext = extractExt(path);
+    return list.contains(ext);
+}
 
+bool isImageFile(const QString &path)
+{
+    static QStringList list;
+    if (list.isEmpty()) {
+        list<<"jpg"<<"jpeg"<<"png"<<"ico"<<"bmp"<<"gif";
+    }
+    QString ext = extractExt(path);
+    return list.contains(ext);
+}

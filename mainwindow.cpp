@@ -644,6 +644,12 @@ void MainWindow::onTabsCloseAllTabs() {
 
 QWidget *MainWindow::openFile( const QString &cpath,bool addToRecent ){
 
+    // try to show image
+    if (isImageFile(cpath)) {
+        showWindowWithImage(cpath);
+        return 0;
+    }
+
     if( isUrl( cpath ) ){
         if(_isShowHelpInDock) {
             _ui->webView->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
@@ -709,25 +715,9 @@ QWidget *MainWindow::openFile( const QString &cpath,bool addToRecent ){
 
     editor->setContextMenuPolicy(Qt::CustomContextMenu);
     connect( editor,SIGNAL(customContextMenuRequested(const QPoint&)),SLOT(onEditorMenu(const QPoint&)) );
-    QStringList filemonkeynamelist = path.split('/');
-    QString filemonkeyname = filemonkeynamelist.value(filemonkeynamelist.length()-1);
-    QString filemonkeytype = ( filemonkeyname.right(3) ).toLower();
 
-    bool fileinvalidbool = false;
-    /*int fileinvalidsnum = 4;
-    QString fileinvalids[fileinvalidsnum] = {"png","ico","jpg","gif"};
-    for(int a=0; a<fileinvalidsnum;a++){
-
-        if( filemonkeytype.endsWith(fileinvalids[a])){
-              fileinvalidbool = true;
-             //qDebug() << "archivo no valido";
-              a=fileinvalidsnum;
-        }
-    }*/
-    if(!fileinvalidbool){
-        _mainTabWidget->addTab( editor,stripDir( path ) );
-        _mainTabWidget->setCurrentWidget( editor );
-    }
+    _mainTabWidget->addTab( editor,stripDir( path ) );
+    _mainTabWidget->setCurrentWidget( editor );
 
     //qDebug()<<"work3";
 
@@ -1313,6 +1303,21 @@ void MainWindow::onEditorMenu(const QPoint &pos) {
     _editorPopupMenu->exec( _codeEditor->mapToGlobal( pos ) );
 }
 
+void MainWindow::showWindowWithImage(const QString &path) {
+    QLabel* label = new QLabel();
+    label->setStyleSheet("QLabel {background-color : #989898;}");
+    QPixmap pix(path);
+    label->setPixmap(pix);
+    label->setAlignment(Qt::AlignCenter);
+    int imagewidth = pix.toImage().width();
+    int imageheight = pix.toImage().height();
+    QString sizeimg = QString::number(imagewidth)+"x"+ QString::number(imageheight);
+    label->setMinimumWidth(150);
+    label->setMinimumHeight(125);
+    label->setWindowTitle(sizeimg+": "+path);
+    label->show();
+}
+
 //Project browser...
 //
 void MainWindow::onProjectMenu( const QPoint &pos ){
@@ -1320,42 +1325,29 @@ void MainWindow::onProjectMenu( const QPoint &pos ){
     QModelIndex index = _ui->projectTreeView->indexAt( pos );
     if( !index.isValid() ) return;
 
-    QFileInfo info=_projectTreeModel->fileInfo( index );
+    QFileInfo info = _projectTreeModel->fileInfo( index );
 
-    QMenu *menu=0;
-    QString typefile = (info.fileName().right( (info.fileName().length()-info.baseName().length())-1 ) ).toLower();
+    QMenu *menu = 0;
 
+    // check for image file type
+    bool isImage = isImageFile(info.fileName());
 
-    bool typeimagefile = false;
-    QStringList fileinvalidimg;
-    fileinvalidimg << "png"<<"jpg"<<"gif"<<"ico";
-
-    /*
-
-    foreach (QString ext, fileinvalidimg) {
-        if ( typefile.endsWith(fileinvalidimg[a])){
-              typeimagefile = true;
-              a=fileinvalidimgsnum;
-        }
-    }
-    */
-
-    if( _projectTreeModel->isProject( index ) ){
-        menu=_projectPopupMenu;
-    }else if( info.isFile()){
-        if(!typeimagefile){
-
-            if(typefile.endsWith("monkey")){
-                menu=_fileMonkeyPopupMenu;
-            }else{
-                menu=_filePopupMenu;
+    if ( _projectTreeModel->isProject( index ) ){
+        menu = _projectPopupMenu;
+    } else if ( info.isFile()){
+        if (isImage) {
+            menu=_fileImagePopupMenu;
+        } else {
+            bool isMonkey = isMonkeyFile(info.fileName());
+            if (isMonkey){
+                menu = _fileMonkeyPopupMenu;
+            } else{
+                menu = _filePopupMenu;
             }
-        }else if(typeimagefile){
-          menu=_fileImagePopupMenu;
         }
 
-    }else{
-        menu=_dirPopupMenu;
+    } else {
+        menu = _dirPopupMenu;
     }
 
     if( !menu ) return;
@@ -1415,18 +1407,7 @@ void MainWindow::onProjectMenu( const QPoint &pos ){
 
     }else if( action==_ui->actionView_Image ){
 
-        QLabel* label = new QLabel();
-        label->setStyleSheet("QLabel {background-color : #989898;}");
-        QPixmap pix(info.filePath());
-        label->setPixmap(pix);
-        label->setAlignment(Qt::AlignCenter);
-        int imagewidth = pix.toImage().width();
-        int imageheight = pix.toImage().height();
-        QString sizeimg = QString::number(imagewidth)+"x"+ QString::number(imageheight);
-        label->setMinimumWidth(150);
-        label->setMinimumHeight(125);
-        label->setWindowTitle(sizeimg+": "+info.fileName());
-        label->show();
+        showWindowWithImage(info.filePath());
 
     }else if( action==_ui->actionEdit_Image ){
         QString path=info.filePath();

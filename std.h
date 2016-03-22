@@ -61,6 +61,9 @@ QString extractDir( const QString &path );
 
 QString extractExt( const QString &path );
 
+bool isMonkeyFile( const QString &path );
+bool isImageFile(const QString &path);
+
 bool removeDir( const QString &path );
 
 void replaceTabWidgetWidget( QTabWidget *tabWidget,int index,QWidget *widget );
