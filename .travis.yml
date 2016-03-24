@@ -1,0 +1,45 @@
+branches:
+  only:
+    - master
+    - dev
+language: cpp
+before_install:
+  - cd ..
+  - mkdir scripts
+  - cd scripts
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+         sudo apt-get update
+      && sudo apt-get install curl
+      && curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/linux/before_install.sh
+      && curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/linux/install.sh
+      && curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/linux/script.sh
+      ;
+    else
+         curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/osx/before_install.sh
+      && curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/osx/install.sh
+      && curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/osx/script.sh
+      ;
+    fi
+  - chmod +x before_install.sh
+  - chmod +x install.sh
+  - chmod +x script.sh
+  - ./before_install.sh
+install:
+  - ./install.sh
+script:
+  - cd $TRAVIS_BUILD_DIR
+  - ../scripts/script.sh
+os:
+  - linux
+  - osx
+env:
+    global:
+      - secure: "zC11ufn9WUrz5ABxD9n2K+qbAEADcH6n8LmDdJ8sBA1VYxVmX+WcHrM8WXygbmz+dDnd3L+YxjPTdwBp3X6n2K5OhPTO8s9FTLSD/6CHVWXT18/IBBxfF4sTQkcH8QqWZHX13dnfhvEtaJdRnYh2rNg6AOS7kmqjzpYOJ9PrGlQQfwkKD52mCRjEAJtw25bm3bslTv8wT454xm4ZkHIibYt3D+2SnEzlqBjPluEdWuf4gi1Z1VRrduCKWEueR1FlaGnNhX2PPGb4HqbDuB1vO5uZ2ivqmes/isYiXRokSwdr4jDxXHBDkS45TO148Nfbxi2WayYdW0MAqFnTQKcww0jD9hKNQcgLDlaVmFdPBJdxYjJprh6Ndqbd4oNsiaHs9h2hYZe3UYT9I6hwDW5/fOxon1C45a2rjsH67md7Sa+hHla6dh8mA3edUEqrTDUcp4w+qaxgl86PgvBkRZmwUzUfiSIYbtpwVZrBm96MrXWJblQIoEYOaiGgHeel9mOkbbEyn3xqHMUkj9pNzWeWW0s/YscAMtdF8vnNE0iSvwF2pznstuCxV4/0+fi2CsI8Tm8FkJnEQ1RHZ+U3A3EwD3VO6pjYZPguO9UcArQcnHpVAJycpkUFa5nfoosPKTSgkyMMbEDbEFIxUarZzEjqv8B+I4nNmOHiLayAtRKO+DI="
+      - secure: "XgV8Fc+55DX4qzFqTZmiXKnD4EEVwy301Ix2Rt5wCyT5Dpx1uamThjrZC3IN1c0W/Ynb7fjbrJqSZHIbs7AItxP5puCIefN0A0MsPnnwASswNYHDJXPhYLBjlG08g8lU4gGB8/lhjBqq/w3g8FuudSP2m1JF9+l3lgnsc3an4L5S9kHdZ8cRzrOXf/EiuGu8YT24WuvRlrWxKIViBMNfPXeRuaS43okSEq7PJyXgaBnYY0zvlG2fNVf+0rXAgY6TN+IJGyqeCf0/i+K5n88KophcM7ZVX2nhgCEVOLN63teQSAv9QAsb6ScoQ8iO65v2Yj7i2FBOMSyDlqHLT97wvGZJX20847ZmbsRQ/6xTRdEyXLdQbETBggFI9+euFciX+tDrEidddOAzMGgDdqa3MixqO1dxIPXqYSH8Q77lGdfLTb3F36LHzm3QMaQrnMIFXdJnqdl64/fvfqol9X7WkkvpLna693H+kKoLh+HVxVDh3iPq/yKKLWNOHvXWCubBBtIQeMHfFtJ0izY57JrXJvGPXLyCPJb2Qw4+R+FSt3YJlDoQ2npjANblYSx5q7bGN1xPhJUNn9SWOmj8Opdn08dsRhpPQzn5kNTzEXPNpAJaVOgfMpR6F4fQsdEPyvYa8C9+z8ZESTuybpdlYWNnE4BgRHRm6w0h+J1UEYRmLrc="
+      - secure: "ecknw/RygELejDHpRjf1fFDNTHEmacpHKoG99XufybUoyREPOZ3kv7Sm2p8DmPlAXq7d2IbOjGd+2PKZRrYf8rvbG3RdGVj8CEuaCqVHiTi+kWvbRmp4gUczZhKPg27hKDToS0kY78J6XrhNMmLNnaNcHL9gqAXojIaxF24fWSBReMkCK/yXbh+ocjufbB2ZIbrYvCUy2RM8Wa/2gdS0zX1liTsCpNFXN6XgB4Ximt3mhWsbecBz+wJ4tDU+s4V+pnc9JKuSDV8at+uaeyfb4JaNFhYYI+7NNfPVaKv3znP2H/UpyemQk9eZ5RadWYnzTLBzptAgdxR2nYyM1E+/TshuCYKMGqj6ixtZ1FRVrXnPmn9IZYc3WI/Rid4+vuzmUebWXaSpDROhWszFNI0ZvNb8gSynnTOlO1kYoPVM5xX/RwbQoHgF90TM8K5VZCjzTzYz8yYsYJcP2pzW/a1rTXCzMWzp8DSAgDpGBOMdyH+BtsWecVSUiL56sI9CbKQ34GIqfdHyztUOOEpVjVZUR4x8tQOc7G26H8YheN8WMgcZ2Js5Tc8opaHCzmfd63Vy4Dz2x1tyiEmS7IR4VOKncv/Vw3dilnyQ3d4wHz2X/wcKfff75XuPhUdbcw+zoCWpIuliog4HH6puWoLzZbseX8I/IUgOsVHJu1ZmYyHQdBA="
+      - secure: "W2Pvb4uFMyZ3iBqJ02UloDSD0Adw9B02WT7Nv7TyRTyoSRIx3uyV6rdm1vG5uLHFK7uEF47WbrsXsC2I8YDH6TKAyVG52piU4X/iteEn1rB6K5uf5tD3dl+cDjAQ85KZaRPIKp4A7Wlk+QfSEgi0wOOrQk4Iw9vR94bL/DoaIgj6lzcDNTsdISraQTgsHFdjjEA4mrxTRQBqdCG6TkeH3fnBchdxXhQLxdnwrTT6tRX8VzL9DERhRXASJ0QZLl43kvb5uX8Zk+jd4wIxChdTXGazN1aIkzbef12EqZgJ5o2tEypFlNEPsW5GW91FSkS//bdYRLu5mvirGEsvux8dza6IlA2P/3cGoDv69HXdYQcPChXutdDeGSB/eASQHq4ASGKjEU2VpfyVPM7HDzprlRQpDb/RVImKQjHIy32lgnofYgjslASUkTHsHxuZj3R77WmgThm8UbAsVguQHcs755GktedRCwIXpDvytCxqrNlBxPyHzjcVdxJRUMjeMcDWtZCv5ZTL2UDvQfTBSy7I86OBxfK6Cm5dyGALaz7rjx3MqP/9pMcW8GhHPvwog23NUak8xOtbN7Wx3kpYQXMB01skcJN0axgOeNErGmej0YdJ+/XRpJloayk/m/AD/KqjRHySW9hNlcACVe9rTvw8Bd5HjgK3MryxZR8yy14XhOo="
+      - secure: "fSZNChWMyVMUDGKadB5UTj1147FjFRl6iryaECRDeFlq4JBjIq/Pbx8kNqwI2ATC2AQuioZATx6NPreB13ZbwMh6bdjlenKO9wfQkZ4Ks2XZCpr4Ebzut/ziBcsYKG99ARmGGZdZcfTv1WhDpKSccKJb5q8E2w4nrloSYjBN2WG9YrPrbnqfKHLbZNsAgnJDkkrTOUWAX/8lI7JozT7ZKqip7gPK086uGfJN3RvhriqIf5E8lxqNB+GIxE2MeIc+6nNoZtQagALjR+fJC6LvvpJtORxEU1kXOO6rKJD50k8G2RvOSjyNEHXl1y+eUrnnhDHAFTic280qxnKjSSe5DNjWMb62yjmlb880hvPJUTEeRjtTaaucVL8eK15Q8uLxhEQoh7fqZh0AVX2HJdKT+83VMpp/+s04X4Y9vJoWZfreiH3AECLFIqkk0l+WJfmIZSWwUqdhk7JVUmjwvKhGzdKivbxa4E7e3HUvmIY1lEnYDaOncqOizuoiZSx8+3sD5rMOJIqPIr+kdlrxumQeuL6WFaygORHyywqax4cjMLjisjRgsbWt9EmDkXr7l+k8UIKt9Sgl8cKB7awyW4htCEAjTFuaig7l78Uu1K7aJkiQBc+ygU82VhXl/eP/CGFRZppvShYarIWAa/k2h4v2JjZF6n+v1qF/vv4nnROBDJ4="
+after_success:
+  - zip -r $TRAVIS_OS_NAME-$TRAVIS_COMMIT-$TRAVIS_BRANCH.zip ./build
+  - export SSHPASS=$DEPLOY_PASS
+  - sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -P $DEPLOY_PORT $TRAVIS_OS_NAME-$TRAVIS_COMMIT-$TRAVIS_BRANCH.zip $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH

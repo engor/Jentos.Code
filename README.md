@@ -1,5 +1,15 @@
-### Jentos_IDE [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE)
-==========
+### Jentos_IDE
+
+Engor [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE)
+
+Malublu [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BRYKFMQT3DWDU)
+
+[![Build Status](https://travis-ci.org/engor/Jentos_IDE.svg)](https://travis-ci.org/malublu/Jentos_IDE)
+[![Build status](https://ci.appveyor.com/api/projects/status/b5ob18a5wisol6cn?svg=true)](https://ci.appveyor.com/project/malublu/jentos-ide-ym5ha)
+[![GitHub issues](https://img.shields.io/github/issues/engor/Jentos_IDE.svg)](https://github.com/malublu/Jentos_IDE/issues)
+[![GitHub license](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://raw.githubusercontent.com/malublu/Jentos_IDE/master/LICENSE.TXT)
+
+---
 ### About
 [Jentos IDE](http://fingerdev.com/apps/jentos/) is a powerfull open source IDE for [Monkey](http://www.monkey-x.com) programming language.
 
