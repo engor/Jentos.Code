@@ -5,16 +5,27 @@ tagline: the powerfull open source IDE for Monkey
 ---
 {% include JB/setup %}
 
-### About
+[![Build Status](https://travis-ci.org/malublu/Jentos_IDE.svg?branch=master)](https://travis-ci.org/malublu/Jentos_IDE)
+[![Build status](https://ci.appveyor.com/api/projects/status/g6wn2pcvkn39alh6/branch/master?svg=true)](https://ci.appveyor.com/project/malublu/jentos-ide/branch/master)
+[![GitHub issues](https://img.shields.io/github/issues/malublu/Jentos_IDE.svg)](https://github.com/malublu/Jentos_IDE/issues)
+[![GitHub license](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://raw.githubusercontent.com/malublu/Jentos_IDE/master/LICENSE.TXT)
+
+# About
 [Jentos IDE](http://fingerdev.com/apps/jentos/) is a powerfull open source IDE for [Monkey](http://www.monkey-x.com) programming language.
 
 It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official IDE for Monkey.
+Build with QTCreator
 
 {% for post in site.categories.releases limit:1 %}
-### Latest: <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a>
+# Latest: <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a>
 {% endfor %}
 
-### Releases
+# Donation
+Engor: [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE)
+
+Malublu: [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BRYKFMQT3DWDU)
+
+# Releases
 
 <ul class="posts">
   {% for post in site.categories.releases limit:5 %}
@@ -23,7 +34,7 @@ It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official
 </ul>
 <a href="http://127.0.0.1:4000/categories.html#releases-ref">More</a>
 
-### News
+# News
 
 <ul class="posts">
   {% for post in site.categories.news limit:5 %}
@@ -32,11 +43,9 @@ It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official
 </ul>
 <a href="http://127.0.0.1:4000/categories.html#news-ref">More</a>
 
-### Build with QTCreator
+# Features
 
-### Features
-
-### snippets
+## snippets
 [![Snippers](http://i.imgur.com/oQc0ut3.gif)](http://fingerdev.com/apps/jentos/)
 
 
@@ -81,11 +90,11 @@ It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official
  Create For EachIn loop **{collection} -> namecollection**
 
 
-### Examples snippers:
+## Examples snippers:
 
 
-#### Snippet :
-##### @mMyMethod
+### Snippet :
+#### @mMyMethod
 
 ```
     Method MyMethod()
@@ -93,14 +102,14 @@ It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official
     End
 ```
 
-#### Snippet :
-##### @kd-Enter
+### Snippet :
+#### @kd-Enter
 ```
         If KeyDown(KEY_ENTER)
 
         End
 ```
-### Themes / Temas
+## Themes / Temas
 * Android Studio, dark.
 * Qt Creator, light.
 * Netbeans ,light, is default.
