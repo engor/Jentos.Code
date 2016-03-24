@@ -4,9 +4,6 @@ branches:
     - dev
 language: cpp
 before_install:
-  - cd ..
-  - mkdir scripts
-  - cd scripts
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          sudo apt-get update
       && sudo apt-get install curl
@@ -28,7 +25,7 @@ install:
   - ./install.sh
 script:
   - cd $TRAVIS_BUILD_DIR
-  - ../scripts/script.sh
+  - ./script.sh
 os:
   - linux
   - osx
