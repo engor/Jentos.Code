@@ -570,9 +570,9 @@ void CodeEditor::onPrefsChanged( const QString &name ){
     if( t=="" || t=="backgroundColor" || t=="fontFamily" || t=="fontSize" || t=="tabSize" || t=="smoothFonts" || t=="highlightLine" || t=="highlightWord" ){
 
         bool hl = _isHighlightLine;
-        bool hw = _isHighlightWord;
+        bool hw = _isHighlightWordUnderCursor;
         _isHighlightLine = prefs->getBool("highlightLine");
-        _isHighlightWord = prefs->getBool("highlightWord");
+        _isHighlightWordUnderCursor = prefs->getBool("highlightWord");
 
         if (_isHighlightLine != hl) {
             if (_isHighlightLine)
@@ -580,8 +580,8 @@ void CodeEditor::onPrefsChanged( const QString &name ){
             else
                 _selection->resetCaretRow();
         }
-        if (_isHighlightWord != hl) {
-            if (!_isHighlightWord)
+        if (_isHighlightWordUnderCursor != hl) {
+            if (!_isHighlightWordUnderCursor)
                 _selection->resetWords();
         }
 
@@ -719,9 +719,39 @@ void CodeEditor::onCursorPositionChanged(){
     //qDebug()<<"onCursorPositionChanged";
 
 
-    if(!_isHighlightWord)
+    if (!_isHighlightWordUnderCursor)
         return;
 
+    // check for brackets
+    QString text = cursor.block().text();
+    int cPos = cursor.positionInBlock();
+    QChar c = text[cPos];
+    int index = -1;
+    if (c == '(' || c == '[' || c == '<')
+        index = indexOfClosedBracket(text, c, cPos+1);
+    else if (c == ')' || c == ']' || c == '>')
+        index = indexOfOpenedBracket(text, c, cPos-1);
+    if (index != -1) {// found a pair of brackets
+        _selection->resetWords();
+        QList<SelItem*> sels;
+        SelItem *sel;
+        // add bracket under cursor
+        int blockPos = cursor.block().position();
+        sel = new SelItem();
+        cursor.setPosition(blockPos+cPos+1, QTextCursor::KeepAnchor);
+        sel->selection.cursor = cursor;
+        sels.append(sel);
+        // add its pair
+        cursor.setPosition(blockPos+index);
+        cursor.setPosition(blockPos+index+1, QTextCursor::KeepAnchor);
+        sel = new SelItem();
+        sel->selection.cursor = cursor;
+        sels.append(sel);
+        _selection->appendWords(sels);
+        return;
+    }
+
+    // check word under cursor
     cursor.select(QTextCursor::WordUnderCursor);
     QString s = cursor.selectedText();
 
@@ -807,6 +837,63 @@ void CodeEditor::onCursorPositionChanged(){
         else*/
             _selection->appendWords(sels);
     }
+}
+
+int CodeEditor::indexOfClosedBracket(const QString &text, const QChar &sourceBracket, int findFrom)
+{
+    QChar pairChar;
+    if (sourceBracket == '(')
+        pairChar = ')';
+    else if (sourceBracket == '[')
+        pairChar = ']';
+    else if (sourceBracket == '<')
+        pairChar = '>';
+    else
+        return -1;
+
+    int len = text.length();
+    int counter = 1;// one must be already opened outside this func
+
+    for (int k = findFrom; k < len; ++k) {
+        QChar c = text[k];
+        if (c == sourceBracket) {
+            ++counter;
+        } else if (c == pairChar) {
+            --counter;
+            if (counter == 0) {
+                return k;
+            }
+        }
+    }
+    return -1;
+}
+
+int CodeEditor::indexOfOpenedBracket(const QString &text, const QChar &sourceBracket, int findFrom)
+{
+    QChar pairChar;
+    if (sourceBracket == ')')
+        pairChar = '(';
+    else if (sourceBracket == ']')
+        pairChar = '[';
+    else if (sourceBracket == '>')
+        pairChar = '<';
+    else
+        return -1;
+
+    int counter = 1;// one must be already closed outside this func
+
+    for (int k = findFrom; k >= 0; --k) {
+        QChar c = text[k];
+        if (c == sourceBracket) {
+            ++counter;
+        } else if (c == pairChar) {
+            --counter;
+            if (counter == 0) {
+                return k;
+            }
+        }
+    }
+    return -1;
 }
 
 void CodeEditor::onTextChanged(){

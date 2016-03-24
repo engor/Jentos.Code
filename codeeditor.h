@@ -175,7 +175,7 @@ private:
     QList<int*> _editPosList;
     int _editPosIndex;
 
-    bool _isHighlightLine, _isHighlightWord;
+    bool _isHighlightLine, _isHighlightWordUnderCursor;
     bool _useAutoBrackets;
     bool _addVoidForMethods, _capitalizeKeywords;
     int _charsCountForCompletion;
@@ -189,6 +189,9 @@ private:
     bool checkFor_New(const QString &text);
 
     int getBlockScreenPositionY(const QTextBlock &block);
+    int indexOfClosedBracket(const QString &text, const QChar &sourceBracket, int findFrom);
+    int indexOfOpenedBracket(const QString &text, const QChar &sourceBracket, int findFrom);
+
 };
 
 

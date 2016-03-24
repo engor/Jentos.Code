@@ -94,3 +94,4 @@ bool isImageFile(const QString &path)
     QString ext = extractExt(path);
     return list.contains(ext);
 }
+
