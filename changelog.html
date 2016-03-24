@@ -1,0 +1,17 @@
+---
+layout: page
+title: Changelog
+group: navigation
+---
+{% include JB/setup %}
+
+{% for post in site.categories.releases %}
+  <div>
+    <h3>{{ post.title }} - {{ post.date | date_to_string }}</h3>
+    <div>
+        {{ post.content | strip_html | truncatewords:75 }}
+    </div>
+    <a href="{{ BASE_PATH }}{{ post.url }}">Read more...</a></li>
+  </div>
+  <hr />
+{% endfor %}

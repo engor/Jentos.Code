@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if page.head_title %}{{ page.head_title }}{% else %}{{ page.title }}{% endif %} | Jekyll-Bootstrap</title>
+    {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
+    <meta name="author" content="{{ site.author.name }}">
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!-- Le styles -->
+    <link href="{{ ASSET_PATH }}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ ASSET_PATH }}/css/custom.css?v=0.3" rel="stylesheet" type="text/css" media="all">
+    <link href="{{ ASSET_PATH }}/css/syntax.css?body=1" rel="stylesheet" type="text/css" media="all">
+  </head>
+
+  <body>
+
+    <div id="navigation">
+      <ul>
+        <li><a class="brand" href="{{ HOME_PATH }}">Home</a></li>
+        {% assign pages_list = site.topbar %}
+        {% include JB/pages_list %}
+        <li class="divider-vertical"></li>
+        <li><a>
+          Latest Version: <span class="label" style="background:#777">0.2.13</span> 
+          <span class="label" style="background:#777">24-03-2012</span>
+        </a></li>
+      </ul>
+    </div>
+    
+    <div id="main" class="container" style="width:90%; margin:0 auto; position:relative">
+      {{ content }}
+      <hr>
+      <footer class="footer" style="text-align:center; margin:40px 0">
+        <p>Lovingly authored by {{ site.author.name }} in 2012
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>,
+          <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>, and countless humans.
+        </p>
+        <p>
+          All my work is <a href="http://www.opensource.org/licenses/MIT">MIT licensed, Open and Free</a>. (unless my employer requires otherwise)
+          <br>Though in that case I should work for a company that believes in Open and Free software.
+        </p>
+        <p><a href="https://mixpanel.com/f/partner"><img src="https://mixpanel.com/site_media/images/partner/badge_light.png" alt="Real Time Web Analytics" /></a></p>
+      </footer>
+    </div> <!-- /container -->
+    
+    <a href="http://github.com/plusjade/jekyll-bootstrap"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{ ASSET_PATH }}/js/jquery.min.js"><\/script>')</script>
+    <script src="/assets/app.js?v=0.1"></script>
+    
+    <script>
+      $(function(){
+      {% if page.url == "/index.html" %}
+        Tabs.init("#tab-list", "#tab-content-wrapper");
+        Pc.init();
+      {% else %}
+        Toc.init('#sidebar', '#main');
+      {% endif %}
+      })
+    </script>
+    {% include JB/analytics %}
+    {% include mixpanel %}
+  </body>
+</html>

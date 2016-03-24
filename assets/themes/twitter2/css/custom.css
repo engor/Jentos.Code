@@ -1,0 +1,196 @@
+/* Override some defaults */
+html, body {
+  background-color: #FFF;
+}
+.container > .content {
+  padding: 20px 30px 20px 30px;
+}
+
+/* HEADERS ======================================================== */ 
+h1 {margin:20px 0 20px 0}
+h2 {margin:10px 0 10px 0}
+h3 {margin:0px 0 10px 0}
+.content.page h1, .content.post h1, 
+  .content.splash h1, .content.landing h1 { 
+  padding:10px 20px;
+  background:#046D8B;
+  color:#FFF;
+  border-radius:5px;
+}
+.content.page h2, .content.post h2{ 
+  margin:20px 0;
+  padding:7px 20px;
+  background:#FBF3DC;
+  border-radius:5px;
+}
+.content.page h3, .content.post h3{
+  margin-left:-10px; 
+}
+
+/* SIDEBAR ======================================================== */ 
+.sidebar {
+  max-width: 200px;
+  background:#FFF;
+  overflow:auto;
+  z-index:0;
+}
+.sidebar h4 {
+  padding:5px;
+  font-size:14px;
+  color:#555;
+  margin-bottom:5px;
+}
+
+.sidebar ul {
+  list-style: none;
+  margin:0 0 0 15px;
+}
+.sidebar ul li {
+  margin-bottom:5px;
+}
+.sidebar ul li a{
+  display:block;
+  padding:0 8px;
+  background:#E8F3F8;
+  line-height:21px;
+  border-radius:2px;
+}
+
+#sidebar ul.nest {
+  margin-top:5px;
+  background:#FFF;
+}
+#sidebar ul.nest li strong {
+  display:block;
+  color:#555;
+  margin-left:-5px;
+}
+#sidebar ul.nest li a{ 
+  background:#F8F8EC;
+  border:0;
+}
+#sidebar ul li a.active {
+  display:block;
+  background:#046D8B;
+  color:#FFF;
+  border:0;
+}
+
+/* TAGS ======================================================== */
+.tag_box {
+  list-style:none;
+  margin:0;
+  padding:5px 0 ;
+  overflow:hidden;
+}
+.tag_box li {
+  line-height:1.8em;
+}
+.tag_box.inline li {
+  float:left;
+}
+.tag_box a {
+  padding: 3px 6px;
+  margin: 2px;
+  background: #eee;
+  border-radius: 3px;
+  border:1px dashed #ccc;
+  text-decoration:none;
+}
+.tag_box a span{
+  vertical-align:super;
+  font-size:0.8em;
+}
+.tag_box a.active {
+  background:#57A957;
+  border:1px solid #4C964D;
+  color:#FFF;
+}
+
+/* LANDING PAGE ================================================= */
+.highlight-wrap span{ background:#FFFFCC }
+
+#tab-list li a {
+  font-size:14px;
+  font-weight:bold;
+}
+#tab-content-wrapper {
+  min-height:190px;
+}
+
+/* NAVBAR ================================================= */
+#navbar a {
+  color:#ECE5CE;
+}
+#navbar li.active a {
+ background:#046D8B; 
+}  
+
+/* SPLASH PAGES ================================================= */
+.page_icon div {
+  height:100px;
+  padding:10px;
+}
+.page_icon h4 {
+  margin-bottom:10px
+}
+
+/* MISC ================================================= */
+.pager li a {
+  padding:15px 40px;
+  font-size:24px;
+  font-weight:bold;
+  border:0;
+}
+.sharing {width:150px; margin-top:12px}
+
+.btn-large {
+  padding: 14px 28px;
+  font-size: 20px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+}
+
+
+
+
+#tab-list li {float:right;}
+
+#navigation {
+  padding:0;
+  background-color:#333;
+  margin-bottom:10px;
+}
+#navigation ul {
+  width:90%;
+  margin:0 auto;
+  list-style:none;
+  padding:10px 0;
+}
+
+#navigation ul li { 
+  list-style:none;
+  display:inline;
+  margin-right:10px;
+}
+
+#navigation ul a {
+  padding:6px 12px;
+  border-radius:3px;
+  color:#eee;
+}
+
+#tab-content-wrapper ul {list-style:none}
+@media all and (max-width: 867px) {
+  #left-pane {
+    width:100%;
+  }
+  #right-pane {
+    width:100%;
+    clear:both;
+    text-align:left !important;
+  }
+  #tab-list li {float:left;}
+}
+
