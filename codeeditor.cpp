@@ -809,9 +809,9 @@ void CodeEditor::onCursorPositionChanged(){
         for (int k = 0; k < len; /**/) {
             QChar c = s.at(k);
             // skip non-latin chars
-            bool big = (c >= 'A' && c <= 'Z');
-            bool small = (c >= 'a' && c <= 'z');
-            if (!big && !small) {
+            bool bigc = (c >= 'A' && c <= 'Z');
+            bool smallc = (c >= 'a' && c <= 'z');
+            if (!bigc && !smallc) {
                 ++k;
                 continue;
             }
