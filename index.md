@@ -16,6 +16,8 @@ tagline: the powerfull open source IDE for Monkey
 It is based on [TED v1.17](http://www.monkey-x.com/Monkey/ted.php), the official IDE for Monkey.
 Build with QTCreator
 
+[Download](http://jentos_ide.malublu.de/#) 
+
 {% for post in site.categories.releases limit:1 %}
 # Latest: <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a>
 {% endfor %}
