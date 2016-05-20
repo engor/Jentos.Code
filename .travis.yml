@@ -7,14 +7,12 @@ before_install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          sudo apt-get update
       && sudo apt-get install curl
-      && curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/linux/before_install.sh
-      && curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/linux/install.sh
-      && curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/linux/script.sh
+      && curl -fsSL -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/linux.sh
+      && ./linux.sh
       ;
     else
-         curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/osx/before_install.sh
-      && curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/osx/install.sh
-      && curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/osx/script.sh
+         curl -fsSL -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/osx.sh
+      && ./osx.sh
       ;
     fi
   - chmod +x before_install.sh

@@ -4,9 +4,8 @@ branches:
     - dev
 os: Visual Studio 2015
 install:
-  - curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/win/before_install.bat
-  - curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/win/install.bat
-  - curl -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/win/script.bat
+  - curl -fsSL -O https://raw.githubusercontent.com/malublu/Jentos_IDE-Buildscripts/master/win.bat
+  - .\win.bat
   - .\before_install.bat
   - .\install.bat
 build_script:
