@@ -45,7 +45,7 @@ See LICENSE.TXT for licensing terms.
 #define _STRINGIZE( X ) _QUOTE(X)
 
 #define TED_VERSION "1.17"
-#define APP_VERSION "1.4"
+#define APP_VERSION "1.4.1"
 #define APP_NAME "Jentos.Code"
 
 
@@ -325,12 +325,23 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
     }
     set->endArray();
 
+    set->beginGroup( "buildSettings" );
+    QString lockedPath = set->value( "locked" ).toString();
+    set->endGroup();
+
     foreach (QString s, list) {
         if (isUrl(s)) {
             openFile( s,false );
         } else if (QFile::exists(s)) {
             CodeAnalyzer::flushFileModified(s);
             openFile( s,false );
+        }
+    }
+
+    if( !lockedPath.isEmpty() ){
+        if( CodeEditor *editor = editorWithPath( lockedPath ) ){
+            _lockedEditor = editor;
+            updateTabLabel( editor );
         }
     }
 
@@ -1034,13 +1045,6 @@ void MainWindow::readSettings(){
             }
         }
     }
-    QString locked = set->value( "locked" ).toString();
-    if( !locked.isEmpty() ){
-        if( CodeEditor *editor = editorWithPath( locked ) ){
-            _lockedEditor = editor;
-            updateTabLabel( editor );
-        }
-    }
     set->endGroup();
 
     _defaultDir = fixPath( set->value("defaultDir").toString() );
@@ -1087,7 +1091,8 @@ void MainWindow::writeSettings(){
     set->beginGroup( "buildSettings" );
     set->setValue( "target",_targetsWidget->currentText() );
     set->setValue( "config",_configsWidget->currentText() );
-    set->setValue( "locked",_lockedEditor ? _lockedEditor->path() : "" );
+    QString lockPath = (_lockedEditor ? _lockedEditor->path() : "");
+    set->setValue( "locked",lockPath );
     set->endGroup();
 
     set->setValue( "defaultDir",_defaultDir );
