@@ -1007,10 +1007,9 @@ void CodeEditor::onShowAutocompleteList()
         _lcomp = new ListWidgetComplete(this);
     }
 
-
-
     // need to fill with class names
     if (_lcompFillClassesOnly) {
+
         _lcompProcess = false;// disable auto insert
         QList<CodeItem*> list;
         // if have type - get only this type
@@ -1030,6 +1029,7 @@ void CodeEditor::onShowAutocompleteList()
         _lcompTargetIdentType = "";
 
     } else {
+
         _lcomp->setIsForInheritance(_lcompInheritance);
         QTextCursor cursor = textCursor();
 
@@ -1050,46 +1050,44 @@ void CodeEditor::onShowAutocompleteList()
         }
         else {
 
-            /*for (int k = 0; k < count; ++k) {
-                _lcomp->addWidgetForItem( _lcomp->item(k) );
-            }*/
-
             int xx=0, yy=0, ww=0, hh=0;
             hh = _lcomp->sizeHintForRow(0)*_lcomp->count()+10;
             if(hh < 60)
                 hh = 60;
             ww = _lcomp->sizeHintForColumn(0)+10;
-            if(ww > 444) {
+            if (ww > 444) {
                 ww = 444;
                 hh += 30;
-            }
-            else if(ww < 200) {
+            } else if (ww < 200) {
                 ww = 200;
             }
 
             QRect r = cursorRect();
             QRect r2 = this->rect();
 
-            if(hh > 444)
+            if (hh > 444)
                 hh = 444;
-            if(hh > r2.height()-20)
+            if (hh > r2.height()-20)
                 hh = r2.height()-20;
+            if (hh < 80)
+                hh = 80;// app cheshed if this size is too small O_o (for 3 or less items)
 
             xx = r.right()+20+60;//60 for left margin
             yy = r.top();
-            if( xx+ww > r2.right()-15 ) {
+            if (xx+ww > r2.right()-15) {
                 xx = r2.right()-ww-15;
                 yy += 30;
             }
-            if( yy < r2.top() )
+            if (yy < r2.top())
                 yy = r2.top();
-            if( yy+hh > r2.bottom()-15 ) {
+            if (yy+hh > r2.bottom()-15) {
                 yy = r2.bottom()-hh-15;
             }
 
             _lcomp->setGeometry(xx, yy, ww, hh);
             _lcomp->setCurrentRow(0);
             _lcomp->setVisible(true);
+
         }
         ListWidgetCompleteItem *lwi = dynamic_cast<ListWidgetCompleteItem*>(_lcomp->item(0));
         emit statusBarChanged( lwi->codeItem()->toString() );

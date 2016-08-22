@@ -406,28 +406,24 @@ void CodeAnalyzer::fillListInheritance(const QTextBlock &block, QListWidget *l) 
 
 CodeItem *CodeAnalyzer::findInScope(const QTextBlock &block, int pos, QListWidget *l, bool findLastIdent, const QString &blockText) {
 
-    //qDebug() << "findInScope. block:" << block.text() << ", list is null:" << (l==0);
-
     QStringList list;
     QString text = blockText;
     if (text == "")
         text = block.text();
     identsList(text, pos, list);
-    if(list.isEmpty()) {
-        //qDebug()<<"list is empty. try to fill common";
+    if (list.isEmpty()) {
         if(l)
             fillListFromCommon(l, "", block);
         return 0;
     }
     QString ident = list.first();
-    //qDebug()<<"ident:"<<ident;
-    if(ident.isEmpty()) {//is empty if there is a number before a dot
+    if (ident.isEmpty()) {//is empty if there is a number before a dot
         //qDebug()<<"dot before number, retirn";
         return 0;
     }
     bool isself = (ident.toLower()=="self");
     bool issuper = (ident.toLower()=="super");
-    if(!isself && !issuper && containsKeyword(ident)) {
+    if (!isself && !issuper && containsKeyword(ident)) {
         //qDebug()<<"ident is keyword: "+ident;
         return 0;
     }
@@ -435,36 +431,30 @@ CodeItem *CodeAnalyzer::findInScope(const QTextBlock &block, int pos, QListWidge
     bool classOnly = (isself || issuper);
     CodeItem *scope = scopeAt(block, classOnly, true);
     CodeItem *item=0;
-    if(classOnly) {
+    if (classOnly) {
         item = scope;
         //qDebug()<<"item = scope; (classonly)";
-    }
-    else if(scope) {
+    } else if (scope) {
         //qDebug()<<"inscope: "+scope->descrAsItem();
         item = scope->child(ident);
-        if(item) {
-            //qDebug()<<"found 1:"<<item->descrAsItem();
-            //return item;
-        }
-        else {
-            while(scope->parent() != 0) {
+        if (item == 0) {
+            while (scope->parent() != 0) {
                 scope = scope->parent();
                 //qDebug()<<"inscope 2:"<<scope->descrAsItem();
-                if(scope->isClassOrInterface()) {
+                if (scope->isClassOrInterface()) {
                     QList<CodeItem*> classes;
                     allClasses("",true,true,classes,scope);
                     foreach (CodeItem *c, classes) {
                         item = c->child(ident);
-                        if(item) {
+                        if (item) {
                             //qDebug()<<"found 2: "+item->descrAsItem()+", class: "+c->descrAsItem();
                             break;
                         }
                     }
-                }
-                else {
+                } else {
                     item = scope->child(ident);
                 }
-                if(item)
+                if (item)
                     break;
             }
         }
@@ -472,13 +462,13 @@ CodeItem *CodeAnalyzer::findInScope(const QTextBlock &block, int pos, QListWidge
     /*else {
         qDebug()<<"scope not found for: "+ident;
     }*/
-    if(!item)
+    if (!item)
         item = itemUser(ident);
-    if(!item)
+    if (!item)
         item = itemMonkey(ident);
-    if(!item) {
+    if (!item) {
         //qDebug() << "ident not found: "+ident+". try to fill common";
-        if(l && list.size() == 1)
+        if (l && list.size() == 1)
             fillListFromCommon(l, ident, block);
         return 0;
     }
@@ -487,38 +477,37 @@ CodeItem *CodeAnalyzer::findInScope(const QTextBlock &block, int pos, QListWidge
     CodeScope sc;
     sc.item = item;
     //CodeItem *res = item;
-    for( int k = 1, n = list.size()-1; k < n; ++k) {
+    for ( int k = 1, n = list.size()-1; k < n; ++k) {
         QString type = item->identTypeCleared();
         //qDebug()<<"type:"<<type;
         CodeItem *c = itemUser(type);
-        if(!c)
+        if (!c)
             c = itemMonkey(type);
-        if(c) {
+        if (c) {
             item = c->child(list.at(k),true);
-            if(item) {
+            if (item) {
                 //qDebug()<<"found sub-item: "+list.at(k);
                 sc.item = item;
                 sc.isSelf = (list.at(k-1).toLower()=="self");
                 sc.isSuper = (list.at(k-1).toLower()=="super");
-            }
-            else {
+            } else {
                 break;
             }
         }
     }
-    if(sc.item) {
+    if (sc.item) {
         //qDebug()<<"scope: "+sc.item->descrAsItem();
-        if(l) {
+        if (l) {
             //qDebug()<<"list.last:"<<list.last();
             fillListFromScope(l,list.last(),sc);
         }
-        if(findLastIdent && list.size() > 1) {
+        if (findLastIdent && list.size() > 1) {
             ident = list.last();
-            if(!ident.isEmpty()) {
+            if (!ident.isEmpty()) {
                 //qDebug()<<"search:"<<ident<<"in"<<sc.item->ident();
                 QString type = sc.item->identTypeCleared();
                 CodeItem *c = CodeAnalyzer::itemUser(type);
-                if(!c)
+                if (!c)
                     c = CodeAnalyzer::itemMonkey(type);
                 sc.item = (c ? c->child(ident, true) : 0);
             }
@@ -1397,31 +1386,31 @@ void CodeAnalyzer::fillListFromCommon( QListWidget *l, const QString &ident, con
     QList<CodeItem*> listRes;
 
     foreach (item, list) {
-        if( ident == "" || item->ident().startsWith(ident, Qt::CaseInsensitive) ) {
+        if (ident == "" || item->ident().startsWith(ident, Qt::CaseInsensitive)) {
             //CodeItem::addUnique(listRes,item);
             listRes.append(item);
         }
     }
 
     CodeItem *scope = scopeAt(block);
-    if(scope) {
+    if (scope) {
         list = scope->children();
         foreach (item, list) {
-            if( ident == "" || item->ident().startsWith(ident, Qt::CaseInsensitive) ) {
+            if (ident == "" || item->ident().startsWith(ident, Qt::CaseInsensitive)) {
                 //CodeItem::addUnique(listRes,item);
                 listRes.append(item);
             }
         }
-        if(scope->parent()) {
+        if (scope->parent()) {
             QList<CodeItem*> classes;
             allClasses("",true,true,classes,scope->parent());
             foreach (CodeItem *c, classes) {
                 list = c->children();
                 foreach (item, list) {
-                    if( ident == "" || item->ident().startsWith(ident, Qt::CaseInsensitive) ) {
+                    if (ident == "" || item->ident().startsWith(ident, Qt::CaseInsensitive)) {
                         //CodeItem::addUnique(listRes,item);
                         CodeItem *same = CodeItem::findTheSame(listRes,item);
-                        if(same)
+                        if (same)
                             same->setIsInherited();
                         else
                             listRes.append(item);
@@ -1444,6 +1433,7 @@ void CodeAnalyzer::fillListFromCommon( QListWidget *l, const QString &ident, con
             CodeItem::addUnique(listRes,item);
         }
     }
+
 
     foreach (item, listRes) {
         tryToAddItemToList(item, scope, l);
@@ -1508,7 +1498,7 @@ void CodeAnalyzer::fillListFromScope( QListWidget *l, const QString &ident, Code
     QStringList templField = item->templWords();
     bool hasTempl = !templField.isEmpty();
     foreach (item, list) {
-        qDebug() << "base: "+ item->ident();
+        //qDebug() << "base: "+ item->ident();
         QList<CodeItem*> listChildren = item->children();
         foreach (CodeItem *child, listChildren) {
             //qDebug() << "child: "+ child->ident();
@@ -1569,7 +1559,6 @@ int CodeAnalyzer::indexOfCommentChar(const QString &text)
 
 bool CodeAnalyzer::isPosInsideOfQuotes(const QString &text, int pos)
 {
-    qDebug()<<"isPosInsideOfQuotes:"<<text<<pos;
     int i = 0;
     int n = text.length();
     if (pos == 0 || pos >= n)
