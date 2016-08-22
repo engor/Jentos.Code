@@ -1567,6 +1567,31 @@ int CodeAnalyzer::indexOfCommentChar(const QString &text)
     return lastCommentPos;
 }
 
+bool CodeAnalyzer::isPosInsideOfQuotes(const QString &text, int pos)
+{
+    qDebug()<<"isPosInsideOfQuotes:"<<text<<pos;
+    int i = 0;
+    int n = text.length();
+    if (pos == 0 || pos >= n)
+        return false;
+    int quoteCounter = 0;
+    while( i < n ) {
+        QChar c = text[i];
+        if (i == pos){
+            if (quoteCounter % 2 == 0){//not inside of string
+                return false;
+            } else {//inside
+                return true;
+            }
+        }
+        if (c == '"'){
+            ++quoteCounter;
+        }
+        ++i;
+    }
+    return false;
+}
+
 void CodeAnalyzer::allClasses(QString identType, bool addSelf, bool addBase, QList<CodeItem*> &list, CodeItem *item) {
     CodeItem *i = item;
     if(!i)

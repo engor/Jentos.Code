@@ -679,7 +679,7 @@ void CodeEditor::onCursorPositionChanged(){
                 }
                 QPoint p = mapToGlobal(pos());
                 int px = p.x()+200;
-                int py = p.y()+getBlockScreenPositionY(cursor.block())-50;
+                int py = p.y()+getBlockScreenPositionY(cursor.block())-70;
                 QPoint point(px, py);
                 QString hint = itemWithParams->paramsToolTip(paramIndex);
                 showToolTip(point, hint);
@@ -2365,8 +2365,10 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
 
     if( e ) QPlainTextEdit::keyPressEvent( e );
 
+    bool isInsideOfQuotes = CodeAnalyzer::isPosInsideOfQuotes(block.text(), cursor.positionInBlock());
+
     //auto ident for var = new ...
-    if (key == Qt::Key_Space && !ctrl && !shift) {
+    if (key == Qt::Key_Space && !ctrl && !shift && !isInsideOfQuotes) {
         QString tt = block.text();
         // check only if cursor is after "New" keyword
         int i = tt.indexOf("New");
@@ -2407,7 +2409,7 @@ void CodeEditor::keyPressEvent( QKeyEvent *e ) {
     }
 
 
-    if ( _monkey ){
+    if ( _monkey && !isInsideOfQuotes ){
         if ( key >= 32 && key <= 255 ) {
             if (!ctrl && !aucompIsVisible() && !block.text().trimmed().startsWith("'")) {
                 QString ident = identAtCursor(false);

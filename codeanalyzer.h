@@ -137,6 +137,7 @@ public:
     static QList<int> lastParamsSplitPositions() {return _lastParamsSplitPositions;}
 
     static int indexOfCommentChar(const QString &text);
+    static bool isPosInsideOfQuotes(const QString &text, int pos);
 
 private:
 
