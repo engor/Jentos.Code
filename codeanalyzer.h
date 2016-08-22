@@ -136,6 +136,8 @@ public:
 
     static QList<int> lastParamsSplitPositions() {return _lastParamsSplitPositions;}
 
+    static int indexOfCommentChar(const QString &text);
+
 private:
 
     static QList<int> _lastParamsSplitPositions;

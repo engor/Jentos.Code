@@ -1505,15 +1505,18 @@ void CodeEditor::capitalizeKeywords(const QTextBlock &block, bool checkCursorPos
         return;
 
     QString text = block.text();
-    int i = 0;
-    i = text.indexOf("'");
-    if (i != -1)
-        text = text.left(i);
+    int n = text.length();
+
+    // skip all text after comment
+    int commentPos = CodeAnalyzer::indexOfCommentChar(text);
+    if (commentPos >= 0){
+        text = text.left(commentPos);
+        n = text.length();;
+    }
 
     const QString ctext = text;
     //qDebug()<<"capitalize:"<<ctext;
-    int n = ctext.length();
-    i = 0;
+    int i = 0;
 
     // skip for indent
     while( i < n && ctext[i] <= ' ' ) ++i;
@@ -1535,6 +1538,12 @@ void CodeEditor::capitalizeKeywords(const QTextBlock &block, bool checkCursorPos
                 ++i;
             }
             prev = i;
+        }
+        else if (c == '"'){//skip strings content
+            while( i < n && ctext[i] != '"' ) {
+                ++i;
+            }
+            prev = i+1;
         }
         else if( isAlpha(c) ) {
             while( i < n && isIdent(ctext[i]) ) ++i;

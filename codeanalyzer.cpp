@@ -1543,6 +1543,30 @@ CodeItem* CodeAnalyzer::getClassOrKeyword(const QString &ident) {
     return i;
 }
 
+/* check if char(') is inside of string or not */
+int CodeAnalyzer::indexOfCommentChar(const QString &text)
+{
+    int i = 0;
+    int n = text.length();
+    int quoteCounter = 0, lastCommentPos = -1;
+    while( i < n ) {
+        QChar c = text[i];
+        if (c == '"'){
+            ++quoteCounter;
+        }
+        if (c == '\''){
+            if (quoteCounter % 2 == 0){//not inside of string, so comment starts from here
+                lastCommentPos = i;
+                break;
+            } else {//comment char is between quoters, so that's regular string
+                lastCommentPos = -i;
+            }
+        }
+        ++i;
+    }
+    return lastCommentPos;
+}
+
 void CodeAnalyzer::allClasses(QString identType, bool addSelf, bool addBase, QList<CodeItem*> &list, CodeItem *item) {
     CodeItem *i = item;
     if(!i)
