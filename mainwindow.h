@@ -238,6 +238,7 @@ private slots:
 
 private:
 
+    QString _appName, _appVersion, _appFullName;
     QNetworkAccessManager *_networkManager;
     bool _isUpdaterQuiet;
     Ui::MainWindow *_ui;

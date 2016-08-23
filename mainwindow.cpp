@@ -44,9 +44,6 @@ See LICENSE.TXT for licensing terms.
 #define _QUOTE(X) #X
 #define _STRINGIZE( X ) _QUOTE(X)
 
-#define TED_VERSION "1.17"
-#define APP_VERSION "1.4.1"
-#define APP_NAME "Jentos.Code"
 
 
 QString MainWindow::_monkeyPath;
@@ -64,6 +61,10 @@ void cdebug( const QString &q ){
 //
 MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::MainWindow ){
 
+    _appName = "Jentos.Code";
+    _appVersion = "1.4.1";
+    _appFullName = _appName+"v"+_appVersion;
+
     mainWindow = this;
 
     QTextCodec::setCodecForLocale( QTextCodec::codecForName( "UTF-8" ) );
@@ -78,7 +79,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
     QSettings::setDefaultFormat( QSettings::IniFormat );
     QCoreApplication::setOrganizationName( "FingerDev Studio" );
     QCoreApplication::setOrganizationDomain( "fingerdev.com" );
-    QCoreApplication::setApplicationName( APP_NAME );
+    QCoreApplication::setApplicationName( _appName );
 
     _ui->setupUi( this );
 
@@ -1239,7 +1240,7 @@ void MainWindow::updateWindowTitle(){
     }
     if (!title.isEmpty())
         title += " - ";
-    title += APP_NAME" v"APP_VERSION;
+    title += _appFullName;
     setWindowTitle(title);
 }
 
@@ -2298,16 +2299,16 @@ void MainWindow::onHelpAbout(){
     QString hrefSite = "http://fingerdev.com/jentos";
     QString hrefPaypal = "https://www.paypal.me/engor";//"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE";
     QString hrefIcons = "https://icons8.com";
-    QString APP_ABOUT = "<html><head><style>a{color:#CC8030;}</style></head><body bgcolor2='#ff3355'><b>"APP_NAME"</b> is a powefull code editor for the Monkey programming language.<br>"
-            "Based on Ted V"TED_VERSION".<br><br>"
+    QString html = "<html><head><style>a{color:#CC8030;}</style></head><body bgcolor2='#ff3355'><b>"+_appName+"</b> is a powefull code editor for the Monkey programming language.<br>"
+            "Based on original Ted IDE.<br><br>"
             "Visit <a href='"+hrefSite+"'>"+hrefSite+"</a> for more information.<br><br>"
             "Latest sources: <a href='"+hrefGithub+"'>"+hrefGithub+"</a><br><br>"
             "Almost all icons taken from <a href='"+hrefIcons+"'>"+hrefIcons+"</a><br><br>"
-            "Version: "APP_VERSION+"<br>Trans: "+_transVersion+"<br>Qt: "_STRINGIZE(QT_VERSION)+"<br><br>"
+            "Version: "+_appVersion+"<br>Trans: "+_transVersion+"<br>Qt: "_STRINGIZE(QT_VERSION)+"<br><br>"
             "Jentos is free and always be free.<br>But you may support the author (Evgeniy Goroshkin)<br>"
             "via <a href=\""+hrefPaypal+"\">PayPal Donation</a>.<br>"
             "</body></html>";
-    QMessageBox::information( this, "About", APP_ABOUT );
+    QMessageBox::information( this, "About", html );
 }
 
 void MainWindow::onShowHelp( const QString &topic ) {
@@ -2470,7 +2471,7 @@ void MainWindow::onNetworkFinished(QNetworkReply *reply) {
     s = s.left(i); //now s contains our clean update info
     i = s.indexOf("\n");
     QString newVersion = s.left(i).trimmed();
-    QString curVersion = APP_VERSION;
+    QString curVersion = _appVersion;
 
     bool allow = (!_isUpdaterQuiet && newVersion == curVersion);
 
