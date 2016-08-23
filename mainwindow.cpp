@@ -2304,7 +2304,7 @@ void MainWindow::onHelpAbout(){
             "Visit <a href='"+hrefSite+"'>"+hrefSite+"</a> for more information.<br><br>"
             "Latest sources: <a href='"+hrefGithub+"'>"+hrefGithub+"</a><br><br>"
             "Almost all icons taken from <a href='"+hrefIcons+"'>"+hrefIcons+"</a><br><br>"
-            "Version: "+_appVersion+"<br>Trans: "+_transVersion+"<br>Qt: "_STRINGIZE(QT_VERSION)+"<br><br>"
+            "Version: "+_appVersion+"<br>Trans: "+_transVersion+"<br>Qt: "+_STRINGIZE(QT_VERSION)+"<br><br>"
             "Jentos is free and always be free.<br>But you may support the author (Evgeniy Goroshkin)<br>"
             "via <a href=\""+hrefPaypal+"\">PayPal Donation</a>.<br>"
             "</body></html>";
