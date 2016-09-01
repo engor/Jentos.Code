@@ -63,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::Mai
 
     _appName = "Jentos.Code";
     _appVersion = "1.4.1";
-    _appFullName = _appName+"v"+_appVersion;
+    _appFullName = _appName+" v"+_appVersion;
 
     mainWindow = this;
 
