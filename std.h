@@ -18,7 +18,7 @@ See LICENSE.TXT for licensing terms.
 #endif
 
 static QString textFileTypes=";txt;monkeydoc;";
-static QString codeFileTypes=";monkey;bmx;cpp;java;js;as;cs;py;";
+static QString codeFileTypes=";cxs;monkey;bmx;cpp;java;js;as;cs;py;";
 
 inline bool isDigit( QChar ch ){
     return (ch>='0' && ch<='9');
@@ -63,6 +63,7 @@ QString extractExt( const QString &path );
 
 bool isMonkeyFile( const QString &path );
 bool isImageFile(const QString &path);
+QStringList monkeyFilesTypes();
 
 bool removeDir( const QString &path );
 

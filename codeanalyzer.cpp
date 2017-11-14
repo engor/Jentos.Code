@@ -724,8 +724,7 @@ void CodeAnalyzer::printKeywords()
 void CodeAnalyzer::analyzeDir( const QString &path, const QStringList &exclude ) {
 
     QDir dir(path);
-    QStringList filters;
-    filters << "*.monkey";
+    QStringList filters( monkeyFilesTypes() );
     QStringList list = dir.entryList(dir.filter());
     QString file;
     for( int k = 0; k < list.size() ; ++k ) {
@@ -737,8 +736,9 @@ void CodeAnalyzer::analyzeDir( const QString &path, const QStringList &exclude )
             if(!exclude.contains(file))
                 analyzeDir(path+file+"/", exclude);
         }
-        else if(extractExt(file) == "monkey"){
-            analyzeFile(path+file);
+        else {
+            if (isMonkeyFile(file))
+                analyzeFile(path+file);
         }
     }
 }
@@ -990,6 +990,8 @@ bool CodeAnalyzer::parse(QTextDocument *doc, const QString &path , int kind, QLi
         //imports
         if(kind == KIND_USER && line.startsWith("Import ")) {
             QString s = dir + line.mid(7).replace(".","/") + ".monkey";
+            if (!QFile::exists(s))
+                s = dir + line.mid(7).replace(".","/") + ".cxs";
             bool b = analyzeFile(s, KIND_USER);
             if(b) {
                 ImportedFiles *f = _imports.value(path);

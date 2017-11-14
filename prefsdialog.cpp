@@ -195,7 +195,7 @@ void PrefsDialog::onAnalyzerChanged() {
 }
 
 void PrefsDialog::onBrowseForPath() {
-    QString path = QFileDialog::getExistingDirectory( this,"Select Monkey directory","",QFileDialog::ShowDirsOnly|QFileDialog::DontResolveSymlinks );
+    QString path = QFileDialog::getExistingDirectory( this,"Select root directory","",QFileDialog::ShowDirsOnly|QFileDialog::DontResolveSymlinks );
     if( path.isEmpty() ) return;
     path = fixPath( path );
     QString trans;
@@ -205,7 +205,7 @@ void PrefsDialog::onBrowseForPath() {
         _ui->monkeyPathWidget->setText( path );
     }
     else {
-        QMessageBox::warning( this,"","Invalid Monkey Path!\nPlease, choose the root directory of Monkey." );
+        QMessageBox::warning( this,"","Invalid path!\nPlease, choose the root directory." );
         _prefs->setValue( "monkeyPath","" );
     }
 }

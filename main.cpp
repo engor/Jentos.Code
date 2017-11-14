@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     delete splash;
 
     if (!Prefs::prefs()->isValidMonkeyPath) {
-        QMessageBox::warning( &w, "Invalid Path", "Invalid Monkey path!\n\nPlease select correct path from the 'File -- Options' dialog.", "Go to Options" );
+        QMessageBox::warning( &w, "Invalid path", "Invalid root path!\n\nPlease select correct path from the 'File -- Options' dialog.", "Go to Options" );
         w.onFilePrefs(true);
     }
 

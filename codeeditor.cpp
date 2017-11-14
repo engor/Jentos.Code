@@ -220,7 +220,7 @@ void CodeEditor::rename( const QString &path ){
 
     _txt = textFileTypes.contains( t );
     _code = codeFileTypes.contains( t );
-    _monkey = _fileType=="monkey";
+    _monkey = monkeyFilesTypes().contains( _fileType );
 
     if( _txt ){
         setLineWrapMode( QPlainTextEdit::WidgetWidth );
@@ -1475,17 +1475,24 @@ void CodeEditor::mousePressEvent(QMouseEvent *e) {
                 //qDebug()<<"click to import";
                 QString dir = extractDir(_path)+"/";
                 QString line = textCursor().block().text();
-                QString s = line.mid(7).replace(".","/") + ".monkey";
+                QString s1 = line.mid(7).replace(".","/") + ".monkey";
+                QString s2 = line.mid(7).replace(".","/") + ".cxs";
                 //qDebug()<<dir+s;
-                if(QFile::exists(dir+s)) {
-                    showCode(dir+s,0);
+                if(QFile::exists(dir+s1)) {
+                    showCode(dir+s1,0);
+                }
+                else if(QFile::exists(dir+s2)) {
+                    showCode(dir+s2,0);
                 }
                 else {
                     Prefs *p = Prefs::prefs();
                     dir = p->getString("monkeyPath")+"/modules/";
                     //qDebug()<<dir+s;
-                    if(QFile::exists(dir+s)) {
-                        showCode(dir+s,0);
+                    if(QFile::exists(dir+s1)) {
+                        showCode(dir+s1,0);
+                    }
+                    else if(QFile::exists(dir+s2)) {
+                        showCode(dir+s2,0);
                     }
                 }
                 _scope.flush();

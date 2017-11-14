@@ -77,12 +77,8 @@ bool isUrl( const QString &path ){
 
 bool isMonkeyFile(const QString &path)
 {
-    static QStringList list;
-    if (list.isEmpty()) {
-        list<<"monkey"<<"monkey2";
-    }
     QString ext = extractExt(path);
-    return list.contains(ext);
+    return monkeyFilesTypes().contains(ext);
 }
 
 bool isImageFile(const QString &path)
@@ -95,3 +91,12 @@ bool isImageFile(const QString &path)
     return list.contains(ext);
 }
 
+
+QStringList monkeyFilesTypes()
+{
+    static QStringList list;
+    if (list.isEmpty()) {
+        list << "monkey" << "cxs";
+    }
+    return list;
+}

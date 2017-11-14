@@ -26,7 +26,7 @@ void FindInFilesDialog::readSettings(){
     QSettings *set = Prefs::settings();
 
     if( set->value( "settingsVersion" ).toInt()<2 ){
-        _ui->typesLineEdit->setText( "*.monkey" );
+        _ui->typesLineEdit->setText( "*cxs,*.monkey" );
         _ui->dirLineEdit->setText( Prefs::prefs()->getString( "monkeyPath" ) );
         return;
     }

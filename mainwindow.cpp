@@ -62,7 +62,7 @@ void cdebug( const QString &q ){
 MainWindow::MainWindow(QWidget *parent) : QMainWindow( parent ),_ui( new Ui::MainWindow ){
 
     _appName = "Jentos.Code";
-    _appVersion = "1.4.1";
+    _appVersion = "1.5";
     _appFullName = _appName+" v"+_appVersion;
 
     mainWindow = this;
@@ -515,7 +515,7 @@ void MainWindow::parseAppArgs(){
 
 bool MainWindow::isBuildable( CodeEditor *editor ){
     if( !editor ) return false;
-    if( editor->fileType()=="monkey" ) return !_monkeyPath.isEmpty();
+    if( editor->isMonkey() ) return !_monkeyPath.isEmpty();
     //if( editor->fileType()=="bmx" ) return !_blitzmaxPath.isEmpty();
     return false;
 }
@@ -545,7 +545,7 @@ QWidget *MainWindow::newFile( const QString &cpath ){
 
     if( path.isEmpty() ){
 
-        path=fixPath( QFileDialog::getSaveFileName( this,"New File",_defaultDir,"Source Files (*.monkey)" ) );
+        path=fixPath( QFileDialog::getSaveFileName( this,"New File",_defaultDir,"Source Files (*.cxs *.monkey)" ) );
         if( path.isEmpty() ) return 0;
     }
 
@@ -696,7 +696,7 @@ QWidget *MainWindow::openFile( const QString &cpath,bool addToRecent ){
 
     if( path.isEmpty() ){
 
-        path=fixPath( QFileDialog::getOpenFileName( this,"Open File",_defaultDir,"Source Files (*.monkey *.cpp *.cs *.js *.as *.java);;Image Files(*.jpg *.png *.bmp);;All Files(*.*)" ) );
+        path=fixPath( QFileDialog::getOpenFileName( this,"Open File",_defaultDir,"Source Files (*.cxs *.monkey *.cpp *.cs *.js *.as *.java);;Image Files(*.jpg *.png *.bmp);;All Files(*.*)" ) );
         if( path.isEmpty() ) return 0;
 
         _defaultDir=extractDir( path );
@@ -773,7 +773,7 @@ bool MainWindow::saveFile( QWidget *widget,const QString &cpath ){
 
         _mainTabWidget->setCurrentWidget( editor );
 
-        path=fixPath( QFileDialog::getSaveFileName( this,"Save File As",editor->path(),"Source Files (*.monkey *.cpp *.cs *.js *.as *.java)" ) );
+        path=fixPath( QFileDialog::getSaveFileName( this,"Save File As",editor->path(),"Source Files (*.cxs *.monkey *.cpp *.cs *.js *.as *.java)" ) );
         if( path.isEmpty() ) return false;
 
     }else if( !editor->modified() ){
@@ -963,7 +963,7 @@ void MainWindow::enumTargets(){
     _targetsWidget->clear();
 
     QString sol = "Valid targets: ";
-    QString ver = "TRANS monkey compiler V";
+    QString ver = "TRANS cerberus compiler V";
     int index = -1;
     while( proc.waitLineAvailable( 0 ) ){
         QString line=proc.readLine( 0 );
@@ -1163,7 +1163,7 @@ void MainWindow::updateActions(){
     //build menu
     CodeEditor *buildEditor=_lockedEditor ? _lockedEditor : _codeEditor;
     bool canBuild=!_consoleProc && isBuildable( buildEditor );
-    bool canTrans=canBuild && buildEditor->fileType()=="monkey";
+    bool canTrans=(canBuild && buildEditor->isMonkey());
     _ui->actionBuildBuild->setEnabled( canBuild );
     _ui->actionBuildRun->setEnabled( canBuild || db );
     _ui->actionBuildCheck->setEnabled( canTrans );
@@ -1366,7 +1366,7 @@ void MainWindow::onProjectMenu( const QPoint &pos ){
         bool ok=false;
         QString name=QInputDialog::getText( this,"Create File","File name: "+info.filePath()+"/",QLineEdit::Normal,"",&ok );
         if( ok && !name.isEmpty() ){
-            if( extractExt( name ).isEmpty() ) name+=".monkey";
+            if( extractExt( name ).isEmpty() ) name+=".cxs";//".monkey";
             QString path=info.filePath()+"/"+name;
             newFile( path );
         }
@@ -1642,7 +1642,7 @@ void MainWindow::runCommand( QString cmd, QWidget *fileWidget ){
 void MainWindow::onProcStdout(){
 
     static QString comerr = " : Error : ";
-    static QString runerr = "Monkey Runtime Error : ";
+    static QString runerr = "Runtime Error : ";
 
     QString text = _consoleProc->readLine( 0 );
 
@@ -1671,7 +1671,7 @@ void MainWindow::onProcStdout(){
         showNormal();
         raise();
         activateWindow();
-        QMessageBox::warning( this,"Monkey Runtime Error",err );
+        QMessageBox::warning( this,"Runtime Error",err );
     }
 }
 
@@ -1768,7 +1768,7 @@ void MainWindow::build( QString mode, QString pathmonkey){
     QString cmd, msg = "Buillding: "+filePath+"...";
 
 
-    if( editor->fileType()=="monkey" ){
+    if( editor->isMonkey() ){
         if( mode=="run" ){
             if(pathmonkey.endsWith("run")){
 
@@ -1825,7 +1825,7 @@ void MainWindow::onFileNew(){
         QTime tt = QTime::currentTime();
         QString t = QString::number(tt.hour())+"-"+QString::number(tt.minute())+"-"+QString::number(tt.second());
 
-        s += y+"-"+m+"-"+d+"_"+t+".monkey";
+        s += y+"-"+m+"-"+d+"_"+t+".cxs";//".monkey";
         //QMessageBox::information(this,"",s);
         newFile(s);
     }
@@ -2295,16 +2295,17 @@ void MainWindow::onHelpQuickHelp(){
 }
 
 void MainWindow::onHelpAbout(){
-    QString hrefGithub = "https://github.com/engor/Jentos_IDE";
-    QString hrefSite = "http://fingerdev.com/jentos";
-    QString hrefPaypal = "https://www.paypal.me/engor";//"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE";
+    QString hrefGithub = "https://github.com/engor/Jentos.Code";
+    QString hrefSite = "http://fingerdev.ru/jentos";
+    QString hrefPaypal = "https://www.paypal.me/engor/10";//"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RGCTKTP8H3CNE";
     QString hrefIcons = "https://icons8.com";
-    QString html = "<html><head><style>a{color:#CC8030;}</style></head><body bgcolor2='#ff3355'><b>"+_appName+"</b> is a powefull code editor for the Monkey programming language.<br>"
-            "Based on original Ted IDE.<br><br>"
+    QString html = "<html><head><style>a{color:#CC8030;}</style></head><body bgcolor2='#ff3355'><b>"+_appName+"</b> is a powefull code editor for the Cerberus (ex Monkey-X) programming language.<br>"
+            /*"Based on original Ted IDE.<br><br>"*/
+            "<br>"
             "Visit <a href='"+hrefSite+"'>"+hrefSite+"</a> for more information.<br><br>"
             "Latest sources: <a href='"+hrefGithub+"'>"+hrefGithub+"</a><br><br>"
             "Almost all icons taken from <a href='"+hrefIcons+"'>"+hrefIcons+"</a><br><br>"
-            "Version: "+_appVersion+"<br>Trans: "+_transVersion+"<br>Qt: "+_STRINGIZE(QT_VERSION)+"<br><br>"
+            "IDE version: "+_appVersion+"<br>Translator version: "+_transVersion+/*"<br>Qt: "+_STRINGIZE(QT_VERSION)+*/"<br><br>"
             "Jentos is free and always be free.<br>But you may support the author (Evgeniy Goroshkin)<br>"
             "via <a href=\""+hrefPaypal+"\">PayPal Donation</a>.<br>"
             "</body></html>";
@@ -2318,11 +2319,11 @@ void MainWindow::onShowHelp( const QString &topic ) {
 }
 
 void MainWindow::onHelpOnlineDocs() {
-    openFile( "http://monkey-x.com/docs/html/Home.html", false );
+    openFile( "https://www.cerberus-x.com/community/cxDocs/Home.html", false );
 }
 
 void MainWindow::onHelpMonkeyHomepage() {
-    QString s = "http://monkey-x.com";
+    QString s = "https://www.cerberus-x.com/";
     QDesktopServices::openUrl( s );
 }
 
@@ -2493,11 +2494,11 @@ void MainWindow::onNetworkFinished(QNetworkReply *reply) {
 void MainWindow::onOpenUrl() {
     QString url;
     if(sender() == _ui->actionHelpOnlineDocs)
-        url = "http://www.monkey-x.com/docs/html/Home.html";
+        url = "https://www.cerberus-x.com/community/cxDocs/Home.html";
     else if(sender() == _ui->actionHelpMonkeyHomepage)
-        url = "http://www.monkey-x.com/";
+        url = "https://www.cerberus-x.com/";
     else if(sender() == _ui->actionHelpFingerDevStudioHomepage)
-        url = "http://fingerdev.com/";
+        url = "http://fingerdev.ru/";
     QDesktopServices::openUrl(url);
 }
 

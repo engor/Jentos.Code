@@ -1926,7 +1926,7 @@ Don't change documents between find usages and rename</string>
   </action>
   <action name="actionHelpMonkeyHomepage">
    <property name="text">
-    <string>Monkey Homepage</string>
+    <string>Cerberus Homepage</string>
    </property>
    <property name="toolTip">
     <string>http://monkey-x.com</string>
